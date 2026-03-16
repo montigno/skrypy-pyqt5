@@ -1,5 +1,5 @@
 [diagram]
-script=[S0] title=[Script_python] inputs=[] outputs=[] code=[your code] RectF=[(-47.47, -104.78, 615.0, 675.0)]
+script=[S0] title=[Script_python] inputs=[] outputs=[] code=[your code] RectF=[(-40.0, -100.0, 615.0, 675.0)]
 [source S0]
 []
 import numpy as np
@@ -36,7 +36,7 @@ ax3d.plot(x_true, y_true, z_true, 'b')
 ax3d.plot(x_sample, y_sample, z_sample, 'r*')
 ax3d.plot(x_knots, y_knots, z_knots, 'go')
 ax3d.plot(x_fine, y_fine, z_fine, 'g')
-fig2.show()
+#fig2.show()
 plt.show()
 []
 [/source S0]

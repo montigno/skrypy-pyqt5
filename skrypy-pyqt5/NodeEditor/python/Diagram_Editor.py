@@ -8,12 +8,12 @@
 
 '''
 Created on 26 December 2023
-Last modification on 11 mars 2026
+Last modification on 15 mars 2026
 @author: Olivier Montigon
 '''
 
 from PyQt5.QtCore import QByteArray, QStringListModel, QLineF, QPointF, \
-    QMimeData, QRectF, pyqtSlot, QRunnable, QTimer, pyqtSignal
+    QMimeData, QRectF, pyqtSlot, QRunnable, QTimer, pyqtSignal, QDir
 from PyQt5.QtGui import QStandardItemModel, QPixmap, QPainterPath, QCursor, \
     QBrush, QStandardItem, QTransform, QColor, QPen, \
     QPolygonF, QLinearGradient, QKeySequence, QIcon, QFontMetrics, \
@@ -26,10 +26,10 @@ from PyQt5.QtWidgets import QMenuBar, QGraphicsScene, QDialog, \
     QHBoxLayout, QLabel, QPushButton, QGraphicsProxyWidget, QGraphicsTextItem, \
     QGridLayout, QCheckBox, QLineEdit, QCompleter, QToolBar, \
     QProgressBar, QApplication, QScrollArea, QProgressDialog, \
-    QMdiSubWindow, QTabWidget, QMainWindow
+    QMdiSubWindow, QTabWidget, QMainWindow, QTextEdit, QGraphicsDropShadowEffect,\
+    QGraphicsWidget, QGraphicsLinearLayout, QFileSystemModel
 from PyQt5.Qt import Qt, QFont, QComboBox, QSizePolicy, QFileDialog, QPainter, \
-    QGraphicsView, QPalette, QGraphicsItem, QImage, QMessageBox, QMdiArea, \
-    QTextEdit
+    QGraphicsView, QPalette, QGraphicsItem, QImage, QMessageBox, QMdiArea
 
 from collections import deque
 from enum import Enum
@@ -48,6 +48,7 @@ import yaml
 import shutil
 from random import randint
 from threading import Timer
+import math
 
 from . import Config, Plugin, AboutSoft
 from . import DefinitType
@@ -72,11 +73,11 @@ from . import setPreferences, setLimits, TextEditor
 class ArrowDynamicDown(QGraphicsPolygonItem):
 
     def __init__(self, parent=None):
-        super(ArrowDynamicDown, self).__init__(QPolygonF([QPointF(14, -9),
-                                                          QPointF(22, -9),
-                                                          QPointF(22, -7),
-                                                          QPointF(14, -7)]),
-                                               parent)
+        ARROW_DOWN = [
+            (14, -9), (22, -9), (22, -7), (14, -7)
+        ]
+        polygon = QPolygonF(QPointF(x, y) for x, y in ARROW_DOWN)
+        super(ArrowDynamicDown, self).__init__(polygon, parent)
         self.setBrush(QBrush(Qt.red))
         self.setCursor(QCursor(ItemMouse.HANDLETOPITEM.value))
         self.answer = False
@@ -93,19 +94,13 @@ class ArrowDynamicDown(QGraphicsPolygonItem):
 class ArrowDynamicUp(QGraphicsPolygonItem):
 
     def __init__(self, parent=None):
-        super(ArrowDynamicUp, self).__init__(QPolygonF([QPointF(3, -9),
-                                                        QPointF(6, -9),
-                                                        QPointF(6, -12),
-                                                        QPointF(8, -12),
-                                                        QPointF(8, -9),
-                                                        QPointF(11, -9),
-                                                        QPointF(11, -7),
-                                                        QPointF(8, -7),
-                                                        QPointF(8, -4),
-                                                        QPointF(6, -4),
-                                                        QPointF(6, -7),
-                                                        QPointF(3, -7)]),
-                                             parent)
+        ARROW_UP = [
+            (3, -9), (6, -9), (6, -12), (8, -12),
+            (8, -9), (11, -9), (11, -7), (8, -7),
+            (8, -4), (6, -4), (6, -7), (3, -7)
+        ]
+        polygon = QPolygonF(QPointF(x, y) for x, y in ARROW_UP)
+        super().__init__(polygon, parent)
         self.setBrush(QBrush(Qt.green))
         self.setCursor(QCursor(ItemMouse.HANDLETOPITEM.value))
         self.answer = False
@@ -123,7 +118,6 @@ class ArrowOptions(QGraphicsPolygonItem):
 
     def __init__(self, parent=None):
         super(ArrowOptions, self).__init__(QPolygonF([QPointF(5, -9),
-                                                      # QPointF(10, -15),
                                                       QPointF(15, -9),
                                                       QPointF(10, -3)]),
                                            parent)
@@ -159,8 +153,6 @@ class BlockCreate(QGraphicsRectItem):
         self.preview = False
         self.moved = False
 
-        self.setAcceptHoverEvents(True)
-
         if self.category:
             self.editBlock(ItemColor.PROCESS_TOP.value, ItemColor.PROCESS_BOT.value, ItemColor.FRAME_PROCESS.value)
         else:
@@ -168,6 +160,58 @@ class BlockCreate(QGraphicsRectItem):
 
         self.caseFinal = False
         self.currentLoop = None
+
+        if isMod:
+            self.setAcceptHoverEvents(True)
+            self.setFlag(QGraphicsRectItem.ItemSendsGeometryChanges)
+            
+    #     self.glowSelected = False 
+    #     self.radius = 8
+    #     self.color_bg = QColor(60, 60, 60)
+    #     self.color_border = QColor(120, 120, 120)
+    #     self.color_selected = QColor(255, 180, 60)
+    #
+    # def paint(self, painter, option, widget):
+    #
+    #     rect = self.rect()
+    #
+    #     # --------------------
+    #     # ombre simple
+    #     # --------------------
+    #     painter.setPen(Qt.NoPen)
+    #     painter.setBrush(QColor(0, 0, 0, 80))
+    #     painter.drawRoundedRect(rect.adjusted(3, 3, 3, 3), self.radius, self.radius)
+    #
+    #     # --------------------
+    #     # fond
+    #     # --------------------
+    #     painter.setBrush(self.color_bg)
+    #
+    #     if self.glowSelected:
+    #         pen = QPen(self.color_selected, 2)
+    #     else:
+    #         pen = QPen(self.color_border, 4)
+    #
+    #     painter.setPen(pen)
+    #
+    #     painter.drawRoundedRect(rect, self.radius, self.radius)
+    #
+    #     # --------------------
+    #     # glow sélection
+    #     # --------------------
+    #     if self.glowSelected:
+    #
+    #         glow = QPen(self.color_selected, 2)
+    #         glow.setCosmetic(True)
+    #
+    #         painter.setPen(glow)
+    #         painter.setBrush(Qt.NoBrush)
+    #
+    #         painter.drawRoundedRect(rect, self.radius, self.radius)
+            # for i in range(3):
+            #     glow = QPen(QColor(255,180,60,60-i*20), 6+i*2)
+            #     painter.setPen(glow)
+            #     painter.drawRoundedRect(rect, self.radius, self.radius)
 
     def addProbesOutputs(self):
         height = self.boundingRect().height() / 2
@@ -332,6 +376,12 @@ class BlockCreate(QGraphicsRectItem):
 
         self.setPen(QPen(colorPen, 4))
         self.setBrush(QBrush(gradient))
+        
+        # shadow = QGraphicsDropShadowEffect()
+        # shadow.setBlurRadius(0)        # flou de l'ombre
+        # shadow.setOffset(5, 5)          # décalage
+        # shadow.setColor(QColor(60, 60, 100, 255))
+        # self.setGraphicsEffect(shadow)
 
         if self.isMod:
             self.setFlags(self.ItemIsSelectable | self.ItemIsMovable | self.ItemSendsGeometryChanges)
@@ -379,16 +429,15 @@ class BlockCreate(QGraphicsRectItem):
             if wminOut < portOut.label.boundingRect().width():
                 wminOut = portOut.label.boundingRect().width()
 
-        gridSize = ItemGrid.SPACEGRID.value
         self.wmin = wminIn + 20 + wminOut
-        self.wmin = round(self.wmin / gridSize) * gridSize
+        self.wmin = round(self.wmin / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
 
         factorh = 20
         self.hmin = factorh * len(self.inputs)
         if self.hmin < factorh * len(self.outputs):
             self.hmin = factorh * len(self.outputs)
 
-        self.wmin, self.hmin = round(self.wmin / gridSize) * gridSize, gridSize + round(self.hmin / gridSize) * gridSize
+        self.wmin, self.hmin = round(self.wmin / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value, ItemGrid.SPACEGRID.value + round(self.hmin / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
 
         x, y = self.newSize(self.w, self.h)
         # self.path.addRoundedRect(0.0, 0.0, x, y, 10, 10)
@@ -427,8 +476,7 @@ class BlockCreate(QGraphicsRectItem):
         if w < self.wmin:
             w = self.wmin
 
-        gridSize = ItemGrid.SPACEGRID.value
-        w, h = round(w / gridSize) * gridSize, round(h / gridSize) * gridSize
+        w, h = round(w / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value, round(h / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
 
         self.setRect(0.0, 0.0, w, h)
         self.box_title.setRect(-1, -24, w + 2, 22)
@@ -484,10 +532,9 @@ class BlockCreate(QGraphicsRectItem):
         event.accept()
 
     def itemChange(self, *args, **kwargs):
-        gridSize = ItemGrid.SPACEGRID.value
         if args[0] == self.ItemPositionHasChanged:
-            xV = round(args[1].x() / gridSize) * gridSize
-            yV = round(args[1].y() / gridSize) * gridSize
+            xV = round(args[1].x() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
+            yV = round(args[1].y() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
             self.setPos(QPointF(xV, yV))
         return QGraphicsRectItem.itemChange(self, *args, **kwargs)
 
@@ -571,6 +618,22 @@ class BlockCreate(QGraphicsRectItem):
         editor.loopMouseReleaseEvent(self, True)
         return QGraphicsRectItem.mouseReleaseEvent(self, event)
 
+    # def mousePressEvent(self, event):
+    #
+    #     if event.button() == Qt.LeftButton and event.modifiers() & Qt.ControlModifier:
+    #         pos = self.mapToScene(event.pos())
+    #         items = self.scene().items(pos)
+    #         for item in items:
+    #             if isinstance(item, NodeRect):
+    #                 # bascule glow
+    #                 item.glowSelected = not item.glowSelected
+    #                 item.update()  # redessine l’item
+    #                 break
+    #         event.accept()
+    #         return
+    #
+    #     super().mousePressEvent(event)
+
     def mousePressEvent(self, event):
         if event.button() == 2:
             try:
@@ -578,8 +641,20 @@ class BlockCreate(QGraphicsRectItem):
             except Exception:
                 pass
             self.setSelected(True)
+            
+        # elif event.button() == 1 and event.modifiers() & Qt.ControlModifier:
+        #     pos = self.mapToScene(event.pos())
+        #     items = self.scene().items(pos)
+        #     for item in items:
+        #         if isinstance(item, BlockCreate):
+        #             # bascule glow
+        #             item.glowSelected = not item.glowSelected
+        #             item.update()  # redessine l’item
+        #             break
+        #     # event.accept()
+        #     # return
 
-        if event.button() == 1 and self.isMod:
+        elif event.button() == 1 and self.isMod:
             if not self.isSelected():
                 editor.diagramScene[editor.currentTab].clearSelection()
                 self.setSelected(True)
@@ -1027,9 +1102,6 @@ class Checkbox(QGraphicsRectItem):
         self.w = self.proxyWidget.boundingRect().size().width() + 15
         self.h = self.proxyWidget.boundingRect().size().height() + 6
 
-        # gridSize = ItemGrid.SPACEGRID.value
-        # self.w, self.h = round(self.w / gridSize) * gridSize, round(self.h / gridSize) * gridSize
-
         self.lab = QGraphicsTextItem(self.label, self)
         self.lab.setDefaultTextColor(ItemColor.DEFAULTTEXTCOLOR.value)
         self.lab.setFont(QFont("Times", 12, QFont.Bold))
@@ -1136,10 +1208,9 @@ class Checkbox(QGraphicsRectItem):
 #         UpdateUndoRedo()
 
     def itemChange(self, *args, **kwargs):
-        gridSize = ItemGrid.SPACEGRID.value
         if args[0] == self.ItemPositionHasChanged:
-            xV = round(args[1].x() / gridSize) * gridSize
-            yV = round(args[1].y() / gridSize) * gridSize
+            xV = round(args[1].x() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
+            yV = round(args[1].y() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
             self.setPos(QPointF(xV, yV))
         return QGraphicsRectItem.itemChange(self, *args, **kwargs)
 
@@ -1323,8 +1394,6 @@ class Clusters(QGraphicsRectItem):
             self.proxyWidget.append([tmp_it])
         wprox, hprox = 102, 28
         w, h = ncol * wprox + 15, nrow * hprox + 5
-        # gridSize = ItemGrid.SPACEGRID.value
-        # h, w = round(h / gridSize) * gridSize, round(w / gridSize) * gridSize
 
         self.setRect(0.0, 0.0, w, h)
         self.nrow, self.ncol = nrow, ncol
@@ -1365,8 +1434,7 @@ class Clusters(QGraphicsRectItem):
 
         wprox, hprox = 102, 28
         w, h = ncol * wprox + 15, nrow * hprox + 5
-        # gridSize = ItemGrid.SPACEGRID.value
-        # h, w = round(h / gridSize) * gridSize, round(w / gridSize) * gridSize
+
         self.setRect(0.0, 0.0, w, h)
 
         self.format = self.format[self.format.index('_') + 1:] if '_' in self.format else self.format
@@ -1410,10 +1478,9 @@ class Clusters(QGraphicsRectItem):
         return it
 
     def itemChange(self, *args, **kwargs):
-        gridSize = ItemGrid.SPACEGRID.value
         if args[0] == self.ItemPositionHasChanged:
-            xV = round(args[1].x() / gridSize) * gridSize
-            yV = round(args[1].y() / gridSize) * gridSize
+            xV = round(args[1].x() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
+            yV = round(args[1].y() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
             self.setPos(QPointF(xV, yV))
         return QGraphicsRectItem.itemChange(self, *args, **kwargs)
 
@@ -1511,7 +1578,7 @@ class Clusters(QGraphicsRectItem):
     def setLimits(self, minlim, maxlim):
         for r in self.proxyWidget:
             for c in r:
-                c.widget().setRange(min, maxlim)
+                c.widget().setRange(minlim, maxlim)
         self.val = (minlim, self.val[1], maxlim)
 
     def addDimension(self):
@@ -1586,10 +1653,9 @@ class CommentsItem(QGraphicsRectItem):
             self.setPos(self.x() + 1, self.y())
 
     def itemChange(self, *args, **kwargs):
-        gridSize = ItemGrid.SPACEGRID.value
         if args[0] == self.ItemPositionHasChanged:
-            xV = round(args[1].x() / gridSize) * gridSize
-            yV = round(args[1].y() / gridSize) * gridSize
+            xV = round(args[1].x() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
+            yV = round(args[1].y() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
             self.setPos(QPointF(xV, yV))
         return QGraphicsRectItem.itemChange(self, *args, **kwargs)
 
@@ -1807,10 +1873,9 @@ class ConnectorItem(QGraphicsPolygonItem):
         return QGraphicsPolygonItem.mouseReleaseEvent(self, event)
 
     def itemChange(self, *args, **kwargs):
-        gridSize = ItemGrid.SPACEGRID.value
         if args[0] == self.ItemPositionHasChanged:
-            xV = round(args[1].x() / gridSize) * gridSize
-            yV = round(args[1].y() / gridSize) * gridSize
+            xV = round(args[1].x() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
+            yV = round(args[1].y() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
             self.setPos(QPointF(xV, yV))
         return QGraphicsPolygonItem.itemChange(self, *args, **kwargs)
 
@@ -2066,10 +2131,9 @@ class Constants(QGraphicsRectItem):
         self.outputs[0].setPos(w + 20 + 2, (h + 6) / 2)
 
     def itemChange(self, *args, **kwargs):
-        gridSize = ItemGrid.SPACEGRID.value
         if args[0] == self.ItemPositionHasChanged:
-            xV = round(args[1].x() / gridSize) * gridSize
-            yV = round(args[1].y() / gridSize) * gridSize
+            xV = round(args[1].x() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
+            yV = round(args[1].y() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
             self.setPos(QPointF(xV, yV))
         return QGraphicsRectItem.itemChange(self, *args, **kwargs)
 
@@ -2787,10 +2851,21 @@ class DiagramScene(QGraphicsScene):
         self.fullScr = False
 
         self.addCenterLines()
-    # def draw_grid(self):
-    #     width = Settings.NUM_BLOCKS_X * Settings.WIDTH
-    #     height = Settings.NUM_BLOCKS_Y * Settings.HEIGHT
 
+    # def centerItemsOnOrigin(scene):
+    #
+    #     rect = scene.itemsBoundingRect()
+    #
+    #     # centre des items
+    #     offset = rect.center()
+    #
+    #     for item in scene.items():
+    #         item.moveBy(-offset.x(), -offset.y())
+    #
+    #     # agrandir la scène autour
+    #     scene.setSceneRect(-rect.width(), -rect.height(),
+    #                        rect.width()*2, rect.height()*2)
+        
     def addCenterLines(self):
         pen = QPen(ItemColor.CROSS_SCENE.value, 2)
         crss = QLineF(-10, 0, 10, 0)
@@ -3216,22 +3291,16 @@ class DiagramView(QGraphicsView):
 
     def __init__(self, scene, parent=None):
         QGraphicsView.__init__(self, scene, parent)
+        self.setCacheMode(QGraphicsView.CacheBackground)
+        self.setViewportUpdateMode(QGraphicsView.SmartViewportUpdate)
         self.setRenderHints(QPainter.Antialiasing |
                             QPainter.SmoothPixmapTransform)
-        # self.setMouseTracking(True)
         self.setTransformationAnchor(QGraphicsView.AnchorUnderMouse)
         self.setResizeAnchor(QGraphicsView.AnchorUnderMouse)
         self.scalefactor = 1
         self.setBackgroundBrush(ItemColor.BACKGROUND.value)
         self.setDragMode(QGraphicsView.RubberBandDrag)
         self.setRubberBandSelectionMode(Qt.IntersectsItemShape)
-        # self.gridVisible = True
-        # self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        # self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        # self.horizontalScrollBar().setStyleSheet('background: grey')
-        # self.verticalScrollBar().setStyleSheet('background: grey')
-        # self.verticalScrollBar().installEventFilter(self);
-        # self.horizontalScrollBar().installEventFilter(self);
         self.setContentsMargins(0, 0, 0, 0)
         self.setMouseTracking(True)
         self.setAcceptDrops(True)
@@ -3242,7 +3311,104 @@ class DiagramView(QGraphicsView):
         self.currentScript = None
         self.m_originX, self.m_originY = 0, 0
 
-#         self.startPos = None
+        self.base_grid = ItemGrid.SPACEGRID.value
+        self.major_step = ItemGrid.MAJORSTEP.value
+
+        self.pen_minor = QPen(ItemColor.GRID_MINOR.value)
+        self.pen_major = QPen(ItemColor.GRID_MAJOR.value)
+        self.pen_axis = QPen(ItemColor.GRID_AXIS.value)
+        
+        self.pen_minor.setWidth(1)
+        self.pen_major.setWidth(1)
+        self.pen_axis.setWidth(2)
+        
+    def drawBackground(self, painter, rect):
+        super().drawBackground(painter, rect)
+
+        zoom = self.transform().m11()
+        grid = self.base_grid
+        while grid * zoom < 15:
+            grid *= 2
+        left = math.floor(rect.left() / grid) * grid
+        top = math.floor(rect.top() / grid) * grid
+        minor = []
+        major = []
+
+        x = left
+        while x < rect.right():
+            if int(x / grid) % self.major_step == 0:
+                major.append(QLineF(x, rect.top(), x, rect.bottom()))
+            else:
+                minor.append(QLineF(x, rect.top(), x, rect.bottom()))
+            x += grid
+
+        y = top
+        while y < rect.bottom():
+            if int(y / grid) % self.major_step == 0:
+                major.append(QLineF(rect.left(), y, rect.right(), y))
+            else:
+                minor.append(QLineF(rect.left(), y, rect.right(), y))
+            y += grid
+
+        painter.setPen(self.pen_minor)
+        painter.drawLines(minor)
+        painter.setPen(self.pen_major)
+        painter.drawLines(major)
+        painter.setPen(self.pen_axis)
+        painter.drawLine(QLineF(0, rect.top(), 0, rect.bottom()))
+        painter.drawLine(QLineF(rect.left(), 0, rect.right(), 0))
+
+    # def drawBackground(self, painter, rect):
+    #
+    #     zoom = self.transform().m11()
+    #
+    #     grid = self.base_grid
+    #
+    #     # LOD dynamique
+    #     while grid * zoom < 10:
+    #         grid *= 2
+    #
+    #     # zone visible uniquement
+    #     visible_rect = self.mapToScene(self.viewport().rect()).boundingRect()
+    #
+    #     left = math.floor(visible_rect.left() / grid) * grid
+    #     right = math.ceil(visible_rect.right() / grid) * grid
+    #     top = math.floor(visible_rect.top() / grid) * grid
+    #     bottom = math.ceil(visible_rect.bottom() / grid) * grid
+    #
+    #     cols = int((right - left) / grid)
+    #     rows = int((bottom - top) / grid)
+    #
+    #     minor_points = []
+    #     major_points = []
+    #
+    #     for i in range(cols + 1):
+    #
+    #         x = left + i * grid
+    #         major_x = (int(x / grid) % self.major_step == 0)
+    #
+    #         for j in range(rows + 1):
+    #
+    #             y = top + j * grid
+    #             major_y = (int(y / grid) % self.major_step == 0)
+    #
+    #             point = QPointF(x, y)
+    #
+    #             if major_x and major_y:
+    #                 major_points.append(point)
+    #             else:
+    #                 minor_points.append(point)
+    #
+    #     painter.setPen(self.pen_minor)
+    #     painter.drawPoints(minor_points)
+    #
+    #     painter.setPen(self.pen_major)
+    #     painter.drawPoints(major_points)
+    #
+    #     # axes
+    #     painter.setPen(self.pen_axis)
+    #     painter.drawLine(QLineF(0, visible_rect.top(), 0, visible_rect.bottom()))
+    #     painter.drawLine(QLineF(visible_rect.left(), 0, visible_rect.right(), 0))
 
     def dragEnterEvent(self, event):
         event.accept()
@@ -3288,24 +3454,6 @@ class DiagramView(QGraphicsView):
 
             event.accept()
 
-    # def drawBackground(self, painter, rect):
-    #     gridSize = ItemGrid.SPACEGRID.value
-    #     pen = QPen(QColor(100, 100, 230))
-    #     pen.setWidth(2)
-    #     painter.setPen(pen)
-    #     left = int(rect.left()) - (int(rect.left()) % gridSize)
-    #     top = int(rect.top()) - (int(rect.top()) % gridSize)
-    #     for x in range(left, int(rect.right()), gridSize):
-    #         for y in range(top, int(rect.bottom()), gridSize):
-    #             painter.drawPoints(QPointF(x,y))
-
-    # def showGrid(self, stat):
-    #     if stat:
-    #         self.gridVisible = True
-    #     else:
-    #         self.gridVisible = False
-    #     self.update()
-
     def dropEvent(self, event):
         cur_dw = editor.diagramView.index(self)
         for lstWind in editor.mdi.subWindowList():
@@ -3314,6 +3462,7 @@ class DiagramView(QGraphicsView):
                 break
 
         editor.diagramScene[editor.currentTab].clearSelection()
+        self.a1 = None
 
         if event.mimeData().hasUrls():
             dialog = QProgressDialog('Loading ...', None, 0, 0, None)
@@ -3451,6 +3600,10 @@ class DiagramView(QGraphicsView):
                     self.a1 = ConnectorItem('unkn', '', 70, 26, 'out', 'unkn', '', True)
             elif "Stop_execution" in name:
                 self.a1 = StopExecution('newStopExec', True)
+            elif "File_explorer" in name:
+                self.a1 = GraphicsWindow('newExplorer', 'File Explorer', True)
+
+        if self.a1:
             self.a1.setPos(self.mapToScene(event.pos()))
             self.scene().addItem(self.a1)
 
@@ -3461,7 +3614,7 @@ class DiagramView(QGraphicsView):
 #                 self.scene().addItem(self.a1)
             except Exception:
                 pass
-        UpdateUndoRedo()
+            UpdateUndoRedo()
         return QGraphicsView.dropEvent(self, event)
 
     def addItemLoop(self, unitItem):
@@ -3731,10 +3884,9 @@ class ForLoopItem(QGraphicsRectItem):
                 portCondition.setPos(0, 15)
 
     def itemChange(self, *args, **kwargs):
-        gridSize = ItemGrid.SPACEGRID.value
         if args[0] == self.ItemPositionHasChanged:
-            xV = round(args[1].x() / gridSize) * gridSize
-            yV = round(args[1].y() / gridSize) * gridSize
+            xV = round(args[1].x() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
+            yV = round(args[1].y() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
             self.setPos(QPointF(xV, yV))
         return QGraphicsRectItem.itemChange(self, *args, **kwargs)
 
@@ -3753,10 +3905,18 @@ class ForLoopItem(QGraphicsRectItem):
         return QGraphicsRectItem.keyPressEvent(self, keyEvent)
 
     def mousePressEvent(self, event):
+
         if self.isMod:
             if event.button() == 1:
-                # editor.diagramScene[editor.currentTab].clearSelection()
-                self.setSelected(True)
+                if not self.isSelected():
+                    editor.diagramScene[editor.currentTab].clearSelection()
+                    self.setSelected(True)
+                else:
+                    for _, ItemsLoop in editor.listTools[editor.currentTab].items():
+                        if self.unit in ItemsLoop:
+                            editor.diagramScene[editor.currentTab].clearSelection()
+                            self.setSelected(True)
+                            break
 
             if event.button() == 2:
                 self.setSelected(True)
@@ -3878,6 +4038,8 @@ class ForLoopItem(QGraphicsRectItem):
             #     w = max(self.loopSizeMini[0][0], self.loopSizeMini[1][0])
             # if h < max(self.loopSizeMini[0][1], self.loopSizeMini[1][1]):
             #     h = max(self.loopSizeMini[0][1], self.loopSizeMini[1][1])
+
+        w, h = round(w / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value, round(h / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
 
         self.setRect(0.0, 0.0, w, h)
         self.label.setPos(0, -40)
@@ -4445,9 +4607,158 @@ class ForLoopItem(QGraphicsRectItem):
         editor.deleteItemsLoop(self)
 
 
+class FileExplorer(QWidget):
+    def __init__(self, parent=None):
+        super(FileExplorer, self).__init__(parent)
+        
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+
+        model = QFileSystemModel()
+        model.setRootPath(QDir.homePath())
+
+        tree = QTreeView()
+        tree.setModel(model)
+        tree.setRootIndex(model.index(QDir.homePath()))
+
+        layout.addWidget(tree)
+
+
 class getPathWork():
     def pathWork(self):
         return editor.currentpathwork
+
+
+class GraphicsWindow(QGraphicsWidget):
+
+    def __init__(self, unit='', label='', isMod=True, parent=None):
+        super(GraphicsWindow, self).__init__(parent)
+        
+        self.unit = unit
+        self.isMod = isMod
+
+        self.setZValue(1)
+        # self.setFlag(QGraphicsItem.ItemIsSelectable)
+        self.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable | QGraphicsItem.ItemSendsGeometryChanges)
+        self.dragging = False
+        self.resizing = False
+
+        self.resize(420, 300)
+
+        layout = QGraphicsLinearLayout(Qt.Vertical)
+        self.setLayout(layout)
+
+        self.title_bar = QLabel(label)
+        self.title_bar.setStyleSheet("""
+            background:#2c2c2c;
+            color:white;
+            padding:6px;
+        """)
+        title_proxy = QGraphicsProxyWidget()
+        title_proxy.setWidget(self.title_bar)
+
+        widget = FileExplorer()
+        self.content_proxy = QGraphicsProxyWidget()
+        self.content_proxy.setWidget(widget)
+
+        layout.addItem(title_proxy)
+        layout.addItem(self.content_proxy)
+
+        layout.setStretchFactor(title_proxy, 0)
+        layout.setStretchFactor(self.content_proxy, 1)
+        
+        
+        self.wmin, self.hmin = 60, 60
+        self.w = self.boundingRect().size().width() + 6
+        self.h = self.boundingRect().size().height() + 6
+        
+        self.inputs, self.outputs = [], []
+        self.outputs.append(Port('', 'out', 'list_path', self.unit, True, self.isMod, 80, -12, self))
+        self.outputs[0].setPos(self.w + 2, self.h / 2)
+        
+        x, y = self.newSize(self.w, self.h)
+        
+        if self.isMod:
+            self.res = Slide(self)
+            self.res.setPos(x, y)
+            # self.ongrid = True
+            self.res.posChangeCallbacks.append(self.newSize)  # Connect the callback
+            self.res.setFlag(self.res.ItemIsSelectable, True)
+            self.res.wmin = self.wmin
+            self.res.hmin = self.hmin
+        
+    def itemChange(self, *args, **kwargs):
+        if args[0] == self.ItemPositionHasChanged:
+            xV = round(args[1].x() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
+            yV = round(args[1].y() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
+            self.setPos(QPointF(xV, yV))
+        return QGraphicsItem.itemChange(self, *args, **kwargs)
+        
+    def newSize(self, w, h):
+        # Limit the block size:
+        if h < self.hmin:
+            h = self.hmin + 2
+        if w < self.wmin:
+            w = self.wmin
+
+        w, h = round(w / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value, round(h / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
+
+        self.resize(w, h)
+        
+        self.outputs[0].setPos(w, h / 2)
+        
+        return w, h
+
+    # # -------------------
+    # # Gestion des événements souris
+    # # -------------------
+    # def mousePressEvent(self, event):
+    #     rect = self.boundingRect()
+    #     # coin bas droit : resize
+    #     if rect.width() - event.pos().x() < 15 and rect.height() - event.pos().y() < 15:
+    #         self.resizing = True
+    #     # barre de titre : drag
+    #     elif event.pos().y() < 30:
+    #         self.dragging = True
+    #         self.drag_offset = event.pos()
+    #     else:
+    #         self.dragging = False
+    #
+    #     # focus devant
+    #     self.setZValue(self.zValue() + 1)
+    #     super().mousePressEvent(event)
+    #
+    # def mouseMoveEvent(self, event):
+    #     if self.dragging:
+    #         new_pos = self.pos() + (event.pos() - self.drag_offset)
+    #         self.setPos(new_pos)
+    #     elif self.resizing:
+    #         w = max(200, event.pos().x())
+    #         h = max(150, event.pos().y())
+    #         self.resize(w, h)
+    #     else:
+    #         super().mouseMoveEvent(event)
+    #
+    # def mouseReleaseEvent(self, event):
+    #     self.dragging = False
+    #     self.resizing = False
+    #     super().mouseReleaseEvent(event)
+
+    # -------------------
+    # Dessin : fenêtre + poignée
+    # -------------------
+    def paint(self, painter, option, widget):
+        rect = self.boundingRect()
+
+        # fond
+        painter.setBrush(QColor(45, 45, 45))
+        painter.setPen(QPen(QColor(20, 20, 20), 2))
+        painter.drawRect(rect)
+
+        # # poignée resize
+        # handle = QRectF(rect.width() - 10, rect.height() - 10, 10, 10)
+        # painter.setBrush(QColor(180, 180, 180))
+        # painter.drawRect(handle)
 
 
 class Imagebox(QGraphicsRectItem):
@@ -4466,8 +4777,7 @@ class Imagebox(QGraphicsRectItem):
         self.isMod = isMod
         self.setZValue(2)
         if self.isMod:
-            self.setFlags(self.ItemIsSelectable | self.ItemIsMovable | self.ItemIsFocusable)
-            self.setFlag(self.ItemSendsGeometryChanges)
+            self.setFlags(self.ItemIsSelectable | self.ItemIsMovable | self.ItemIsFocusable | self.ItemSendsGeometryChanges)
             self.setAcceptHoverEvents(True)
 
         if unit == 'newImagebox':
@@ -4488,12 +4798,12 @@ class Imagebox(QGraphicsRectItem):
         self.elemProxy.setBackgroundRole(QPalette.Base)
         self.elemProxy.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.elemProxy.setScaledContents(True)
+        self.elemProxy.setCursor(QCursor(ItemMouse.HANDLETOPITEM.value))
 
         self.proxyWidget = QGraphicsProxyWidget(self, Qt.Widget)
         self.proxyWidget.setWidget(self.elemProxy)
         self.proxyWidget.setPos(3, 3)
         self.proxyWidget.setZValue(3)
-        self.elemProxy.setCursor(QCursor(ItemMouse.HANDLETOPITEM.value))
 
         self.w = self.proxyWidget.boundingRect().size().width() + 6
         self.h = self.proxyWidget.boundingRect().size().height() + 6
@@ -4535,6 +4845,24 @@ class Imagebox(QGraphicsRectItem):
             self.outputs[0].setPos(self.w + 2, self.h / 2)
             if self.isMod:
                 editor.listConstants[editor.currentTab][self.unit] = ('path_box', self.pathImage, self.label)
+
+    def mousePressEvent(self, event):
+        if self.isMod:
+            if event.button() == 1:
+                if not self.isSelected():
+                    editor.diagramScene[editor.currentTab].clearSelection()
+                    self.setSelected(True)
+                else:
+                    for _, ItemsLoop in editor.listTools[editor.currentTab].items():
+                        if self.unit in ItemsLoop:
+                            editor.diagramScene[editor.currentTab].clearSelection()
+                            self.setSelected(True)
+                            break
+
+            if event.button() == 2:
+                self.setSelected(True)
+
+        event.accept()
 
     def mouseDoubleClickEvent(self, event):
         if self.isMod:
@@ -4648,8 +4976,6 @@ class Imagebox(QGraphicsRectItem):
         self.labshape.setPos((self.w / 2) - rect.size().width() / 2, self.h + 3)
         editor.listConstants[editor.currentTab][self.unit] = ('path_box', pathFile, self.label)
 
-        # UpdateUndoRedo()
-
     def hoverEnterEvent(self, event):
         # self.setFocus(True)
         txt = "<p style=\"background-color: #fff59d;\">"
@@ -4661,15 +4987,18 @@ class Imagebox(QGraphicsRectItem):
         txt += "<br></span></p>"
         self.setToolTip(txt)
         event.accept()
-#         return QGraphicsRectItem.hoverEnterEvent(self, event)
+        return QGraphicsRectItem.hoverEnterEvent(self, event)
 
-    # def itemChange(self, *args, **kwargs):
-    #     gridSize = ItemGrid.SPACEGRID.value
-    #     if args[0] == self.ItemPositionHasChanged:
-    #         xV = round(args[1].x() / gridSize) * gridSize
-    #         yV = round(args[1].y() / gridSize) * gridSize
-    #         self.setPos(QPointF(xV, yV))
-    #     return QGraphicsRectItem.itemChange(self, *args, **kwargs)
+    def itemChange(self, *args, **kwargs):
+        if self.isMod:
+            if args[0] == self.ItemPositionHasChanged:
+                xV = round(args[1].x() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
+                yV = round(args[1].y() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
+                self.setPos(QPointF(xV, yV))
+            try:
+                return QGraphicsRectItem.itemChange(self, *args, **kwargs)
+            except Exception as err:
+                print(err)
 
     def contextMenuEvent(self, event):
         if self.isMod:
@@ -4727,9 +5056,6 @@ class Imagebox(QGraphicsRectItem):
             pass
         editor.deleteItemsLoop(self)
 
-    # def displayRange(self):
-    #     pass
-
 
 class ItemColor(Enum):
 
@@ -4751,6 +5077,9 @@ class ItemColor(Enum):
     TEXT_PORT_LABEL_INPUT2 = QColor(150, 150, 150, 255)
     TEXT_PORT_LABEL_OUTPUT2 = QColor(150, 150, 150, 255)
     BIS_LINK = BACKGROUND
+    GRID_MINOR = QColor(80, 60, 60, 100)
+    GRID_MAJOR = QColor(120, 100, 100, 100)
+    GRID_AXIS = QColor(150, 80, 80, 100)
 #     bis_link = QColor(30, 30, 30, 255)
     FOCUS_LINK = QColor(150, 150, 250, 255)
     FRAME_COMMENT = QColor(100, 100, 200, 255)
@@ -4785,8 +5114,9 @@ class ItemMouse(Enum):
 
 
 class ItemGrid(Enum):
-    SPACEGRID = 0.01
-    # SPACEGRID = 25
+    # SPACEGRID = 0.01
+    SPACEGRID = 20
+    MAJORSTEP = 5
 
 
 class ItemResize(Enum):
@@ -6197,6 +6527,7 @@ class NodeEdit(QWidget):
                                                 'Constant_combobox', 'Constant_boolean', 'Constant_path',
                                                 'Constant_tuple'),
                                   'Control': ('Stop_execution',),
+                                  # 'Explorer': ('File_explorer',),
                                   'Loop': ('For_sequential', 'For_multiprocessing', 'For_multithreading'),
                                   'Probes': ('Value', 'Type', 'Length'),
                                   'Script': ('Script_python', 'Macro_ImageJ'),
@@ -7487,7 +7818,7 @@ class Port(QGraphicsRectItem):
                 menu.addSeparator()
                 cp = menu.addAction('add Print block')
                 cp.triggered.connect(self.addPrint)
-            elif (self.format not in ['list_bool', 'array_bool', 'list_path', 'array_path', 'dict'] and ' A' not in self.unit):
+            elif (self.format not in ['list_bool', 'array_bool', 'list_path', 'array_path', 'dict'] and 'A' not in self.unit):
                 # 'tuple' not in self.format and
                 yet = False
                 for _, val in editor.listNodes[editor.currentTab].items():
@@ -7982,8 +8313,10 @@ class Probes(QGraphicsPolygonItem):
         else:
             self.unit = unit
 
-        polyhead = QPolygonF([QPointF(0, 8), QPointF(20, 0), QPointF(70, 0),
-                              QPointF(70, 26), QPointF(20, 26), QPointF(0, 18)])
+        PROBE_FRAME = [(0, 8), (20, 0), (70, 0), (70, 26), (20, 26), (0, 18)]
+
+        polygon = QPolygonF(QPointF(x, y) for x, y in PROBE_FRAME)
+        polyhead = QPolygonF(polygon)
         self.setPolygon(polyhead)
 
         self.setPen(QPen(ItemColor.FRAME_PROBE.value, 3))
@@ -7991,11 +8324,11 @@ class Probes(QGraphicsPolygonItem):
 
         lab = QGraphicsTextItem(self.unit, self)
         lab.setDefaultTextColor(ItemColor.DEFAULTTEXTCOLOR.value)
-        lab.setPos(75, 0)
+        lab.setPos(75, 8)
 
         self.inputs = []
         self.outputs = None
-        inp = Port(label, 'in', form, self.unit, True, isMod, 10, -15, self)
+        inp = Port(label, 'in', form, self.unit, True, isMod, 15, -15, self)
         inp.setPos(0, 13)
         self.inputs.append(inp)
 
@@ -8012,10 +8345,9 @@ class Probes(QGraphicsPolygonItem):
             menu.exec_(event.screenPos())
 
     def itemChange(self, *args, **kwargs):
-        gridSize = ItemGrid.SPACEGRID.value
         if args[0] == self.ItemPositionHasChanged:
-            xV = round(args[1].x() / gridSize) * gridSize
-            yV = round(args[1].y() / gridSize) * gridSize
+            xV = round(args[1].x() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
+            yV = round(args[1].y() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
             self.setPos(QPointF(xV, yV))
         return QGraphicsPolygonItem.itemChange(self, *args, **kwargs)
 
@@ -8497,10 +8829,9 @@ class ScriptItem(QGraphicsRectItem):
         # return QGraphicsRectItem.hoverLeaveEvent(self, *args, **kwargs)
 
     def itemChange(self, *args, **kwargs):
-        gridSize = ItemGrid.SPACEGRID.value
         if args[0] == self.ItemPositionHasChanged:
-            xV = round(args[1].x() / gridSize) * gridSize
-            yV = round(args[1].y() / gridSize) * gridSize
+            xV = round(args[1].x() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
+            yV = round(args[1].y() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
             self.setPos(QPointF(xV, yV))
         return QGraphicsRectItem.itemChange(self, *args, **kwargs)
 
@@ -8974,9 +9305,7 @@ class Slide(QGraphicsPolygonItem):
                         self.x = self.wmin
                     if self.y < self.hmin:
                         self.y = self.hmin
-                    if self.ongrid:
-                        gridSize = ItemGrid.SPACEGRID.value
-                        self.x, self.y = round(self.x / gridSize) * gridSize, round(self.y / gridSize) * gridSize
+                    self.x, self.y = round(self.x / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value, round(self.y / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
                     value = QPointF(self.x, self.y)
             return value
         return super(Slide, self).itemChange(change, value)
@@ -9362,10 +9691,9 @@ class StopExecution(QGraphicsPolygonItem):
         self.nameStp.setPos(lx2, ly2)
 
     def itemChange(self, *args, **kwargs):
-        gridSize = ItemGrid.SPACEGRID.value
         if args[0] == self.ItemPositionHasChanged:
-            xV = round(args[1].x() / gridSize) * gridSize
-            yV = round(args[1].y() / gridSize) * gridSize
+            xV = round(args[1].x() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
+            yV = round(args[1].y() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
             self.setPos(QPointF(xV, yV))
         return QGraphicsPolygonItem.itemChange(self, *args, **kwargs)
 
@@ -9781,7 +10109,7 @@ class TreeLibrary(QTreeView):
             link.setPen(QPen(color, 5))
             bislink.setPen(QPen(Qt.NoPen))
 
-        elif 'array' in str(format):
+        elif 'array' in str(form):
             link.setPen(QPen(color, 8))
             bislink.setPen(QPen(ItemColor.BIS_LINK.value, 3, Qt.SolidLine))
 

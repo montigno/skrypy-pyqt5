@@ -38,7 +38,7 @@ class SubWindow(QDialog):
             if (event.type() == QEvent.Wheel):
                 return True
             elif (event.type() == QEvent.MouseMove):
-                self.mouseMouveDiagram(event)
+                self.mouseMoveDiagram(event)
             elif (event.type() == QEvent.MouseButtonPress):
                 self.mousePressEvent(event)
             elif (event.type() == QEvent.MouseButtonRelease):
@@ -74,7 +74,7 @@ class SubWindow(QDialog):
         self.diagram_view.horizontalScrollBar().setEnabled(True)
         self.diagram_view.verticalScrollBar().setEnabled(True)
 
-    def mouseMouveDiagram(self, event):
+    def mouseMoveDiagram(self, event):
         if event.buttons() == Qt.MidButton:
             offset = self.__prevMousePos - event.pos()
             self.__prevMousePos = event.pos()

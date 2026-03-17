@@ -156,6 +156,7 @@ class execution2(QObject):
         stop_message = 'Diagram stopped'
 
         for execution in listBlockExecution:
+
             if 'E' in execution:
                 self.must_stopped = True
                 stop_message = "Diagram stopped by {}".format(execution)
@@ -654,6 +655,7 @@ class executionMacro:
     def __init__(self, unitName, txt, listDynamicValue, textEditor):
         self.listDynamicValueToReturn = {}
         inputsList = eval(txt[0:txt.index('\n')])
+        print("input list=", inputsList)
         textScript = '\n'.join(txt.split('\n')[1:-2])
         outputsList = eval(txt.splitlines()[-1])
         code = ''
@@ -672,7 +674,7 @@ class executionMacro:
                 elif (type(value_type).__name__ in ['bool']):
                     val = value_type
                     val == 1 if val == 'True' else 0
-                elif ('float' in type(value_type).__name__) or ('int' in type(value_type).__name__):
+                elif isinstance(value_type, (int, float)):
                     code += az[0] + ' = ' + str(value_type)
                 elif (type(value_type).__name__ in ['array']):
                     code += az[0] + ' = ' + str(value_type)

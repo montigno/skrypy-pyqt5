@@ -1,9 +1,9 @@
 [diagram]
 link=[N0] node=[S0:NoGPU#Node#P0:Value]
 link=[N1] node=[S0:WithGPU#Node#P1:Value]
-probe=[P0] label=[Value] format=[float] RectF=[(222.18, -35.0, 70, 24)] 
-probe=[P1] label=[Value] format=[float] RectF=[(222.18, 150.66, 70, 24)] 
-script=[S0] title=[Script_python] inputs=[] outputs=[['NoGPU', 'out', 'float'], ['WithGPU', 'out', 'float']] code=[your code] RectF=[(-305.32, -213.17000000000002, 424.0, 557.0)]
+probe=[P0] label=[Value] format=[float] RectF=[(220.0, -40.0, 70, 24)] 
+probe=[P1] label=[Value] format=[float] RectF=[(220.0, 180.0, 70, 24)] 
+script=[S0] title=[Script_python] inputs=[] outputs=[['NoGPU', 'out', 'float'], ['WithGPU', 'out', 'float']] code=[your code] RectF=[(-340.0, -200.0, 424.0, 557.0)]
 [source S0]
 []
 # see https://www.geeksforgeeks.org/running-python-script-on-gpu/

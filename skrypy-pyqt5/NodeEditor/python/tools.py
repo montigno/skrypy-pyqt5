@@ -11,14 +11,21 @@ class GetValueInBrackets():
         for i in range(len(args) - 1):
             tmp = ''
             try:
-                tmp = line[line.index(args[i] + '=') + len(args[i]) + 1:line.index(args[i + 1] + '=') - 1][1:-1]
+                start = line.index(args[i] + '=') + len(args[i]) + 1
+                end = line.index(args[i + 1] + '=') - 1
+                tmp = line[start:end][1:-1]
             except Exception:
                 try:
-                    tmp = line[line.index(args[i] + '=') + len(args[i]) + 1:line.index(args[i + 2] + '=') - 1][1:-1]
+                    start = line.index(args[i] + '=') + len(args[i]) + 1
+                    end = line.index(args[i + 2] + '=') - 1
+                    tmp = line[start:end][1:-1]
                 except Exception:
                     pass
             self.res.append(tmp)
-        self.res.append(line[line.index(args[-1] + '=') + len(args[-1]) + 1:][1:-1])
+        
+        key_index = line.index(args[-1] + '=') + len(args[-1]) + 1
+        value = line[key_index:][1:-1]
+        self.res.append(value)
 
     def getValues(self):
         return self.res
@@ -35,6 +42,21 @@ class SetValueInBrackets():
         return self.line
 
 
+# class ReorderList():
+#
+#     def __init__(self, listToOrder):
+#         listOrder = self.sorted_nicely(listToOrder)
+#         self.list = listOrder
+#
+#     def sorted_nicely(self, lst):
+#         convert = lambda text: int(text) if text.isdigit() else text
+#         alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
+#         return sorted(lst, key=alphanum_key)
+#
+#     def getNewList(self):
+#         return self.list
+
+
 class ReorderList():
 
     def __init__(self, listToOrder):
@@ -42,9 +64,16 @@ class ReorderList():
         self.list = listOrder
 
     def sorted_nicely(self, lst):
-        convert = lambda text: int(text) if text.isdigit() else text
-        alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
-        return sorted(lst, key=alphanum_key)
+        # convert = lambda text: int(text) if text.isdigit() else text
+        # alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
+        # return sorted(lst, key=alphanum_key)
+        return sorted(lst, key=self.alphanum_key)
+
+    def convert(self, text):
+        return int(text) if text.isdigit() else text
+
+    def alphanum_key(self, key):
+        return [self.convert(c) for c in re.split(r'([0-9]+)', key)]
 
     def getNewList(self):
         return self.list

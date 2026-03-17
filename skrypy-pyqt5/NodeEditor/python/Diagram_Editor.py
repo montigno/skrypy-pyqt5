@@ -682,14 +682,14 @@ class BlockCreate(QGraphicsRectItem):
             except Exception:
                 pass
 
-            if 'U' in self.unit:
-                b1 = BlockCreate(self.name, '', editor.getlib()[self.name][0], 150, 100, editor.getlib()[self.name][1][1], False, editor.getlib()[self.name][1])
-                b1.preview = True
-                textSource = 'Source : ' + editor.getlib()[self.name][0]
-                TreeLibrary().showModel(b1, textSource)
-            else:
-                bm = BlockCreate(self.name, '', None, 150, 100, editor.libSubMod[self.name][1], False, editor.libSubMod[self.name])
-                TreeLibrary().showModel(bm, '')
+            # if 'U' in self.unit:
+            #     b1 = BlockCreate(self.name, '', editor.getlib()[self.name][0], 150, 100, editor.getlib()[self.name][1][1], False, editor.getlib()[self.name][1])
+            #     b1.preview = True
+            #     textSource = 'Source : ' + editor.getlib()[self.name][0]
+            #     TreeLibrary().showModel(b1, textSource)
+            # else:
+            #     bm = BlockCreate(self.name, '', None, 150, 100, editor.libSubMod[self.name][1], False, editor.libSubMod[self.name])
+            #     TreeLibrary().showModel(bm, '')
 
         event.accept()
 #         if event.button() == 1 and event.modifiers() == Qt.ControlModifier:
@@ -705,13 +705,13 @@ class BlockCreate(QGraphicsRectItem):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Up:
-            self.setPos(self.x(), self.y() - 1)
+            self.setPos(self.x(), self.y() - ItemGrid.SPACEGRID.value)
         elif event.key() == Qt.Key_Down:
-            self.setPos(self.x(), self.y() + 1)
+            self.setPos(self.x(), self.y() + ItemGrid.SPACEGRID.value)
         elif event.key() == Qt.Key_Left:
-            self.setPos(self.x() - 1, self.y())
+            self.setPos(self.x() - ItemGrid.SPACEGRID.value, self.y())
         elif event.key() == Qt.Key_Right:
-            self.setPos(self.x() + 1, self.y())
+            self.setPos(self.x() + ItemGrid.SPACEGRID.value, self.y())
         elif event.key() == Qt.Key_Plus and '_dyn' in self.name:
             self.addinput()
         elif event.key() == Qt.Key_Minus and '_dyn' in self.name:
@@ -751,7 +751,7 @@ class BlockCreate(QGraphicsRectItem):
                      font-size:11pt; \
                      font-family:Calibri; \
                      font-weight:1000; \
-                     color:#000000; \" > " + self.name + ":</span><br>"
+                     color:#000000; \" > " + self.name + ": (" + editor.getlib()[self.name][0] + ")</span><br>"
         txt_html += "<span style=\" \
                      font-size:" + sizefont + "pt; \
                      font-family:Calibri; \
@@ -1135,13 +1135,13 @@ class Checkbox(QGraphicsRectItem):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Up:
-            self.setPos(self.x(), self.y() - 1)
-        if event.key() == Qt.Key_Down:
-            self.setPos(self.x(), self.y() + 1)
-        if event.key() == Qt.Key_Left:
-            self.setPos(self.x() - 1, self.y())
-        if event.key() == Qt.Key_Right:
-            self.setPos(self.x() + 1, self.y())
+            self.setPos(self.x(), self.y() - ItemGrid.SPACEGRID.value)
+        elif event.key() == Qt.Key_Down:
+            self.setPos(self.x(), self.y() + ItemGrid.SPACEGRID.value)
+        elif event.key() == Qt.Key_Left:
+            self.setPos(self.x() - ItemGrid.SPACEGRID.value, self.y())
+        elif event.key() == Qt.Key_Right:
+            self.setPos(self.x() + ItemGrid.SPACEGRID.value, self.y())
 #         return QGraphicsRectItem.keyPressEvent(self, *args, **kwargs)
 
     def mouseDoubleClickEvent(self, event):
@@ -1644,13 +1644,13 @@ class CommentsItem(QGraphicsRectItem):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Up:
-            self.setPos(self.x(), self.y() - 1)
-        if event.key() == Qt.Key_Down:
-            self.setPos(self.x(), self.y() + 1)
-        if event.key() == Qt.Key_Left:
-            self.setPos(self.x() - 1, self.y())
-        if event.key() == Qt.Key_Right:
-            self.setPos(self.x() + 1, self.y())
+            self.setPos(self.x(), self.y() - ItemGrid.SPACEGRID.value)
+        elif event.key() == Qt.Key_Down:
+            self.setPos(self.x(), self.y() + ItemGrid.SPACEGRID.value)
+        elif event.key() == Qt.Key_Left:
+            self.setPos(self.x() - ItemGrid.SPACEGRID.value, self.y())
+        elif event.key() == Qt.Key_Right:
+            self.setPos(self.x() + ItemGrid.SPACEGRID.value, self.y())
 
     def itemChange(self, *args, **kwargs):
         if args[0] == self.ItemPositionHasChanged:
@@ -1881,13 +1881,13 @@ class ConnectorItem(QGraphicsPolygonItem):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Up:
-            self.setPos(self.x(), self.y() - 1)
-        if event.key() == Qt.Key_Down:
-            self.setPos(self.x(), self.y() + 1)
-        if event.key() == Qt.Key_Left:
-            self.setPos(self.x() - 1, self.y())
-        if event.key() == Qt.Key_Right:
-            self.setPos(self.x() + 1, self.y())
+            self.setPos(self.x(), self.y() - ItemGrid.SPACEGRID.value)
+        elif event.key() == Qt.Key_Down:
+            self.setPos(self.x(), self.y() + ItemGrid.SPACEGRID.value)
+        elif event.key() == Qt.Key_Left:
+            self.setPos(self.x() - ItemGrid.SPACEGRID.value, self.y())
+        elif event.key() == Qt.Key_Right:
+            self.setPos(self.x() + ItemGrid.SPACEGRID.value, self.y())
 
     def contextMenuEvent(self, event):
         if not self.isSelected():
@@ -2369,13 +2369,13 @@ class Constants(QGraphicsRectItem):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Up:
-            self.setPos(self.x(), self.y() - 1)
-        if event.key() == Qt.Key_Down:
-            self.setPos(self.x(), self.y() + 1)
-        if event.key() == Qt.Key_Left:
-            self.setPos(self.x() - 1, self.y())
-        if event.key() == Qt.Key_Right:
-            self.setPos(self.x() + 1, self.y())
+            self.setPos(self.x(), self.y() - ItemGrid.SPACEGRID.value)
+        elif event.key() == Qt.Key_Down:
+            self.setPos(self.x(), self.y() + ItemGrid.SPACEGRID.value)
+        elif event.key() == Qt.Key_Left:
+            self.setPos(self.x() - ItemGrid.SPACEGRID.value, self.y())
+        elif event.key() == Qt.Key_Right:
+            self.setPos(self.x() + ItemGrid.SPACEGRID.value, self.y())
 #         if QKeySequence(event.key() + int(event.modifiers())) == QKeySequence("Ctrl+C"):
 #             editor.listItemStored.clear()
 #             editor.listBlSmStored.clear()
@@ -3512,6 +3512,7 @@ class DiagramView(QGraphicsView):
                 name = name[2:len(name) - 1]
                 self.addItemScript(self.currentScript, name)
                 self.scriptFinal = False
+                UpdateUndoRedo()
             else:
                 name = str(event.mimeData().data('mod_SubMod'))
                 name = name[2:len(name) - 1]
@@ -3524,6 +3525,7 @@ class DiagramView(QGraphicsView):
                 self.scene().addItem(self.b1)
                 editor.listItems[editor.currentTab][self.b1.unit] = self.b1
                 self.addItemLoop(self.b1.unit)
+                UpdateUndoRedo()
 
         elif event.mimeData().hasFormat('blocks_subModules'):
             name = str(event.mimeData().data('blocks_subModules'))
@@ -3534,6 +3536,7 @@ class DiagramView(QGraphicsView):
             self.scene().addItem(self.bm)
             editor.listItems[editor.currentTab][self.bm.unit] = self.bm
             self.addItemLoop(self.bm.unit)
+            UpdateUndoRedo()
 
         elif event.mimeData().hasFormat('structures_tools'):
             name = str(event.mimeData().data('structures_tools'))
@@ -3895,17 +3898,16 @@ class ForLoopItem(QGraphicsRectItem):
             self.deleteItem()
 #             UpdateUndoRedo()
         if keyEvent.key() == Qt.Key_Up:
-            self.setPos(self.x(), self.y() - 1)
-        if keyEvent.key() == Qt.Key_Down:
-            self.setPos(self.x(), self.y() + 1)
-        if keyEvent.key() == Qt.Key_Left:
-            self.setPos(self.x() - 1, self.y())
-        if keyEvent.key() == Qt.Key_Right:
-            self.setPos(self.x() + 1, self.y())
+            self.setPos(self.x(), self.y() - ItemGrid.SPACEGRID.value)
+        elif keyEvent.key() == Qt.Key_Down:
+            self.setPos(self.x(), self.y() + ItemGrid.SPACEGRID.value)
+        elif keyEvent.key() == Qt.Key_Left:
+            self.setPos(self.x() - ItemGrid.SPACEGRID.value, self.y())
+        elif keyEvent.key() == Qt.Key_Right:
+            self.setPos(self.x() + ItemGrid.SPACEGRID.value, self.y())
         return QGraphicsRectItem.keyPressEvent(self, keyEvent)
 
     def mousePressEvent(self, event):
-
         if self.isMod:
             if event.button() == 1:
                 if not self.isSelected():
@@ -4633,17 +4635,30 @@ class GraphicsWindow(QGraphicsWidget):
 
     def __init__(self, unit='', label='', isMod=True, parent=None):
         super(GraphicsWindow, self).__init__(parent)
-        
+
         self.unit = unit
         self.isMod = isMod
 
-        self.setZValue(1)
-        # self.setFlag(QGraphicsItem.ItemIsSelectable)
-        self.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable | QGraphicsItem.ItemSendsGeometryChanges)
+        self.setZValue(2)
+        if self.isMod:
+            self.setFlags(self.ItemIsSelectable | self.ItemIsMovable | self.ItemIsFocusable | self.ItemSendsGeometryChanges)
+            self.setAcceptHoverEvents(True)
         self.dragging = False
         self.resizing = False
 
         self.resize(420, 300)
+
+        if unit == 'newExplorer':
+            ExplorerExist = True
+            inc = 0
+            while ExplorerExist:
+                if 'W' + str(inc) in editor.listExplorers[editor.currentTab]:
+                    inc += 1
+                else:
+                    ExplorerExist = False
+            self.unit = 'W' + str(inc)
+        else:
+            self.unit = unit
 
         layout = QGraphicsLinearLayout(Qt.Vertical)
         self.setLayout(layout)
@@ -4686,6 +4701,7 @@ class GraphicsWindow(QGraphicsWidget):
             self.res.setFlag(self.res.ItemIsSelectable, True)
             self.res.wmin = self.wmin
             self.res.hmin = self.hmin
+            editor.listExplorers[editor.currentTab][self.unit] = label
         
     def itemChange(self, *args, **kwargs):
         if args[0] == self.ItemPositionHasChanged:
@@ -4708,6 +4724,24 @@ class GraphicsWindow(QGraphicsWidget):
         self.outputs[0].setPos(w, h / 2)
         
         return w, h
+    
+    def mousePressEvent(self, event):
+        if self.isMod:
+            if event.button() == 1:
+                if not self.isSelected():
+                    editor.diagramScene[editor.currentTab].clearSelection()
+                    self.setSelected(True)
+                else:
+                    for _, ItemsLoop in editor.listTools[editor.currentTab].items():
+                        if self.unit in ItemsLoop:
+                            editor.diagramScene[editor.currentTab].clearSelection()
+                            self.setSelected(True)
+                            break
+
+            if event.button() == 2:
+                self.setSelected(True)
+
+        event.accept()
 
     # # -------------------
     # # Gestion des événements souris
@@ -4747,13 +4781,13 @@ class GraphicsWindow(QGraphicsWidget):
     # -------------------
     # Dessin : fenêtre + poignée
     # -------------------
-    def paint(self, painter, option, widget):
-        rect = self.boundingRect()
-
-        # fond
-        painter.setBrush(QColor(45, 45, 45))
-        painter.setPen(QPen(QColor(20, 20, 20), 2))
-        painter.drawRect(rect)
+    # def paint(self, painter, option, widget):
+    #     rect = self.boundingRect()
+    #
+    #     # fond
+    #     painter.setBrush(QColor(45, 45, 45))
+    #     painter.setPen(QPen(QColor(20, 20, 20), 2))
+    #     painter.drawRect(rect)
 
         # # poignée resize
         # handle = QRectF(rect.width() - 10, rect.height() - 10, 10, 10)
@@ -4990,15 +5024,14 @@ class Imagebox(QGraphicsRectItem):
         return QGraphicsRectItem.hoverEnterEvent(self, event)
 
     def itemChange(self, *args, **kwargs):
-        if self.isMod:
-            if args[0] == self.ItemPositionHasChanged:
-                xV = round(args[1].x() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
-                yV = round(args[1].y() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
-                self.setPos(QPointF(xV, yV))
-            try:
-                return QGraphicsRectItem.itemChange(self, *args, **kwargs)
-            except Exception as err:
-                print(err)
+        if args[0] == self.ItemPositionHasChanged:
+            xV = round(args[1].x() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
+            yV = round(args[1].y() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
+            self.setPos(QPointF(xV, yV))
+        try:
+            return QGraphicsRectItem.itemChange(self, *args, **kwargs)
+        except Exception as err:
+            print(err)
 
     def contextMenuEvent(self, event):
         if self.isMod:
@@ -5015,13 +5048,13 @@ class Imagebox(QGraphicsRectItem):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Up:
-            self.setPos(self.x(), self.y() - 1)
-        if event.key() == Qt.Key_Down:
-            self.setPos(self.x(), self.y() + 1)
-        if event.key() == Qt.Key_Left:
-            self.setPos(self.x() - 1, self.y())
-        if event.key() == Qt.Key_Right:
-            self.setPos(self.x() + 1, self.y())
+            self.setPos(self.x(), self.y() - ItemGrid.SPACEGRID.value)
+        elif event.key() == Qt.Key_Down:
+            self.setPos(self.x(), self.y() + ItemGrid.SPACEGRID.value)
+        elif event.key() == Qt.Key_Left:
+            self.setPos(self.x() - ItemGrid.SPACEGRID.value, self.y())
+        elif event.key() == Qt.Key_Right:
+            self.setPos(self.x() + ItemGrid.SPACEGRID.value, self.y())
 
     def changeLabel(self):
         listLabCts = []
@@ -5180,13 +5213,13 @@ class LabelGroup(QGraphicsTextItem):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Up:
-            self.setPos(self.x(), self.y() - 2)
-        if event.key() == Qt.Key_Down:
-            self.setPos(self.x(), self.y() + 2)
-        if event.key() == Qt.Key_Left:
-            self.setPos(self.x() - 2, self.y())
-        if event.key() == Qt.Key_Right:
-            self.setPos(self.x() + 2, self.y())
+            self.setPos(self.x(), self.y() - ItemGrid.SPACEGRID.value)
+        elif event.key() == Qt.Key_Down:
+            self.setPos(self.x(), self.y() + ItemGrid.SPACEGRID.value)
+        elif event.key() == Qt.Key_Left:
+            self.setPos(self.x() - ItemGrid.SPACEGRID.value, self.y())
+        elif event.key() == Qt.Key_Right:
+            self.setPos(self.x() + ItemGrid.SPACEGRID.value, self.y())
 
 
 class LibMod(QStandardItemModel):
@@ -6268,7 +6301,7 @@ class Menu(QMenuBar):
             text = ("listNodes :\n{}\n\nlistBlocks :\n{}\n\nlistSubMod :\n{}\n\n"
                     "listConstants :\n{}\n\nlistTools :\n{}\n\nlibTools :\n{}\n\n"
                     "listImgBox :\n{}\n\nlistProbes :\n{}\n\nlistConnects :\n{}\n\n"
-                    "listStopExec : \n{}\n\nlistIfShowState :\n{}\n\n"
+                    "listStopExec : \n{}\n\nlistIfShowState :\n{}\n\nlistExplorers :\n{}\n\n"
                     "listItems :\n{}\n\n"
                     .format('\n'.join(f'{key} : {value}' for key, value in editor.listNodes[editor.currentTab].items()),
                             '\n'.join(f'{key} : {value}' for key, value in editor.listBlocks[editor.currentTab].items()),
@@ -6281,6 +6314,7 @@ class Menu(QMenuBar):
                             '\n'.join(f'{key} : {value}' for key, value in editor.listConnects[editor.currentTab].items()),
                             '\n'.join(f'{key} : {value}' for key, value in editor.listStopExec[editor.currentTab].items()),
                             '\n'.join(f'{key} : {value}' for key, value in editor.listIfShowedState[editor.currentTab].items()),
+                            '\n'.join(f'{key} : {value}' for key, value in editor.listExplorers[editor.currentTab].items()),
                             '\n'.join(f'{key} : {value}' for key, value in editor.listItems[editor.currentTab].items())
                             ))
 
@@ -6493,7 +6527,7 @@ class NodeEdit(QWidget):
         self.listItems, self.listBlocks, self.listNodes, self.listSubMod = [], [], [], []
         self.listImgBox, self.listProbes, self.listCategorySubMod = [], [], []
         self.listConnects, self.listTools, self.listConstants, self.libTools = [], [], [], []
-        self.listStopExec, self.listIfShowedState = [], []
+        self.listStopExec, self.listExplorers, self.listIfShowedState = [], [], []
         self.libSubMod, libBlocks, self.listCategory = {}, {}, []
         self.undoredoTyping, self.pointTyping = [], []
         self.diagramScene, self.diagramView, self.pathDiagram = [], [], []
@@ -6724,6 +6758,7 @@ class NodeEdit(QWidget):
         self.listItems.append({})
         self.listBlocks.append({})
         self.listNodes.append({})
+        self.listExplorers.append({})
         self.listConnects.append({})
         self.listSubMod.append({})
         self.listTools.append({})
@@ -6967,6 +7002,7 @@ class NodeEdit(QWidget):
                 del self.listItems[currentIndex]
                 del self.listBlocks[currentIndex]
                 del self.listNodes[currentIndex]
+                del self.listExplorers[currentIndex]
                 del self.listSubMod[currentIndex]
                 del self.listConnects[currentIndex]
                 del self.listConstants[currentIndex]
@@ -8362,13 +8398,13 @@ class Probes(QGraphicsPolygonItem):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Up:
-            self.setPos(self.x(), self.y() - 1)
-        if event.key() == Qt.Key_Down:
-            self.setPos(self.x(), self.y() + 1)
-        if event.key() == Qt.Key_Left:
-            self.setPos(self.x() - 1, self.y())
-        if event.key() == Qt.Key_Right:
-            self.setPos(self.x() + 1, self.y())
+            self.setPos(self.x(), self.y() - ItemGrid.SPACEGRID.value)
+        elif event.key() == Qt.Key_Down:
+            self.setPos(self.x(), self.y() + ItemGrid.SPACEGRID.value)
+        elif event.key() == Qt.Key_Left:
+            self.setPos(self.x() - ItemGrid.SPACEGRID.value, self.y())
+        elif event.key() == Qt.Key_Right:
+            self.setPos(self.x() + ItemGrid.SPACEGRID.value, self.y())
 
     def deleteItem(self):
         for elem in editor.diagramView[editor.currentTab].items():
@@ -8837,13 +8873,13 @@ class ScriptItem(QGraphicsRectItem):
 
     def keyPressEvent(self, keyEvent):
         if keyEvent.key() == Qt.Key_Up:
-            self.setPos(self.x(), self.y() - 1)
-        if keyEvent.key() == Qt.Key_Down:
-            self.setPos(self.x(), self.y() + 1)
-        if keyEvent.key() == Qt.Key_Left:
-            self.setPos(self.x() - 1, self.y())
-        if keyEvent.key() == Qt.Key_Right:
-            self.setPos(self.x() + 1, self.y())
+            self.setPos(self.x(), self.y() - ItemGrid.SPACEGRID.value)
+        elif keyEvent.key() == Qt.Key_Down:
+            self.setPos(self.x(), self.y() + ItemGrid.SPACEGRID.value)
+        elif keyEvent.key() == Qt.Key_Left:
+            self.setPos(self.x() - ItemGrid.SPACEGRID.value, self.y())
+        elif keyEvent.key() == Qt.Key_Right:
+            self.setPos(self.x() + ItemGrid.SPACEGRID.value, self.y())
         return QGraphicsRectItem.keyPressEvent(self, keyEvent)
 
     def mousePressEvent(self, event):
@@ -10044,6 +10080,8 @@ class TreeLibrary(QTreeView):
                         bc = ConnectorItem('', 'C0', 70, 26, 'out', 'unkn', '', False)
                 elif 'Stop' in name:
                     bc = StopExecution('', False)
+                elif 'File_explorer' in name:
+                    bc = GraphicsWindow('', '', False)
 
                 self.showModel(bc, name)
 

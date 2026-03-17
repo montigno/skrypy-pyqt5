@@ -27,7 +27,7 @@ class define_inputs_outputs(QDialog):
         for prts in ports:
             self.listPorts.append(prts.name)
             if prts.name == defaultName:
-                currentFormat = prts.form
+                currentFormat = prts.format
 
         dim, form = '', 'int'
         if '_' in currentFormat:

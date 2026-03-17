@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
-"""This is an example of a plugin with the minimal code needed for proper functioning.
+"""
+This is an example of a plugin with the minimal code needed
+for proper functioning.
 
 The plugin file and class names must be the same.
-The class name can start with the uppercase.
-The class must contain the argument 'diagram' which contains the structure of the pipeline.
+The class name can start with an uppercase letter.
+The class must contain the argument 'diagram', which contains
+the structure of the pipeline.
 
-This plugin only displays the content of the argument 'diagram' in the terminal.
+This plugin only displays the content of the argument
+'diagram' in the terminal.
 """
 
 

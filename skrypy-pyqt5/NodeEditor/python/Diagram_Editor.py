@@ -13,7 +13,8 @@ Last modification on 15 mars 2026
 '''
 
 from PyQt5.QtCore import QByteArray, QStringListModel, QLineF, QPointF, \
-    QMimeData, QRectF, pyqtSlot, QRunnable, QTimer, pyqtSignal, QDir
+    QMimeData, QRectF, pyqtSlot, QRunnable, QTimer, pyqtSignal, QDir,\
+    QItemSelectionModel, QModelIndex, QPoint
 from PyQt5.QtGui import QStandardItemModel, QPixmap, QPainterPath, QCursor, \
     QBrush, QStandardItem, QTransform, QColor, QPen, \
     QPolygonF, QLinearGradient, QKeySequence, QIcon, QFontMetrics, \
@@ -27,7 +28,8 @@ from PyQt5.QtWidgets import QMenuBar, QGraphicsScene, QDialog, \
     QGridLayout, QCheckBox, QLineEdit, QCompleter, QToolBar, \
     QProgressBar, QApplication, QScrollArea, QProgressDialog, \
     QMdiSubWindow, QTabWidget, QMainWindow, QTextEdit, QGraphicsDropShadowEffect,\
-    QGraphicsWidget, QGraphicsLinearLayout, QFileSystemModel
+    QGraphicsWidget, QGraphicsLinearLayout, QFileSystemModel, QStyle,\
+    QAbstractItemView, QHeaderView
 from PyQt5.Qt import Qt, QFont, QComboBox, QSizePolicy, QFileDialog, QPainter, \
     QGraphicsView, QPalette, QGraphicsItem, QImage, QMessageBox, QMdiArea
 
@@ -1706,6 +1708,7 @@ class Connection:
         if self.toPort:
             self.pos2 = toPort.scenePos()
             self.toPort.posCallbacks.append(self.setEndPos)
+            # .mapToScene(event.pos())
 
     def setEndPos(self, endpos):
         self.pos2 = endpos
@@ -3017,7 +3020,7 @@ class DiagramScene(QGraphicsScene):
                             pass
         for el in self.selectedItems():
             if type(el) is not CommentsItem:
-                if type(el) in [BlockCreate, Constants, Clusters,
+                if type(el) in [BlockCreate, Constants, Clusters, GraphicsWindow,
                                 ScriptItem, Probes, ForLoopItem,
                                 Checkbox, Imagebox, ConnectorItem, StopExecution]:
                     self.topCorner[0] = min(el.scenePos().x(), self.topCorner[0])
@@ -3044,6 +3047,10 @@ class DiagramScene(QGraphicsScene):
                                                           [el.unit])
                     elif 'E' in el.unit:
                         editor.listBlSmStored[el.unit] = (editor.listStopExec
+                                                          [editor.currentTab]
+                                                          [el.unit])
+                    elif 'W' in el.unit:
+                        editor.listBlSmStored[el.unit] = (editor.listExplorers
                                                           [editor.currentTab]
                                                           [el.unit])
 
@@ -3216,6 +3223,8 @@ class DiagramScene(QGraphicsScene):
             elif 'E' in nameUnit:
                 edit.loadStopExec(changeUnit[nameUnit], posRe)
                 editor.listStopExec[editor.currentTab][changeUnit[nameUnit]] = ()
+            elif 'W' in nameUnit:
+                edit.loadFileExplorer(changeUnit[nameUnit], list_Bl_Sm[nameUnit][0], list_Bl_Sm[nameUnit][1], posRe)
             # else:
             #     edit.loadComments(posRe, ins.label.toPlainText())
 
@@ -3232,7 +3241,7 @@ class DiagramScene(QGraphicsScene):
                                                                 c + ':' + d)
                 tmp = editor.listItems[editor.currentTab][a]
 #                 tmp.setSelected(1)
-                if 'A' in a:
+                if 'A' in a or 'W' in a:
                     fromPort = tmp.outputs[0]
                 elif 'C' in a:
                     fromPort = tmp.outputs
@@ -3604,7 +3613,7 @@ class DiagramView(QGraphicsView):
             elif "Stop_execution" in name:
                 self.a1 = StopExecution('newStopExec', True)
             elif "File_explorer" in name:
-                self.a1 = GraphicsWindow('newExplorer', 'File Explorer', True)
+                self.a1 = GraphicsWindow('newExplorer', 'File Explorer', [], 400, 300, True)
 
         if self.a1:
             self.a1.setPos(self.mapToScene(event.pos()))
@@ -3723,6 +3732,14 @@ class DiagramView(QGraphicsView):
         self.scene().addItem(b11)
         editor.listItems[editor.currentTab][b11.unit] = b11
         self.ball = b11
+        
+    def loadFileExplorer(self, unit, label, value, pos):
+        b12 = GraphicsWindow(unit, label, value, pos[2], pos[3], True)
+        b12.widget.restore_tree_state(value)
+        b12.setPos(pos[0], pos[1])
+        self.scene().addItem(b12)
+        editor.listItems[editor.currentTab][b12.unit] = b12
+        self.ball = b12
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MidButton:
@@ -4610,20 +4627,130 @@ class ForLoopItem(QGraphicsRectItem):
 
 
 class FileExplorer(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, unit, state, parent=None):
         super(FileExplorer, self).__init__(parent)
-        
+
+        self.unit = unit
+        self.state = state
+
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
 
-        model = QFileSystemModel()
-        model.setRootPath(QDir.homePath())
+        self.model = QFileSystemModel()
+        self.model.setRootPath(QDir.homePath())
 
-        tree = QTreeView()
-        tree.setModel(model)
-        tree.setRootIndex(model.index(QDir.homePath()))
+        self.tree = QTreeView()
+        self.tree.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.tree.setModel(self.model)
+        self.tree.setRootIndex(self.model.index(QDir.homePath()))
+        # self.tree.setColumnWidth(0, 300)
+        header = self.tree.header()
+        header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
+        # for col in range(2, self.model.columnCount()):
+        #     self.tree.hideColumn(col)
+        # if state:
+        #     QTimer.singleShot(50, lambda: self.restore_tree_state(state))
+        #     # self.restore_tree_state(state)
+        
+        self.tree.selectionModel().selectionChanged.connect(self.on_selection_changed)
 
-        layout.addWidget(tree)
+        layout.addWidget(self.tree)
+
+    def on_selection_changed(self, current, previous):
+        label = editor.listExplorers[editor.currentTab][self.unit][0]
+        del editor.listExplorers[editor.currentTab][self.unit]
+        editor.listExplorers[editor.currentTab][self.unit] = (label, self.save_tree_state())
+        # print(self.get_selected_files())
+
+    def get_selected_files(self):
+        indexes = self.tree.selectionModel().selectedIndexes()
+        return list({
+            self.model.filePath(index)
+            for index in indexes
+            if index.column() == 0
+        })
+
+    def select_files(self, paths):
+        QTimer.singleShot(50, lambda: self._select_files_impl(paths))
+    
+    def _select_files_impl(self, paths):
+        selection_model = self.tree.selectionModel()
+        selection_model.clearSelection()
+        # paths = eval(paths)
+        # print("paths=", paths)
+        for path in paths:
+            index = self.model.index(path)
+            if not index.isValid():
+                continue
+
+            parent = index.parent()
+            while parent.isValid():
+                self.tree.expand(parent)
+                parent = parent.parent()
+
+            selection_model.select(
+                index,
+                QItemSelectionModel.Select | QItemSelectionModel.Rows
+            )
+
+        # focus on the last
+        # if paths:
+        #     last_index = self.model.index(paths[-1])
+        #     if last_index.isValid():
+        #         self.tree.setCurrentIndex(last_index)
+        #         self.tree.scrollTo(last_index)
+
+    def save_tree_state(self):
+        header = self.tree.header()
+        state = {
+            "header_widths": [header.sectionSize(i) for i in range(header.count())],
+            "sort_column": header.sortIndicatorSection(),
+            "sort_order": int(header.sortIndicatorOrder()),
+            "expanded_paths": [],
+            "selected_paths": list(self.get_selected_files()),
+            "scroll_vertical": self.tree.verticalScrollBar().value(),
+            "scroll_horizontal": self.tree.horizontalScrollBar().value()
+        }
+        
+     
+        def recurse(index):
+            for row in range(self.model.rowCount(index)):
+                child = self.model.index(row, 0, index)
+                if self.tree.isExpanded(child):
+                    state["expanded_paths"].append(self.model.filePath(child))
+                    recurse(child)
+        recurse(QModelIndex())
+
+        top_index = self.tree.indexAt(QPoint(0, 0))
+        state["top_visible_path"] = self.model.filePath(top_index) if top_index.isValid() else None
+
+        self.state = state
+
+    def restore_tree_state(self, state):
+   
+        header = self.tree.header()
+        for i, w in enumerate(state.get("header_widths", [])):
+            header.resizeSection(i, int(w))
+    
+        sort_col = state.get("sort_column", 0)
+        sort_order = Qt.SortOrder(state.get("sort_order", int(Qt.AscendingOrder)))
+        self.tree.sortByColumn(sort_col, 0)
+    
+        for path in state.get("expanded_paths", []):
+            idx = self.model.index(path)
+            if idx.isValid():
+                self.tree.expand(idx)
+
+        selected_paths = state.get("selected_paths", [])
+        self.select_files(state.get("selected_paths", []))
+
+        QTimer.singleShot(50, lambda: self.restore_scrollbars(state))
+    #
+    def restore_scrollbars(self, state):
+        if "scroll_vertical" in state:
+            self.tree.verticalScrollBar().setValue(state["scroll_vertical"])
+        if "scroll_horizontal" in state:
+            self.tree.horizontalScrollBar().setValue(state["scroll_horizontal"])
 
 
 class getPathWork():
@@ -4633,11 +4760,13 @@ class getPathWork():
 
 class GraphicsWindow(QGraphicsWidget):
 
-    def __init__(self, unit='', label='', isMod=True, parent=None):
+    def __init__(self, unit='', label='', stateExplorer={}, w=400, h=300, isMod=True, parent=None):
         super(GraphicsWindow, self).__init__(parent)
 
         self.unit = unit
         self.isMod = isMod
+        self.label = label
+        self.format = "list_path"
 
         self.setZValue(2)
         if self.isMod:
@@ -4645,6 +4774,9 @@ class GraphicsWindow(QGraphicsWidget):
             self.setAcceptHoverEvents(True)
         self.dragging = False
         self.resizing = False
+        self.moved = False
+        
+        self.setCursor(QCursor(ItemMouse.HANDLETOPITEM.value))
 
         self.resize(420, 300)
 
@@ -4672,9 +4804,9 @@ class GraphicsWindow(QGraphicsWidget):
         title_proxy = QGraphicsProxyWidget()
         title_proxy.setWidget(self.title_bar)
 
-        widget = FileExplorer()
+        self.widget = FileExplorer(self.unit, stateExplorer)
         self.content_proxy = QGraphicsProxyWidget()
-        self.content_proxy.setWidget(widget)
+        self.content_proxy.setWidget(self.widget)
 
         layout.addItem(title_proxy)
         layout.addItem(self.content_proxy)
@@ -4684,15 +4816,16 @@ class GraphicsWindow(QGraphicsWidget):
         
         
         self.wmin, self.hmin = 60, 60
-        self.w = self.boundingRect().size().width() + 6
-        self.h = self.boundingRect().size().height() + 6
+        # self.w = self.boundingRect().size().width() + 6
+        # self.h = self.boundingRect().size().height() + 6
+        self.w, self.h = w, h
         
         self.inputs, self.outputs = [], []
         self.outputs.append(Port('', 'out', 'list_path', self.unit, True, self.isMod, 80, -12, self))
         self.outputs[0].setPos(self.w + 2, self.h / 2)
-        
+
         x, y = self.newSize(self.w, self.h)
-        
+
         if self.isMod:
             self.res = Slide(self)
             self.res.setPos(x, y)
@@ -4701,8 +4834,11 @@ class GraphicsWindow(QGraphicsWidget):
             self.res.setFlag(self.res.ItemIsSelectable, True)
             self.res.wmin = self.wmin
             self.res.hmin = self.hmin
-            editor.listExplorers[editor.currentTab][self.unit] = label
-        
+            editor.listExplorers[editor.currentTab][self.unit] = (label, stateExplorer)
+            # stateExplorer = self.widget.save_tree_state()
+            if stateExplorer:
+                self.widget.restore_tree_state(stateExplorer)
+
     def itemChange(self, *args, **kwargs):
         if args[0] == self.ItemPositionHasChanged:
             xV = round(args[1].x() / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
@@ -4724,6 +4860,18 @@ class GraphicsWindow(QGraphicsWidget):
         self.outputs[0].setPos(w, h / 2)
         
         return w, h
+    
+    
+    def mouseMoveEvent(self, event):
+        self.moved = True
+        event.accept()
+        return QGraphicsItem.mouseMoveEvent(self, event)
+
+    def mouseReleaseEvent(self, event):
+        if self.moved:
+            UpdateUndoRedo()
+            self.moved = False
+        return QGraphicsItem.mouseReleaseEvent(self, event)
     
     def mousePressEvent(self, event):
         if self.isMod:
@@ -4781,19 +4929,40 @@ class GraphicsWindow(QGraphicsWidget):
     # -------------------
     # Dessin : fenêtre + poignée
     # -------------------
-    # def paint(self, painter, option, widget):
-    #     rect = self.boundingRect()
-    #
-    #     # fond
-    #     painter.setBrush(QColor(45, 45, 45))
-    #     painter.setPen(QPen(QColor(20, 20, 20), 2))
-    #     painter.drawRect(rect)
+    def paint(self, painter, option, widget):
+        rect = self.boundingRect()
+    
+        # fond
+        painter.setBrush(QColor(45, 45, 45))
+        painter.setPen(QPen(QColor(20, 20, 20), 2))
+        painter.drawRect(rect)
+        painter.fillRect(self.boundingRect(), Qt.lightGray)
+
+        
+        if option.state & QStyle.State_Selected:
+            pen = QPen(Qt.black, 2, Qt.DashLine)
+            painter.setPen(pen)
+            painter.setBrush(Qt.NoBrush)
+            painter.drawRect(self.boundingRect())
 
         # # poignée resize
         # handle = QRectF(rect.width() - 10, rect.height() - 10, 10, 10)
         # painter.setBrush(QColor(180, 180, 180))
         # painter.drawRect(handle)
 
+    def deleteItem(self):
+        for elem in editor.diagramView[editor.currentTab].items():
+            if type(elem) is LinkItem:
+                if editor.listNodes[editor.currentTab][elem.name].find(self.unit + ':') != -1:
+                    BlockCreate.deletelink(self, elem, self.unit)
+        editor.diagramScene[editor.currentTab].removeItem(self)
+        del editor.listExplorers[editor.currentTab][self.unit]
+        del editor.listItems[editor.currentTab][self.unit]
+        try:
+            del editor.listImgBox[editor.currentTab][self.unit]
+        except Exception:
+            pass
+        editor.deleteItemsLoop(self)
 
 class Imagebox(QGraphicsRectItem):
 
@@ -5462,6 +5631,7 @@ class LoadDiagram:
         listNd = {}
         listCn, listBl, listFo, listIf = {}, {}, {}, {}
         listSm, listCt, listSc, listPr = {}, {}, {}, {}
+        listEx = {}
         listCode = {}
         insource = False
         tmpKeyScript = ''
@@ -5580,6 +5750,13 @@ class LoadDiagram:
                 unit, pos = GetValueInBrackets(line, args).getValues()
                 pos = eval(pos)
                 edit.loadStopExec(unit, pos)
+                
+            elif line[0:12] == "fileExplorer" and 'RectF' in line:
+                args = ["fileExplorer", "label", "value", "RectF"]
+                unit, label, value, pos = GetValueInBrackets(line, args).getValues()
+                pos = eval(pos)
+                edit.loadFileExplorer(unit, label, eval(value), pos)
+                listEx[unit] = edit.returnBlockSystem()
 
         for lk, lv in listNd.items():
             unitStart = lv[0]
@@ -5619,6 +5796,8 @@ class LoadDiagram:
                         break
             elif 'A' in unitStart:
                 fromPort = listCt[unitStart].outputs[0]
+            elif 'W' in unitStart:
+                fromPort = listEx[unitStart].outputs[0]
 
             if 'U' in unitEnd:
                 for lout in listBl[unitEnd].inputs:
@@ -5959,6 +6138,7 @@ class Menu(QMenuBar):
             if not connectorPresent:
                 self.btnPressed(QAction('Refresh Diagram'))
                 txt = SaveDiagram()
+                
 #                 blk = BlocksProjects(txt.toPlainText())
                 if ('.dgr' not in extension or
                         tmpActText == 'Save Diagram As...'):
@@ -6561,7 +6741,7 @@ class NodeEdit(QWidget):
                                                 'Constant_combobox', 'Constant_boolean', 'Constant_path',
                                                 'Constant_tuple'),
                                   'Control': ('Stop_execution',),
-                                  # 'Explorer': ('File_explorer',),
+                                  'Explorer': ('File_explorer',),
                                   'Loop': ('For_sequential', 'For_multiprocessing', 'For_multithreading'),
                                   'Probes': ('Value', 'Type', 'Length'),
                                   'Script': ('Script_python', 'Macro_ImageJ'),
@@ -7343,6 +7523,7 @@ class NodeEdit(QWidget):
             linkcurrent = ''
 
             for item in items:
+                # print("info", item.unit, item.format, self.fromPort.unit, self.fromPort.typeio, self.fromPort.format)
                 if type(item) is LinkItem:
                     if item.name == nt:
                         linkcurrent = item
@@ -7427,6 +7608,8 @@ class NodeEdit(QWidget):
                 b = tmpname
                 c = self.fromPort.unit
                 d = self.fromPort.name
+                
+            # print("a,b,c,d = ", a, b, c, d)
 
             if self.startConnection.pos1 == self.startConnection.pos2:
                 self.startConnection.delete()
@@ -7438,10 +7621,10 @@ class NodeEdit(QWidget):
                 self.startConnection.delete()
                 self.editText('Connection impossible : unknow plug to unknow plug',
                               10, 600, 'ff0000', False, True)
-            elif (tmpformat == 'unkn' and 'A' in self.fromPort.unit) or (
-                    self.fromPort.format == 'unkn' and 'A' in tmpunit):
+            elif (tmpformat == 'unkn' and ('A' in self.fromPort.unit or 'W' in self.fromPort.unit)) or (
+                    self.fromPort.format == 'unkn' and ('A' in tmpunit or 'W' in tmpunit)):
                 self.startConnection.delete()
-                self.editText('Connection impossible : constant to connector',
+                self.editText('Connection impossible : constant to connector or probe',
                               10, 600, 'ff0000', False, True)
             elif ('U' in tmpunit or 'M' in tmpunit) and tmpunit == self.fromPort.unit:
                 self.startConnection.delete()
@@ -7680,6 +7863,9 @@ class NodeEdit(QWidget):
                                         del self.listConstants[self.currentTab][gh.unit]
                                         self.listConstants[self.currentTab][gh.unit] = (gh.elemProxy.txt, gh.elemProxy.value, gh.label)
 
+                    if 'W' in a:
+                        print("explorer")
+                    
                     #################################################################################
 
                     if changeColorLink:
@@ -7706,7 +7892,7 @@ class NodeEdit(QWidget):
 
                     self.editText("Connection ok", 10, 600, '003300', False, True)
                     UpdateUndoRedo()
-                    Menu().btnPressed(QAction('Refresh Diagram'))
+                    # Menu().btnPressed(QAction('Refresh Diagram'))
 
             self.startConnection = None
 
@@ -7844,7 +8030,7 @@ class Port(QGraphicsRectItem):
                 ac.triggered.connect(self.deletePort)
                 cf = menu.addAction('Change format')
                 cf.triggered.connect(self.changeFormatScript)
-            if self.typeio == 'out' and 'A' not in self.unit:
+            if self.typeio == 'out' and 'A' not in self.unit and 'C' not in self.unit  and 'W' not in self.unit:
                 cp = menu.addAction('add Value Probe')
                 cp.triggered.connect(self.addValueP)
                 cp = menu.addAction('add Type Probe')
@@ -7854,7 +8040,8 @@ class Port(QGraphicsRectItem):
                 menu.addSeparator()
                 cp = menu.addAction('add Print block')
                 cp.triggered.connect(self.addPrint)
-            elif (self.format not in ['list_bool', 'array_bool', 'list_path', 'array_path', 'dict'] and 'A' not in self.unit):
+            elif (self.format not in ['list_bool', 'array_bool', 'list_path', 'array_path', 'dict'] and 'A' not in self.unit
+                  and 'P' not in self.unit and 'C' not in self.unit and 'W' not in self.unit):
                 # 'tuple' not in self.format and
                 yet = False
                 for _, val in editor.listNodes[editor.currentTab].items():
@@ -8596,7 +8783,7 @@ class SaveDiagram(QTextEdit):
 
             args, vals = [], []
 
-            if type(item) is BlockCreate:
+            if isinstance(item, BlockCreate):
                 if item.category:
                     rect = item.rect()
                     args = ["block", "category", "class", "valInputs", "RectF"]
@@ -8610,7 +8797,7 @@ class SaveDiagram(QTextEdit):
                             str(editor.listSubMod[editor.currentTab][item.unit][1]),
                             str((coord.x(), coord.y(), rect.width(), rect.height()))]
 
-            elif type(item) is LinkItem:
+            elif isinstance(item, LinkItem):
                 try:
                     self.append(
                         f"link=[{item.name}] node=[{editor.listNodes[editor.currentTab][item.name]}]"
@@ -8618,7 +8805,7 @@ class SaveDiagram(QTextEdit):
                 except Exception:
                     pass
 
-            elif type(item) is ConnectorItem:
+            elif isinstance(item, ConnectorItem):
                 if 'in' in item.inout:
                     args = ["connt", "name", "type", "format", "valOut", "RectF"]
                     vals = [str(item.connct), str(editor.listConnects[editor.currentTab][item.connct][1]),
@@ -8631,19 +8818,19 @@ class SaveDiagram(QTextEdit):
                             str(item.inout), str(editor.listConnects[editor.currentTab][item.connct][2]),
                             str((coord.x(), coord.y(), 70, 24))]
 
-            elif type(item) is Probes:
+            elif isinstance(item, Probes):
                 args = ["probe", "label", "format", "RectF"]
                 vals = [str(item.unit), str(editor.listProbes[editor.currentTab][item.unit][1]),
                         str(editor.listProbes[editor.currentTab][item.unit][0]),
                         str((coord.x(), coord.y(), 70, 24))]
 
-            elif type(item) is CommentsItem:
+            elif isinstance(item, CommentsItem):
                 rect = item.rect()
                 comm = item.label.toPlainText()
                 args = ["comments", "RectF", "text"]
                 vals = ["", str((coord.x(), coord.y(), rect.width(), rect.height())), repr(comm)]
 
-            elif type(item) is ForLoopItem:
+            elif isinstance(item, ForLoopItem):
                 rect = item.rect()
                 if 'F' in item.unit:
                     try:
@@ -8664,28 +8851,28 @@ class SaveDiagram(QTextEdit):
                     except Exception:
                         pass
 
-            elif type(item) in [Constants, Checkbox, Imagebox]:
+            elif isinstance(item, (Constants, Checkbox, Imagebox)):
                 rect = item.rect()
-                if type(item.elemProxy) is Constants_Combo:
+                if isinstance(item.elemProxy, Constants_Combo):
                     value = repr(item.elemProxy.currentText())
-                elif type(item.elemProxy) in [Constants_text]:
+                elif isinstance(item.elemProxy, Constants_text):
                     if item.format == "list_path":
                         value = item.elemProxy.toPlainText()
                         value = value.split('\n')
                     else:
                         value = repr(item.elemProxy.toPlainText())
-                elif type(item.elemProxy) in [Constants_tuple]:
+                elif isinstance(item.elemProxy, Constants_tuple):
                     try:
                         value = eval(item.elemProxy.toPlainText())
                     except Exception:
                         value = item.elemProxy.toPlainText()
-                elif type(item.elemProxy) in [Constants_float, Constants_int]:
+                elif isinstance(item.elemProxy, (Constants_float, Constants_int)):
                     value = (item.elemProxy.minimum(),
                              item.elemProxy.value(),
                              item.elemProxy.maximum())
                 elif type(item.elemProxy) is QWidget:
                     value = item.listItemsBox
-                elif type(item.elemProxy) is QLabel:
+                elif isinstance(item.elemProxy, QLabel):
                     value = item.pathImage
                 args = ["constant", "value", "format", "label", "RectF"]
                 if item.form == bool:
@@ -8697,7 +8884,7 @@ class SaveDiagram(QTextEdit):
                     newvalue = str(value)
                 vals = [str(item.unit), newvalue, str(item.form), str(item.label),
                         str((coord.x(), coord.y(), rect.width(), rect.height()))]
-            elif type(item) is Clusters:
+            elif isinstance(item, Clusters):
                 rect = item.rect()
                 if item.format == 'str':
                     value = repr(item.val)
@@ -8706,7 +8893,7 @@ class SaveDiagram(QTextEdit):
                 args = ["cluster", "value", "format", "label", "RectF"]
                 vals = [str(item.unit), str(value), str(item.format), str(item.label),
                         str((coord.x(), coord.y(), rect.width(), rect.height()))]
-            elif type(item) is ScriptItem:
+            elif isinstance(item, ScriptItem):
                 listCodeScript[item.unit] = item.elemProxy.toPlainText()
                 rect = item.rect()
                 self.append("".join([
@@ -8717,10 +8904,20 @@ class SaveDiagram(QTextEdit):
                     " code=[your code]",
                     f" RectF=[{(coord.x(), coord.y(), rect.width(), rect.height())}]",
                 ]))
-            elif type(item) is StopExecution:
+            elif isinstance(item, StopExecution):
                 # rect = item.rect()
                 args = ["stopexec", "RectF"]
                 vals = [item.unit, str((coord.x(), coord.y(), 80, 80))]
+            elif isinstance(item, GraphicsWindow):
+                # val = editor.listExplorers[editor.currentTab][item.unit][1]
+                # print(val)
+                val = editor.listItems[editor.currentTab][item.unit].widget.state
+                # val = editor.listExplorers[editor.currentTab][item.unit][1]
+                rect = item.rect()
+                args = ["fileExplorer", "label", "value", "RectF"]
+                vals = [item.unit, str(item.label), val,
+                        str((coord.x(), coord.y(), rect.width(), rect.height()))]
+                # editor.listItems[editor.currentTab][item.unit].widget.save_tree_state_to_file()
 
             if args:
                 self.append(SetValueInBrackets(args, vals).getNewLine())
@@ -10081,7 +10278,7 @@ class TreeLibrary(QTreeView):
                 elif 'Stop' in name:
                     bc = StopExecution('', False)
                 elif 'File_explorer' in name:
-                    bc = GraphicsWindow('', '', False)
+                    bc = GraphicsWindow('', '', [], 400, 300, False)
 
                 self.showModel(bc, name)
 
@@ -10194,6 +10391,7 @@ class UpdateList:
         editor.listProbes[editor.currentTab].clear()
         editor.listTools[editor.currentTab].clear()
         editor.libTools[editor.currentTab].clear()
+        editor.listExplorers[editor.currentTab].clear()
         listUnit = []
 
         for line in txt.splitlines():
@@ -10277,6 +10475,10 @@ class UpdateList:
                 args = ["stopexec", "RectF"]
                 unit, _ = GetValueInBrackets(line, args).getValues()
                 editor.listStopExec[editor.currentTab][unit] = ()
+            elif line[0:12] == "fileExplorer":
+                args = ["fileExplorer", "label", "value", "RectF"]
+                unit, label, value, pos = GetValueInBrackets(line, args).getValues()
+                editor.listExplorers[editor.currentTab][unit] = (label, value)
 
             if unit:
                 listUnit.append(unit)

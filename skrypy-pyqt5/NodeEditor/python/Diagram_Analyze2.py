@@ -129,6 +129,14 @@ class analyze2:
                 pos = eval(pos)
                 listIt.append(unit)
 
+            elif line[0:12] == 'fileExplorer' and 'RectF' in line:
+                args = ["fileExplorer", "label", "value", "RectF"]
+                unit, label, value, pos = GetValueInBrackets(line, args).getValues()
+                vout = eval(value)
+                vout = vout['selected_paths']
+                fort = 'list_path'
+                self.listCt[unit] = (vout, fort)
+
         self.assign_variables()
         connects = self.connection_inputs_ouputs(ConnectIn, ConnectOut)
         self.interlinks, self.interlinks_node = self.get_inter_link()
@@ -150,7 +158,7 @@ class analyze2:
         for klan, vlan in self.listNd.items():
             tmp_klan = 'Node(' + klan + ')'
             if 'U' in vlan[2] or 'M' in vlan[2]:
-                if 'A' in vlan[0]:
+                if 'A' in vlan[0] or 'W' in vlan[0]:
                     tmp_val = self.listCt[vlan[0]][0]
                 else:
                     tmp_val = vlan[0] + ':' + vlan[1]
@@ -164,7 +172,7 @@ class analyze2:
                         vlan_new.append(w)
                 self.listBl[vlan[2]] = (a, b, str((x, vlan_new, y, z)))
             elif 'P' in vlan[2]:
-                if 'A' in vlan[0]:
+                if 'A' in vlan[0] or 'W' in vlan[0]:
                     tmp_val = self.listCt[vlan[0]][0]
                 else:
                     tmp_val = vlan[0] + ':' + vlan[1]
@@ -198,7 +206,7 @@ class analyze2:
         tunnel_in, tunnel_out = [], []
         for _, vlan in self.listNd.items():
             if unit == vlan[2]:
-                if 'A' in vlan[0]:
+                if 'A' in vlan[0] or 'W' in vlan[0]:
                     if 'in' in vlan[3]:
                         tunnel_in.append(vlan[2] + ':' + vlan[3] + '=' + str(self.listCt[vlan[0]][0]))
                     else:
@@ -216,12 +224,12 @@ class analyze2:
         tunnel_in, tunnel_out = [], []
         for klan, vlan in self.listNd.items():
             if unit == vlan[2]:
-                if 'A' in vlan[0] and vlan[0] in list_it:
+                if ('A' in vlan[0] or 'W' in vlan[0]) and vlan[0] in list_it:
                     tunnel_out.append(vlan[2] + ':' + vlan[3] + '=' + str(self.listCt[vlan[0]][0]))
                 elif vlan[0] in list_it or klan in list_it:
                     tunnel_out.append(vlan[2] + ':' + vlan[3] + '=' + vlan[0] + ':' + vlan[1])
                 elif 'in' in vlan[3] or 'val' in vlan[3]:
-                    if 'A' in vlan[0]:
+                    if 'A' in vlan[0] or 'W' in vlan[0]:
                         tunnel_in.append(vlan[2] + ':' + vlan[3] + '=' + str(self.listCt[vlan[0]][0]))
                     else:
                         tunnel_in.append(vlan[2] + ':' + vlan[3] + '=' + vlan[0] + ':' + vlan[1])
@@ -234,13 +242,13 @@ class analyze2:
         tasks_list = []
 
         if listIt:
-            listBlInLoop = [i for i in listBlInLoop if 'A' not in i]
-            listIt = [i for i in listIt if 'A' not in i]
+            listBlInLoop = [i for i in listBlInLoop if ('A' not in i and 'W' not in i)]
+            listIt = [i for i in listIt if ('A' not in i and 'W' not in i)]
 
             startBlocks, endBlocks, centralBlocks = [], [], []
 
             for _, val_Nd in listNd.items():
-                if 'A' in val_Nd[0] or 'C' in val_Nd[0]:
+                if 'A' in val_Nd[0] or 'C' in val_Nd[0] or 'W' in val_Nd[0]:
                     pass
                 elif 'C' in val_Nd[2]:
                     pass
@@ -327,7 +335,7 @@ class analyze2:
 
             if len(centralBlocks) > 1:
                 for _, val_Nd in listNd.items():
-                    if 'A' not in val_Nd[0] and 'C' not in val_Nd[0] and val_Nd[0] != val_Nd[2]:
+                    if 'A' not in val_Nd[0] and 'C' not in val_Nd[0] and 'W' not in val_Nd[0] and val_Nd[0] != val_Nd[2]:
                         if val_Nd[0] in startBlocks or val_Nd[0] in centralBlocks:
                             if val_Nd[2] in centralBlocks:
                                 tmpVal = []
@@ -409,7 +417,7 @@ class analyze2:
                 tmp_Nd = {}
                 tmp_it = self.listFo[lst_bl][3]
                 for key_Nd, val_Nd in self.listNd.items():
-                    if 'A' not in val_Nd[0]:
+                    if 'A' not in val_Nd[0] and 'W' not in val_Nd[0]:
                         if val_Nd[0] in tmp_it and val_Nd[2] in tmp_it:
                             tmp_Nd[key_Nd] = val_Nd
                 self.textExecution += ('[loopfor {}]'.format(lst_bl)) + '\n'
@@ -428,7 +436,7 @@ class analyze2:
                 tmp_it = self.listIf[lst_bl][3][0]
 #                 tmp_it = [x for x in tmp_it if "N" not in x]
                 for key_Nd, val_Nd in self.listNd.items():
-                    if 'A' not in val_Nd[0]:
+                    if 'A' not in val_Nd[0] and 'W' not in val_Nd[0]:
                         if val_Nd[0] in tmp_it and val_Nd[2] in tmp_it:
                             tmp_Nd[key_Nd] = val_Nd
                 self.textExecution += ('[loopif {} True]'.format(lst_bl)) + '\n'
@@ -447,7 +455,7 @@ class analyze2:
                 tmp_it = self.listIf[lst_bl][3][1]
 #                 tmp_it = [x for x in tmp_it if "N" not in x]
                 for key_Nd, val_Nd in self.listNd.items():
-                    if 'A' not in val_Nd[0]:
+                    if 'A' not in val_Nd[0] and 'W' not in val_Nd[0]:
                         if val_Nd[0] in tmp_it and val_Nd[2] in tmp_it:
                             tmp_Nd[key_Nd] = val_Nd
                 self.textExecution += ('[loopif {} False]'.format(lst_bl)) + '\n'
@@ -489,7 +497,7 @@ class analyze2:
             # if ('A' not in vlan[0] and
             #     'F' not in vlan[0] and
             #     'F' not in vlan[2]):
-            if ('A' not in vlan[0] and
+            if ('A' not in vlan[0] and 'W' not in vlan[0] and
                     'F' not in vlan[0]):
                 for kfor, vfor in self.listFo.items():
                     # print('    kfor, vfor 1: ', kfor, vfor)

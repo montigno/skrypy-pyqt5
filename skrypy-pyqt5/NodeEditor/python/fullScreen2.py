@@ -68,6 +68,7 @@ class DiagramView(QGraphicsView):
         self.setResizeAnchor(QGraphicsView.AnchorUnderMouse)
 
         self.setViewportUpdateMode(QGraphicsView.FullViewportUpdate)
+        self.fitInView(scene.itemsBoundingRect(), Qt.KeepAspectRatio)
 
         self._panning = False
         self._panStart = QPoint()

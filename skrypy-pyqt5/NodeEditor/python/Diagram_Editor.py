@@ -7891,7 +7891,12 @@ class NodeEdit(QWidget):
                         linkcurrent.color = color
 
                     self.editText("Connection ok", 10, 600, '003300', False, True)
+ 
+                    # to refresh connection
+                    item_current = self.listItems[self.currentTab][item.unit]
+                    item_current.setPos(item_current.scenePos().x() + 2, item_current.scenePos().y() + 2)
                     UpdateUndoRedo()
+
                     # Menu().btnPressed(QAction('Refresh Diagram'))
 
             self.startConnection = None

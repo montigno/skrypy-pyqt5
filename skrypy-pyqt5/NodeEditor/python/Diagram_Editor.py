@@ -4657,9 +4657,12 @@ class FileExplorer(QWidget):
         layout.addWidget(self.tree)
 
     def on_selection_changed(self, current, previous):
-        label = editor.listExplorers[editor.currentTab][self.unit][0]
-        del editor.listExplorers[editor.currentTab][self.unit]
-        editor.listExplorers[editor.currentTab][self.unit] = (label, self.save_tree_state())
+        try:
+            label = editor.listExplorers[editor.currentTab][self.unit][0]
+            del editor.listExplorers[editor.currentTab][self.unit]
+            editor.listExplorers[editor.currentTab][self.unit] = (label, self.save_tree_state())
+        except Exception as err:
+            pass
         # print(self.get_selected_files())
 
     def get_selected_files(self):

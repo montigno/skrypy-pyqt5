@@ -10,6 +10,11 @@ A documentation is available here : [https://montigno.github.io/skrypy-pyqt5](ht
 
 <p></p>
 
+	23/03/2026: version 26.03.23a
+	- Info plaque added (under developement)
+
+<p></p>
+
 	20/03/2026: version 26.03.20a
 	- Continued development of the file explorer tool (is now visible)
 

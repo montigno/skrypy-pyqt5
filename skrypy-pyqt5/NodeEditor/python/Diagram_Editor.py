@@ -31,7 +31,8 @@ from PyQt5.QtWidgets import QMenuBar, QGraphicsScene, QDialog, \
     QGraphicsWidget, QGraphicsLinearLayout, QFileSystemModel, QStyle,\
     QAbstractItemView, QHeaderView
 from PyQt5.Qt import Qt, QFont, QComboBox, QSizePolicy, QFileDialog, QPainter, \
-    QGraphicsView, QPalette, QGraphicsItem, QImage, QMessageBox, QMdiArea
+    QGraphicsView, QPalette, QGraphicsItem, QImage, QMessageBox, QMdiArea,\
+    QGraphicsObject, QGraphicsSimpleTextItem
 
 from collections import deque
 from enum import Enum
@@ -45,15 +46,18 @@ import subprocess
 import sys
 import re
 import time
+from datetime import datetime
 import webbrowser
 import yaml
 import shutil
 from random import randint
 from threading import Timer
 import math
+import nibabel as nib
+import numpy as np
 
 from . import Config, Plugin, AboutSoft
-from . import DefinitType
+from . import DefinitType, EditDialog
 from . import GetValueInBrackets, SetValueInBrackets
 from . import PythonHighlighter, skrypy_update
 from . import multiple_execution, multiple_execution_altern
@@ -70,6 +74,62 @@ from . import setPreferences, setLimits, TextEditor
 
 # report_diagram = False
 # showGrid = True
+
+class AdvancedPlate(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.layout = QVBoxLayout()
+        self.layout.setContentsMargins(8, 8, 8, 8)
+        self.layout.setSpacing(2)  # réduire interlignes
+        self.setLayout(self.layout)
+        
+        self.info_dict = {
+            "Author(s)": "",
+            "Date": datetime.today().date(),
+            "Project": "my project",
+            "Statut": "Under development"
+        }
+
+        self.labels = {}
+        self.update_content(self.info_dict)
+
+        self.setStyleSheet("""
+            background-color: rgba(230,230,250,220);
+            border-radius: 10px;
+            border: 1px solid black;
+        """)
+        
+    def mouseDoubleClickEvent(self, event):
+        dialog = EditDialog(self.info_dict)
+
+        if dialog.exec_():
+            info_dict = dialog.get_info()
+            self.update_content(info_dict)
+            
+    def update_content(self, info_dict):
+        """Met à jour dynamiquement le contenu de la plaque"""
+        self.info_dict = info_dict.copy()
+
+        # Supprimer labels existants qui ne sont plus dans info_dict
+        for key in list(self.labels.keys()):
+            if key not in info_dict:
+                label = self.labels.pop(key)
+                self.layout.removeWidget(label)
+                label.deleteLater()
+
+        # Ajouter / mettre à jour les labels
+        for key, value in info_dict.items():
+            if key in self.labels:
+                self.labels[key].setText(f"{key}: {value}")
+            else:
+                label = QLabel(f"{key}: {value}")
+                label.setStyleSheet("color: black;")
+                self.layout.addWidget(label)
+                self.labels[key] = label
+
+        # Ajuster la taille du widget automatiquement
+        # self.adjustSize()
 
 
 class ArrowDynamicDown(QGraphicsPolygonItem):
@@ -2868,7 +2928,7 @@ class DiagramScene(QGraphicsScene):
     #     # agrandir la scène autour
     #     scene.setSceneRect(-rect.width(), -rect.height(),
     #                        rect.width()*2, rect.height()*2)
-        
+
     def addCenterLines(self):
         pen = QPen(ItemColor.CROSS_SCENE.value, 2)
         crss = QLineF(-10, 0, 10, 0)
@@ -3331,6 +3391,20 @@ class DiagramView(QGraphicsView):
         self.pen_major.setWidth(1)
         self.pen_axis.setWidth(2)
         
+    # def resizeEvent(self, event):
+    #     print('resizeEvent')
+    #     margin = 10
+    #     # w = self.viewport().rect.width()
+    #     # h = self.viewport().rect.height()
+    #     rect = self.viewport().rect()
+    #     w = rect.width()
+    #     h = rect.height()
+    #     pw = self.plate.rect().width()
+    #     ph = self.plate.rect().height()
+    #     self.plate.setPos(w - pw - margin, h - ph - margin)
+    #
+    #     super().resizeEvent(event)
+        
     def drawBackground(self, painter, rect):
         super().drawBackground(painter, rect)
 
@@ -3601,8 +3675,10 @@ class DiagramView(QGraphicsView):
                 self.a1 = Probes('new', 'unkn', name, True)
             elif "Checkbox" in name:
                 self.a1 = Checkbox('newCheckbox', ['Item1', 'Item2'], '', True)
-            elif "Imagebox" in name:
+            elif "Imagebox" == name:
                 self.a1 = Imagebox('newImagebox', 'path', '', True)
+            elif "Imagebox2" == name:
+                self.a1 = Imagebox2()
             elif "Pathbox" in name:
                 self.a1 = Constants('newConstant', 80, 30, ['path'], 'list_path', '', True)
             elif "Connector" in name:
@@ -3735,7 +3811,8 @@ class DiagramView(QGraphicsView):
         
     def loadFileExplorer(self, unit, label, value, pos):
         b12 = GraphicsWindow(unit, label, value, pos[2], pos[3], True)
-        b12.widget.restore_tree_state(value)
+        if value:
+            b12.widget.restore_tree_state(value)
         b12.setPos(pos[0], pos[1])
         self.scene().addItem(b12)
         editor.listItems[editor.currentTab][b12.unit] = b12
@@ -3769,13 +3846,19 @@ class DiagramView(QGraphicsView):
         # return QGraphicsView.eventFilter(self, object, event)
 
     def wheelEvent(self, event):
-        adj = 0.1777
-        if event.angleDelta().y() < 0:
-            adj = -adj
-        self.scalefactor += adj
-        self.scale(1 + adj, 1 + adj)
-        rectBounds = self.scene().itemsBoundingRect()
-        self.scene().setSceneRect(rectBounds.x() - 200, rectBounds.y() - 200, rectBounds.width() + 400, rectBounds.height() + 400)
+        view_pos = event.pos()
+        scene_pos = self.mapToScene(view_pos)
+        item = self.scene().itemAt(scene_pos, self.transform())
+        if not isinstance(item, QGraphicsWidget):
+            adj = 0.1777
+            if event.angleDelta().y() < 0:
+                adj = -adj
+            self.scalefactor += adj
+            self.scale(1 + adj, 1 + adj)
+            rectBounds = self.scene().itemsBoundingRect()
+            self.scene().setSceneRect(rectBounds.x() - 200, rectBounds.y() - 200, rectBounds.width() + 400, rectBounds.height() + 400)
+        else:
+            super().wheelEvent(event)
 
     def returnBlockSystem(self):
         return self.ball
@@ -4646,11 +4729,6 @@ class FileExplorer(QWidget):
         # self.tree.setColumnWidth(0, 300)
         header = self.tree.header()
         header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
-        # for col in range(2, self.model.columnCount()):
-        #     self.tree.hideColumn(col)
-        # if state:
-        #     QTimer.singleShot(50, lambda: self.restore_tree_state(state))
-        #     # self.restore_tree_state(state)
         
         self.tree.selectionModel().selectionChanged.connect(self.on_selection_changed)
 
@@ -4663,7 +4741,6 @@ class FileExplorer(QWidget):
             editor.listExplorers[editor.currentTab][self.unit] = (label, self.save_tree_state())
         except Exception as err:
             pass
-        # print(self.get_selected_files())
 
     def get_selected_files(self):
         indexes = self.tree.selectionModel().selectedIndexes()
@@ -4675,7 +4752,7 @@ class FileExplorer(QWidget):
 
     def select_files(self, paths):
         QTimer.singleShot(50, lambda: self._select_files_impl(paths))
-    
+
     def _select_files_impl(self, paths):
         selection_model = self.tree.selectionModel()
         selection_model.clearSelection()
@@ -4714,8 +4791,7 @@ class FileExplorer(QWidget):
             "scroll_vertical": self.tree.verticalScrollBar().value(),
             "scroll_horizontal": self.tree.horizontalScrollBar().value()
         }
-        
-     
+
         def recurse(index):
             for row in range(self.model.rowCount(index)):
                 child = self.model.index(row, 0, index)
@@ -4730,15 +4806,15 @@ class FileExplorer(QWidget):
         self.state = state
 
     def restore_tree_state(self, state):
-   
+
         header = self.tree.header()
         for i, w in enumerate(state.get("header_widths", [])):
             header.resizeSection(i, int(w))
-    
+
         sort_col = state.get("sort_column", 0)
         sort_order = Qt.SortOrder(state.get("sort_order", int(Qt.AscendingOrder)))
         self.tree.sortByColumn(sort_col, 0)
-    
+
         for path in state.get("expanded_paths", []):
             idx = self.model.index(path)
             if idx.isValid():
@@ -4817,7 +4893,6 @@ class GraphicsWindow(QGraphicsWidget):
         layout.setStretchFactor(title_proxy, 0)
         layout.setStretchFactor(self.content_proxy, 1)
         
-        
         self.wmin, self.hmin = 60, 60
         # self.w = self.boundingRect().size().width() + 6
         # self.h = self.boundingRect().size().height() + 6
@@ -4837,10 +4912,13 @@ class GraphicsWindow(QGraphicsWidget):
             self.res.setFlag(self.res.ItemIsSelectable, True)
             self.res.wmin = self.wmin
             self.res.hmin = self.hmin
-            editor.listExplorers[editor.currentTab][self.unit] = (label, stateExplorer)
             # stateExplorer = self.widget.save_tree_state()
             if stateExplorer:
                 self.widget.restore_tree_state(stateExplorer)
+            else:
+                self.widget.save_tree_state()
+                stateExplorer = self.widget.state
+            editor.listExplorers[editor.currentTab][self.unit] = (label, stateExplorer)
 
     def itemChange(self, *args, **kwargs):
         if args[0] == self.ItemPositionHasChanged:
@@ -4855,16 +4933,11 @@ class GraphicsWindow(QGraphicsWidget):
             h = self.hmin + 2
         if w < self.wmin:
             w = self.wmin
-
         w, h = round(w / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value, round(h / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
-
         self.resize(w, h)
-        
         self.outputs[0].setPos(w, h / 2)
-        
         return w, h
-    
-    
+
     def mouseMoveEvent(self, event):
         self.moved = True
         event.accept()
@@ -5067,7 +5140,6 @@ class Imagebox(QGraphicsRectItem):
 
             if event.button() == 2:
                 self.setSelected(True)
-
         event.accept()
 
     def mouseDoubleClickEvent(self, event):
@@ -5114,14 +5186,11 @@ class Imagebox(QGraphicsRectItem):
         from PIL import Image
         self.pathImage = pathFile
         x_scale, y_scale, z_scale = 1.0, 1.0, 1.0
-        # ratio = 1
-        # showFov = False
         if self.unit in editor.listImgBox[editor.currentTab]:
             oImage = editor.listImgBox[editor.currentTab][self.unit][0]
             self.sh = editor.listImgBox[editor.currentTab][self.unit][1]
             self.fov = editor.listImgBox[editor.currentTab][self.unit][2]
             x_scale, y_scale = editor.listImgBox[editor.currentTab][self.unit][3]
-            # ratio = x_scale / y_scale
             del editor.listImgBox[editor.currentTab][self.unit]
         elif self.pathImage.endswith(('.jpg', '.png')):
             img = Image.open(self.pathImage)
@@ -5129,14 +5198,11 @@ class Imagebox(QGraphicsRectItem):
             self.fov = ''
             oImage = QImage(self.pathImage)
         else:
-            # showFov = True
             import nibabel as nib
             import numpy as np
             from scipy.ndimage import rotate
             img = nib.load(pathFile)
             x_scale, y_scale, z_scale = img.header['pixdim'][1], img.header['pixdim'][2], img.header['pixdim'][3]
-            # ratio = x_scale / y_scale
-            # cal_max, cal_min = img.header['cal_max'], img.header['cal_min']
             self.sh = img.shape
             self.fov = ''
             img = img.get_fdata().copy()
@@ -5152,31 +5218,22 @@ class Imagebox(QGraphicsRectItem):
             totalBytes = img.nbytes
             bytesPerLine = int(totalBytes / self.sh[1])
             oImage = QImage(img, self.sh[0], self.sh[1], bytesPerLine, QImage.Format_Indexed8)
-        # factor = max([self.sh[0], self.sh[1]]) / 300.0
         fov_x, fov_y = x_scale * self.sh[0], y_scale * self.sh[1]
         factor = max(fov_x, fov_y) / 400.0
         if not self.fov:
             self.fov = '{:.2f}x{:.2f}x{:.2f} mm3'.format(fov_x, fov_y, z_scale)
         self.elemProxy.setPixmap(QPixmap.fromImage(oImage))
-        # self.elemProxy.setGeometry(5, 5, int(self.sh[0] / factor), int(self.sh[1] / factor))
         self.elemProxy.setGeometry(5, 5, int(fov_x / factor), int(fov_y / factor))
         editor.listImgBox[editor.currentTab][self.unit] = (oImage, self.sh, self.fov, (x_scale, y_scale))
         self.proxyWidget.resize(10, 10)
         self.proxyWidget.updateGeometry()
-        # self.proxyWidget.resize(self.sh[0] / factor, self.sh[1] / (ratio * factor))
-        # self.proxyWidget.resize(fov_x / factor, fov_y / (ratio * factor))
         self.proxyWidget.resize(fov_x / factor, fov_y / factor)
-
         self.proxyWidget.setWidget(self.elemProxy)
         self.proxyWidget.updateGeometry()
         self.w = self.proxyWidget.boundingRect().size().width() + 8
         self.h = self.proxyWidget.boundingRect().size().height() + 8
         self.setRect(0.0, 0.0, self.w, self.h)
         self.outputs[0].setPos(self.w + 2, self.h / 2)
-        # if showFov:
-        #     self.labshape.setPlainText('{}\r{}'.format(str(self.fov), str(self.sh)))
-        # else:
-        #     self.labshape.setPlainText(str(self.sh))
         self.labshape.setPlainText('{}\r{}'.format(str(self.fov), str(self.sh)))
         rect = self.labshape.boundingRect()
         self.labshape.setPos((self.w / 2) - rect.size().width() / 2, self.h + 3)
@@ -6817,7 +6874,6 @@ class NodeEdit(QWidget):
         tabW.addTab(self.console, "Probes")
         tabW.addTab(self.shm, "Shared Memory")
 
-        #######################################################################
         previewBlock = QWidget(self)
         self.previewScene = QGraphicsScene()
         self.previewScene.setSceneRect(QRectF())
@@ -6842,6 +6898,13 @@ class NodeEdit(QWidget):
         legend.setStyleSheet("background-color:rgb" + style_bkg)
         legend.setLayout(layoutDiagram)
         ShowLegend()
+
+        #######################################################################
+        tabInfo = QTabWidget()
+        tabInfo.addTab(AdvancedPlate(), "Author(s)")
+        tabInfo.addTab(legend, "Legends")
+
+        #######################################################################
 
         self.mdi = QMdiArea()
         self.mdi.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
@@ -6907,14 +6970,13 @@ class NodeEdit(QWidget):
 
         self.splitterp = QSplitter(Qt.Horizontal)
         self.splitterp.addWidget(tabW)
-        self.splitterp.addWidget(legend)
+        self.splitterp.addWidget(tabInfo)
         self.splitterp.setSizes([400, 150])
 
         self.splitter2 = QSplitter(Qt.Vertical)
-        self.splitter2.addWidget(self.menut)
         self.splitter2.addWidget(self.mdi)
         self.splitter2.addWidget(self.splitterp)
-        self.splitter2.setSizes([10, 400, 100])
+        self.splitter2.setSizes([400, 100])
 
         self.splitter3 = QSplitter(Qt.Vertical)
         self.splitter3.addWidget(self.textEdit)
@@ -6925,8 +6987,11 @@ class NodeEdit(QWidget):
         self.splitter4.addWidget(self.splitter3)
         self.splitter4.setSizes([100, 800, 100])
 
+        self.menus_layout = QHBoxLayout()
         self.verticalLayout = QVBoxLayout(self)
-        self.verticalLayout.addWidget(self.menub)
+        self.menus_layout.addWidget(self.menub)
+        self.menus_layout.addWidget(self.menut)
+        self.verticalLayout.addLayout(self.menus_layout)
         self.verticalLayout.addWidget(self.splitter4)
 
         self.startConnection = None

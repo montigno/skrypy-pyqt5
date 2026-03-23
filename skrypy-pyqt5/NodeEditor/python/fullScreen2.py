@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QPoint, QLineF
 from PyQt5.QtGui import QColor, QPen
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QGraphicsView
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QGraphicsView, QGraphicsWidget
 from PyQt5.Qt import QLabel, Qt, QPainter, QEvent
 from enum import Enum
 import math
@@ -125,13 +125,15 @@ class DiagramView(QGraphicsView):
     # ---------------------------
 
     def wheelEvent(self, event):
-
-        zoomFactor = 1.15
-
-        if event.angleDelta().y() > 0:
-            self.scale(zoomFactor, zoomFactor)
-        else:
-            self.scale(1 / zoomFactor, 1 / zoomFactor)
+        view_pos = event.pos()
+        scene_pos = self.mapToScene(view_pos)
+        item = self.scene().itemAt(scene_pos, self.transform())
+        if not isinstance(item, QGraphicsWidget):
+            zoomFactor = 1.15
+            if event.angleDelta().y() > 0:
+                self.scale(zoomFactor, zoomFactor)
+            else:
+                self.scale(1 / zoomFactor, 1 / zoomFactor)
 
     # ---------------------------
     # GRID

@@ -1,154 +1,435 @@
-spm_ApplyTransform:
-  ignore_exception: False
+spm_SPMCommand:
   matlab_cmd: ''
-  mfile: True
-  out_file: 'path'
   paths: ['path']
-  use_mcr: False
-  use_v8struct: True
+  mfile: true
+  use_mcr: true
+spm_EstimateContrast:
+  use_derivs: true
+  group_contrast: true
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_EstimateModel:
+  write_residuals: true
+  flags: {}
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_Level1Design:
+  spm_mat_dir: 'path'
+  microtime_resolution: 0
+  microtime_onset: 0.0
+  factor_info: enumerate(('name','levels' and with values which are any value))
+  volterra_expansion_order: ''
+  global_intensity_normalization: enumerate(('none','scaling'))
+  mask_image: 'path'
+  mask_threshold: 0.0
+  model_serial_correlations: ''
+  flags: {}
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_MultipleRegressionDesign:
+  include_intercept: true
+  user_covariates: enumerate(('vector','name','centering' and with values which 
+    are any value))
+  spm_mat_dir: 'path'
+  covariates: enumerate(('vector','name','interaction','centering' and with 
+    values which are any value))
+  threshold_mask_none: true
+  threshold_mask_absolute: 0.0
+  threshold_mask_relative: 0.0
+  use_implicit_threshold: true
+  explicit_mask_file: 'path'
+  global_calc_omit: true
+  global_calc_mean: true
+  global_calc_values: [0.0]
+  no_grand_mean_scaling: true
+  global_normalization: ''
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_OneSampleTTestDesign:
+  spm_mat_dir: 'path'
+  covariates: enumerate(('vector','name','interaction','centering' and with 
+    values which are any value))
+  threshold_mask_none: true
+  threshold_mask_absolute: 0.0
+  threshold_mask_relative: 0.0
+  use_implicit_threshold: true
+  explicit_mask_file: 'path'
+  global_calc_omit: true
+  global_calc_mean: true
+  global_calc_values: [0.0]
+  no_grand_mean_scaling: true
+  global_normalization: ''
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_PairedTTestDesign:
+  grand_mean_scaling: true
+  ancova: true
+  spm_mat_dir: 'path'
+  covariates: enumerate(('vector','name','interaction','centering' and with 
+    values which are any value))
+  threshold_mask_none: true
+  threshold_mask_absolute: 0.0
+  threshold_mask_relative: 0.0
+  use_implicit_threshold: true
+  explicit_mask_file: 'path'
+  global_calc_omit: true
+  global_calc_mean: true
+  global_calc_values: [0.0]
+  no_grand_mean_scaling: true
+  global_normalization: ''
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_Threshold:
+  use_fwe_correction: true
+  use_vox_fdr_correction: true
+  use_topo_fdr: true
+  height_threshold: 0.0
+  height_threshold_type: enumerate(('p-value','stat'))
+  extent_fdr_p_threshold: 0.0
+  extent_threshold: 0
+  force_activation: true
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_TwoSampleTTestDesign:
+  dependent: true
+  unequal_variance: true
+  spm_mat_dir: 'path'
+  covariates: enumerate(('vector','name','interaction','centering' and with 
+    values which are any value))
+  threshold_mask_none: true
+  threshold_mask_absolute: 0.0
+  threshold_mask_relative: 0.0
+  use_implicit_threshold: true
+  explicit_mask_file: 'path'
+  global_calc_omit: true
+  global_calc_mean: true
+  global_calc_values: [0.0]
+  no_grand_mean_scaling: true
+  global_normalization: ''
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_ApplyVDM:
+  distortion_direction: 0
+  write_which: 0
+  interpolation: 0
+  write_wrap: 0
+  write_mask: true
+  out_prefix: ''
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
 spm_Coregister:
+  jobtype: enumerate(('estwrite','estimate','write'))
   apply_to_files: ['path']
   cost_function: enumerate(('mi','nmi','ecc','ncc'))
-  fwhm: [0.0]
-  ignore_exception: False
-  jobtype: enumerate(('estwrite','estimate','write'))
-  matlab_cmd: ''
-  mfile: True
-  out_prefix: 'r'
-  paths: ['path']
+  fwhm: 0.0
   separation: [0.0]
   tolerance: [0.0]
-  use_mcr: True
-  use_v8struct: True
   write_interp: 0
-  write_mask: True
-  write_wrap: [0,0,0]
-spm_Normalize:
-  DCT_period_cutoff: 0.0
-  affine_regularization_type: enumerate(('mni','size','none'))
-  apply_to_files: ['path']
-  ignore_exception: False
-  jobtype: enumerate(('estwrite','est','write'))
+  write_wrap: 0
+  write_mask: true
+  out_prefix: ''
   matlab_cmd: ''
-  mfile: True
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_CreateWarped:
+  iterations: 0
+  interp: 0
+  modulate: true
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_DARTEL:
+  template_prefix: ''
+  regularization_form: enumerate(('Linear','Membrane','Bending'))
+  iteration_parameters: (0,)
+  optimization_parameters: (0,)
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_DARTELNorm2MNI:
+  voxel_size: (0,)
+  bounding_box: (0,)
+  modulate: true
+  fwhm: 0.0
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_FieldMap:
+  jobtype: ''
+  maskbrain: true
+  epifm: true
+  jacobian_modulation: true
+  method: enumerate(('Mark3D','Mark2D','Huttonish'))
+  unwarp_fwhm: 0
+  pad: 0
+  ws: true
+  template: 'path'
+  mask_fwhm: 0
+  nerode: 0
+  ndilate: 0
+  thresh: 0.0
+  reg: 0.0
+  matchvdm: true
+  sessname: ''
+  writeunwarped: true
+  anat_file: 'path'
+  matchanat: true
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_MultiChannelNewSegment:
+  channels: [(0, )]
+  tissues: [(0, )]
+  affine_regularization: enumerate(('mni','eastern','subj','none'))
+  warping_regularization: 0.0
+  sampling_distance: 0.0
+  write_deformation_fields: true
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_NewSegment:
+  channel_info: (0,)
+  tissues: [(0, )]
+  affine_regularization: enumerate(('mni','eastern','subj','none'))
+  warping_regularization: 0.0
+  sampling_distance: 0.0
+  write_deformation_fields: true
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_Normalize:
+  jobtype: enumerate(('estwrite','est','write'))
+  apply_to_files: ['path']
+  source_weight: 'path'
+  template_weight: 'path'
+  source_image_smoothing: 0.0
+  template_image_smoothing: 0.0
+  affine_regularization_type: enumerate(('mni','size','none'))
+  DCT_period_cutoff: 0.0
   nonlinear_iterations: 0
   nonlinear_regularization: 0.0
-  out_prefix: ''
-  paths: ['path']
-  source_image_smoothing: 0.0
-  source_weight: 'path'
-  template_image_smoothing: 0.0
-  template_weight: 'path'
-  use_mcr: True
-  use_v8struct: True
-  write_bounding_box: [[0.0,0.0],[0.0,0.0],[0.0,0.0]]
+  write_preserve: true
+  write_bounding_box: 0.0
+  write_voxel_sizes: 0.0
   write_interp: 0
-  write_preserve: True
-  write_voxel_sizes: [[0.0,0.0,0.0],[0.0,0.0,0.0],[0.0,0.0,0.0]]
   write_wrap: [0]
-spm_Normalize12:
-  affine_regularization_type: enumerate(('mni','size','none'))
-  apply_to_files: ['path']
-  bias_fwhm: 30
-  bias_regularization: 0
-  ignore_exception: False
-  jobtype: enumerate(('estwrite','est','write'))
+  out_prefix: ''
   matlab_cmd: ''
-  mfile: True
   paths: ['path']
-  sampling_distance: 0.0
-  smoothness: 0.0
+  mfile: true
+  use_mcr: true
+spm_Normalize12:
+  apply_to_files: ['path']
+  jobtype: enumerate(('estwrite','est','write'))
+  bias_regularization: ''
+  bias_fwhm: ''
   tpm: 'path'
-  use_mcr: False
-  use_v8struct: True
-  warping_regularization: [0.0, 0.001, 0.1, 0.01, 0.2]
-  write_interp: 0
-  write_voxel_sizes: [1.0, 1.0, 1.0]
-spm_NewSegment:
-  affine_regularization: enumerate(('mni','eastern','subj','none'))
-  channel_info: (0.0,0.0,(True,True))
-  ignore_exception: False
-  matlab_cmd: ''  
-  mfile: True
-  paths: ['path']
+  affine_regularization_type: enumerate(('mni','size','none'))
+  warping_regularization: 0.0
+  smoothness: 0.0
   sampling_distance: 0.0
-  tissues: ('path',)
-  use_mcr: True
-  use_v8struct: True
-  warping_regularization: [0.0]
-  write_deformation_fields: [True,True]
+  write_bounding_box: 0.0
+  write_voxel_sizes: 0.0
+  write_interp: 0
+  out_prefix: ''
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
 spm_Realign:
   jobtype: enumerate(('estwrite','estimate','write'))
   quality: 0.0
   fwhm: 0.0
   separation: 0.0
-  register_to_mean: False
+  register_to_mean: true
   weight_img: 'path'
   interp: 0
-  wrap: [0,0,0]
-  write_which: [2,1]
+  wrap: 0
+  write_which: 0
   write_interp: 0
-  write_wrap: [0,0,0]
-  write_mask: False
-  out_prefix: 'r'
+  write_wrap: 0
+  write_mask: true
+  out_prefix: ''
   matlab_cmd: ''
   paths: ['path']
-  mfile: True
-  use_mcr: False
-  use_v8struct: True
-spm_Reslice:
+  mfile: true
+  use_mcr: true
+spm_RealignUnwarp:
+  phase_map: 'path'
+  quality: 0.0
+  fwhm: 0.0
+  separation: 0.0
+  register_to_mean: true
+  weight_img: 'path'
   interp: 0
+  wrap: 0
+  est_basis_func: 0
+  est_reg_order: 0
+  est_reg_factor: 0
+  est_jacobian_deformations: true
+  est_first_order_effects: 0
+  est_second_order_effects: 0
+  est_unwarp_fwhm: 0.0
+  est_re_est_mov_par: true
+  est_num_of_iterations: 0
+  est_taylor_expansion_point: ''
+  reslice_which: 0
+  reslice_interp: 0
+  reslice_wrap: 0
+  reslice_mask: true
+  out_prefix: ''
   matlab_cmd: ''
-  mfile: True
-  out_file: 'path'
   paths: ['path']
-  use_mcr: False
-  use_v8struct: True
-spm_ResliceToReference:
-  bounding_box: [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]
-  interpolation: 0
-  matlab_cmd: ''
-  mfile: True
-  paths: ['path']
-  target: 'path'
-  use_mcr: False
-  use_v8struct: True
-  voxel_sizes: [1.0, 1.0, 1.0]
+  mfile: true
+  use_mcr: true
 spm_Segment:
-  affine_regularization: enumerate(('mni','eastern','subj','none',''))
-  bias_fwhm: 0
-  bias_regularization: 0.0
+  gm_output_type: true
+  wm_output_type: true
+  csf_output_type: true
+  save_bias_corrected: true
   clean_masks: enumerate(('no','light','thorough'))
-  csf_output_type: [False,False,False]
-  gaussians_per_class: [0.0]
-  gm_output_type: [False,False,False]
+  tissue_prob_maps: ['path']
+  gaussians_per_class: [0]
+  affine_regularization: enumerate(('mni','eastern','subj','none',''))
+  warping_regularization: 0.0
+  warp_frequency_cutoff: 0.0
+  bias_regularization: ''
+  bias_fwhm: ''
+  sampling_distance: 0.0
   mask_image: 'path'
   matlab_cmd: ''
-  mfile: True
-  paths: 'path'
-  sampling_distance: 0.0
-  save_bias_corrected: False
-  tissue_prob_maps: 'path'
-  use_mcr: False
-  use_v8struct: False
-  warp_frequency_cutoff: 0.0
-  warping_regularization: 0.0
-  wm_output_type: [False,False,False]
+  paths: ['path']
+  mfile: true
+  use_mcr: true
 spm_SliceTiming:
-  ignore_exception: False
+  out_prefix: ''
   matlab_cmd: ''
-  out_prefix: 'a'
   paths: ['path']
-  use_mcr: True
-  use_v8struct: True
+  mfile: true
+  use_mcr: true
 spm_Smooth:
-  fwhm: [0.0,0.0,0.0]
+  fwhm: 0.0
   data_type: 0
-  implicit_masking: False
-  ignore_exception: False
-  out_prefix: 's'
+  implicit_masking: true
+  out_prefix: ''
   matlab_cmd: ''
   paths: ['path']
-  mfile: True
-  use_mcr: False
-  use_v8struct: True
+  mfile: true
+  use_mcr: true
+spm_VBMSegment:
+  tissues: 'path'
+  gaussians_per_class: (0,)
+  bias_regularization: ''
+  bias_fwhm: ''
+  sampling_distance: 0.0
+  warping_regularization: 0.0
+  spatial_normalization: enumerate(('high','low'))
+  dartel_template: 'path'
+  use_sanlm_denoising_filter: 0
+  mrf_weighting: 0.0
+  cleanup_partitions: 0
+  display_results: true
+  gm_native: true
+  gm_normalized: true
+  gm_modulated_normalized: 0
+  gm_dartel: 0
+  wm_native: true
+  wm_normalized: true
+  wm_modulated_normalized: 0
+  wm_dartel: 0
+  csf_native: true
+  csf_normalized: true
+  csf_modulated_normalized: 0
+  csf_dartel: 0
+  bias_corrected_native: true
+  bias_corrected_normalized: true
+  bias_corrected_affine: true
+  pve_label_native: true
+  pve_label_normalized: true
+  pve_label_dartel: 0
+  jacobian_determinant: true
+  deformation_field: (0,)
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_Analyze2nii:
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_ApplyInverseDeformation:
+  target: 'path'
+  deformation: 'path'
+  deformation_field: 'path'
+  interpolation: 0
+  bounding_box: 0.0
+  voxel_sizes: 0.0
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_ApplyTransform:
+  out_file: 'path'
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_CalcCoregAffine:
+  mat: 'path'
+  invmat: 'path'
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_DicomImport:
+  output_dir_struct: 
+    enumerate(('flat','series','patname','patid_date','patid','date_time'))
+  output_dir: ''
+  format: enumerate(('nii','img'))
+  icedims: true
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_Reslice:
+  interp: 0
+  out_file: 'path'
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true
+spm_ResliceToReference:
+  target: 'path'
+  interpolation: 0
+  bounding_box: 0.0
+  voxel_sizes: 0.0
+  matlab_cmd: ''
+  paths: ['path']
+  mfile: true
+  use_mcr: true

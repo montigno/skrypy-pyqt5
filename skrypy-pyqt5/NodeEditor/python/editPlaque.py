@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLineEdit,\
-    QPushButton, QWidget, QLabel, QCheckBox, QSpinBox, QDoubleSpinBox
+    QPushButton, QWidget, QLabel, QCheckBox, QSpinBox, QDoubleSpinBox,\
+    QScrollArea
 
 
 class EditDialog(QDialog):
@@ -10,16 +11,23 @@ class EditDialog(QDialog):
         self.widgets = {}
 
         self.layout = QVBoxLayout()
+        self.fields_container = QWidget()
         self.fields_layout = QVBoxLayout()
-        self.layout.addLayout(self.fields_layout)
+        self.fields_container.setLayout(self.fields_layout)
+
+        self.scroll = QScrollArea()
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setWidget(self.fields_container)
+
+        self.layout.addWidget(self.scroll)
 
         self.build_fields()
 
         btn_layout = QHBoxLayout()
-        add_btn = QPushButton("➕ Ajouter")
+        add_btn = QPushButton("Add")
         add_btn.clicked.connect(self.add_field)
 
-        save_btn = QPushButton("💾 Enregistrer")
+        save_btn = QPushButton("Save")
         save_btn.clicked.connect(self.accept)
 
         btn_layout.addWidget(add_btn)
@@ -28,26 +36,6 @@ class EditDialog(QDialog):
 
         self.setLayout(self.layout)
 
-    # =====================
-    # Création dynamique
-    # =====================
-    def create_widget(self, value):
-        if isinstance(value, bool):
-            w = QCheckBox()
-            w.setChecked(value)
-        elif isinstance(value, int):
-            w = QSpinBox()
-            w.setRange(-1_000_000, 1_000_000)
-            w.setValue(value)
-        elif isinstance(value, float):
-            w = QDoubleSpinBox()
-            w.setRange(-1e9, 1e9)
-            w.setDecimals(3)
-            w.setValue(value)
-        else:
-            w = QLineEdit(str(value))
-        return w
-
     def build_fields(self):
         for key, value in self.info_dict.items():
             self.add_field(key, value)
@@ -55,32 +43,35 @@ class EditDialog(QDialog):
     def add_field(self, key="", value=""):
         row = QHBoxLayout()
 
+        if not key:
+            key = 'new key'
+            value = 'new value'
         key_edit = QLineEdit(str(key))
-        value_widget = self.create_widget(value)
+        value_widget = QLineEdit(str(value))
 
-        del_btn = QPushButton("❌")
+        del_btn = QPushButton("del")
         del_btn.setFixedWidth(30)
 
         container = QWidget()
         container.setLayout(row)
 
         def delete():
-            container.setParent(None)
+            self.fields_layout.removeWidget(container)
+            if container in self.widgets:
+                del self.widgets[container]
+            container.deleteLater()
 
         del_btn.clicked.connect(delete)
 
-        row.addWidget(QLabel("Clé"))
+        row.addWidget(QLabel("Key"))
         row.addWidget(key_edit)
-        row.addWidget(QLabel("Valeur"))
+        row.addWidget(QLabel("Value"))
         row.addWidget(value_widget)
         row.addWidget(del_btn)
 
         self.fields_layout.addWidget(container)
         self.widgets[container] = (key_edit, value_widget)
 
-    # =====================
-    # Récupération valeurs
-    # =====================
     def get_value(self, widget):
         if isinstance(widget, QCheckBox):
             return widget.isChecked()

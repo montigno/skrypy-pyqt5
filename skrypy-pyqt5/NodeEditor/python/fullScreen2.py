@@ -120,51 +120,35 @@ class DiagramView(QGraphicsView):
 
         super().mouseReleaseEvent(event)
 
-    # ---------------------------
-    # ZOOM (roulette)
-    # ---------------------------
-
     def wheelEvent(self, event):
-        view_pos = event.pos()
-        scene_pos = self.mapToScene(view_pos)
-        item = self.scene().itemAt(scene_pos, self.transform())
-        if not isinstance(item, QGraphicsWidget):
-            zoomFactor = 1.15
-            if event.angleDelta().y() > 0:
-                self.scale(zoomFactor, zoomFactor)
-            else:
-                self.scale(1 / zoomFactor, 1 / zoomFactor)
-
-    # ---------------------------
-    # GRID
-    # ---------------------------
+        # view_pos = event.pos()
+        # scene_pos = self.mapToScene(view_pos)
+        # item = self.scene().itemAt(scene_pos, self.transform())
+        # if not isinstance(item, QGraphicsWidget):
+        zoomFactor = 1.15
+        if event.angleDelta().y() > 0:
+            self.scale(zoomFactor, zoomFactor)
+        else:
+            self.scale(1 / zoomFactor, 1 / zoomFactor)
 
     def drawBackground(self, painter, rect):
 
         super().drawBackground(painter, rect)
-
         zoom = self.transform().m11()
-
         grid = self.base_grid
         while grid * zoom < 15:
             grid *= 2
-
         left = math.floor(rect.left() / grid) * grid
         top = math.floor(rect.top() / grid) * grid
-
         minor = []
         major = []
-
         x = left
         while x < rect.right():
-
             if int(x / grid) % self.major_step == 0:
                 major.append(QLineF(x, rect.top(), x, rect.bottom()))
             else:
                 minor.append(QLineF(x, rect.top(), x, rect.bottom()))
-
             x += grid
-
         y = top
         while y < rect.bottom():
 
@@ -172,15 +156,12 @@ class DiagramView(QGraphicsView):
                 major.append(QLineF(rect.left(), y, rect.right(), y))
             else:
                 minor.append(QLineF(rect.left(), y, rect.right(), y))
-
             y += grid
 
         painter.setPen(self.pen_minor)
         painter.drawLines(minor)
-
         painter.setPen(self.pen_major)
         painter.drawLines(major)
-
         painter.setPen(self.pen_axis)
         painter.drawLine(QLineF(0, rect.top(), 0, rect.bottom()))
         painter.drawLine(QLineF(rect.left(), 0, rect.right(), 0))

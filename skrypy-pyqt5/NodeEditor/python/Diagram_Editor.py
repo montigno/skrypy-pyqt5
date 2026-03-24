@@ -82,6 +82,7 @@ class AdvancedPlate(QWidget):
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(8, 8, 8, 8)
         self.layout.setSpacing(2)  # réduire interlignes
+      
         self.setLayout(self.layout)
         
         self.info_dict = {
@@ -127,8 +128,7 @@ class AdvancedPlate(QWidget):
                 label.setStyleSheet("color: black;")
                 self.layout.addWidget(label)
                 self.labels[key] = label
-
-        # Ajuster la taille du widget automatiquement
+        self.updateGeometry()
         # self.adjustSize()
 
 
@@ -198,7 +198,7 @@ class ArrowOptions(QGraphicsPolygonItem):
 
 class BlockCreate(QGraphicsRectItem):
 
-    def __init__(self, name='', unit='', category=None, w=150, h=100, listValIn=(), isMod=True, *inout, parent=None):
+    def __init__(self, name='', unit='', category=None, w=150, h=100,listValIn=(), isMod=True, *inout, parent=None):
         super(BlockCreate, self).__init__(parent)
         self.name = name
         self.unit = unit
@@ -6900,8 +6900,14 @@ class NodeEdit(QWidget):
         ShowLegend()
 
         #######################################################################
+        
+        scrollPlaque = QScrollArea()
+        scrollPlaque.setWidgetResizable(True)
+        scrollPlaque.setMinimumWidth(200)
+        scrollPlaque.setWidget(AdvancedPlate())
+        
         tabInfo = QTabWidget()
-        tabInfo.addTab(AdvancedPlate(), "Author(s)")
+        tabInfo.addTab(scrollPlaque, "Author(s)")
         tabInfo.addTab(legend, "Legends")
 
         #######################################################################

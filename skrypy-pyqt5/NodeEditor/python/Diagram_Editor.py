@@ -68,7 +68,7 @@ from . import defineTunnels, define_inputs_outputs
 from . import input_output_setName, project_archive
 from . import editCombobox, errorHandler
 from . import editParam, editParamLoopFor
-from . import getlistModules, getlistSubModules
+from . import getlistModules, getlistSubModules, getlistModules2
 from . import seeCode, getDocString, manage_pck
 from . import setPreferences, setLimits, TextEditor
 
@@ -6570,7 +6570,10 @@ class Menu(QMenuBar):
             # diagramInfo(text).exec_()
             current_dir_path = os.path.dirname(os.path.realpath(__file__))
             source_disp = os.path.join(current_dir_path, 'systemInfo.py')
-            subprocess.Popen([sys.executable, source_disp, text, "List Libraries"])
+            try:
+                subprocess.Popen([sys.executable, source_disp, text, "List Libraries"])
+            except Exception as err:
+                print(err)
 
         elif tmpActText == 'See Raw file':
             if len(editor.mdi.subWindowList()) == 0:
@@ -6815,8 +6818,12 @@ class NodeEdit(QWidget):
         # self.list_tools[''] = None
 
         self.get_sub_tree()
+        
+        getlistModules2()
+       
 
 # processes blocks
+        start_time = time.time()
         for name in lstmod:
             tmp = (os.path.join(rep, name))
             if (os.path.isdir(tmp) and
@@ -6836,10 +6843,15 @@ class NodeEdit(QWidget):
                         libBlocks[clas[0]] = (name + '.' + category, clas[1:5])
                         list_module.append(clas[0])
                     list_by_cat[category] = list_module
+                # if 'Demos' == name:
+                #     print(libBlocks)
+                #     print(mod_instance.listBlocks)
+                #     print(list_by_cat)
+                #     print(mod_instance.listCat())
             self.list_tree[name] = list_by_cat
 
-        print("Number of blocks in library:", len(libBlocks))
-        print("size of block library:", sys.getsizeof(libBlocks), "bytes.")
+        print("Number of blocks in library:", len(libBlocks), ", loading time:", time.time() - start_time) 
+        print("Size of blocks dictionnary:", sys.getsizeof(libBlocks), "bytes.")
         self.setlib(libBlocks)
         self.library_tools = buildLibrary(self.list_tools)
         self.library_tools.menu_choosen.connect(self.menu_choosen)

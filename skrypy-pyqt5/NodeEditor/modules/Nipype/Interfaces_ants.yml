@@ -42,26 +42,21 @@ ants_Registration:
   invert_initial_moving_transform: [true]
   initial_moving_transform_com: ''
   metric_item_trait: enumerate(('CC','MeanSquares','Demons','GC','MI','Mattes'))
-  metric_stage_trait: 
-    enumerate(('CC','MeanSquares','Demons','GC','MI','Mattes',a list of items 
-    which are 'CC','MeanSquares','Demons','GC','MI','Mattes'))
+  metric_stage_trait: enumerate(('CC','MeanSquares','Demons','GC','MI','Mattes'))
   metric_weight_item_trait: 0.0
   metric_weight_stage_trait: [0.0]
   radius_bins_item_trait: 0
   radius_bins_stage_trait: [0]
   radius_or_number_of_bins: [0]
   sampling_strategy_item_trait: enumerate(('None','Regular','Random',None))
-  sampling_strategy_stage_trait: enumerate(('None','Regular','Random',None,a 
-    list of items which are 'None','Regular','Random',None))
-  sampling_strategy: enumerate(('None','Regular','Random',None,a list of items 
-    which are 'None','Regular','Random',None))
+  sampling_strategy_stage_trait: enumerate(('None','Regular','Random',None))
+  sampling_strategy: enumerate(('None','Regular','Random',None))
   sampling_percentage_item_trait: 0.0
   sampling_percentage_stage_trait: [0.0]
   sampling_percentage: [0.0]
   use_estimate_learning_rate_once: [true]
   use_histogram_matching: [true]
-  interpolation: 
-    enumerate(('Linear','NearestNeighbor','CosineWindowedSinc','WelchWindowedSinc','HammingWindowedSinc','LanczosWindowedSinc','BSpline','MultiLabel','Gaussian','GenericLabel'))
+  interpolation: enumerate(('Linear','NearestNeighbor','CosineWindowedSinc','WelchWindowedSinc','HammingWindowedSinc','LanczosWindowedSinc','BSpline','MultiLabel','Gaussian','GenericLabel'))
   interpolation_parameters: (0,)
   write_composite_transform: true
   collapse_output_transforms: true
@@ -98,8 +93,7 @@ ants_ApplyTransforms:
   input_image_type: ''
   output_image: ''
   out_postfix: ''
-  interpolation: 
-    enumerate(('Linear','NearestNeighbor','CosineWindowedSinc','WelchWindowedSinc','HammingWindowedSinc','LanczosWindowedSinc','MultiLabel','Gaussian','BSpline','GenericLabel'))
+  interpolation: enumerate(('Linear','NearestNeighbor','CosineWindowedSinc','WelchWindowedSinc','HammingWindowedSinc','LanczosWindowedSinc','MultiLabel','Gaussian','BSpline','GenericLabel'))
   interpolation_parameters: (0,)
   invert_transform_flags: [true]
   default_value: 0.0
@@ -109,7 +103,7 @@ ants_ApplyTransforms:
   args: ''
 ants_ApplyTransformsToPoints:
   dimension: ''
-  output_file: ''
+  output_file: 'path'
   invert_transform_flags: [true]
   num_threads: 0
   args: ''
@@ -289,7 +283,7 @@ ants_ImageMath:
   num_threads: 0
 ants_LabelGeometry:
   dimension: ''
-  output_file: ''
+  output_file: 'path'
   num_threads: 0
   args: ''
 ants_MultiplyImages:

@@ -1,0 +1,61 @@
+dipy_APMQball:
+  mask_file: 'path'
+  b0_thres: 0
+dipy_Denoise:
+  in_mask: 'path'
+  signal_mask: 'path'
+  noise_mask: 'path'
+  patch_radius: 0
+  block_radius: 0
+dipy_Resample:
+dipy_CSD:
+  in_mask: 'path'
+  response: 'path'
+  sh_order: 0
+  save_fods: true
+  out_fods: 'path'
+  b0_thres: 0
+dipy_EstimateResponseSH:
+  in_mask: 'path'
+  fa_thresh: 0.0
+  roi_radius: 0
+  auto: true
+  recursive: true
+  response: 'path'
+  out_mask: 'path'
+  b0_thres: 0
+dipy_RESTORE:
+  in_mask: 'path'
+  noise_mask: 'path'
+  b0_thres: 0
+dipy_SimulateMultiTensor:
+  in_mask: 'path'
+  diff_iso: [0.0]
+  diff_sf: (0,)
+  n_proc: 0
+  gradients: 'path'
+  in_bvec: 'path'
+  in_bval: 'path'
+  num_dirs: 0
+  bvalues: [0]
+  out_file: 'path'
+  out_mask: 'path'
+  out_bvec: 'path'
+  out_bval: 'path'
+dipy_DTI:
+  mask_file: 'path'
+  b0_thres: 0
+dipy_TensorMode:
+  mask_file: 'path'
+  b0_thres: 0
+dipy_StreamlineTractography:
+  in_model: 'path'
+  tracking_mask: 'path'
+  seed_mask: 'path'
+  in_peaks: 'path'
+  seed_coord: 'path'
+dipy_TrackDensityMap:
+  reference: 'path'
+  points_space: enumerate(('rasmm','voxel',None))
+  voxel_dims: 0.0
+  data_dims: 0

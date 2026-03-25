@@ -34,11 +34,9 @@ spm_Level1Design:
   use_mcr: true
 spm_MultipleRegressionDesign:
   include_intercept: true
-  user_covariates: enumerate(('vector','name','centering' and with values which 
-    are any value))
+  user_covariates: enumerate(('vector','name','centering'))
   spm_mat_dir: 'path'
-  covariates: enumerate(('vector','name','interaction','centering' and with 
-    values which are any value))
+  covariates: enumerate(('vector','name','interaction','centering''))
   threshold_mask_none: true
   threshold_mask_absolute: 0.0
   threshold_mask_relative: 0.0
@@ -55,8 +53,7 @@ spm_MultipleRegressionDesign:
   use_mcr: true
 spm_OneSampleTTestDesign:
   spm_mat_dir: 'path'
-  covariates: enumerate(('vector','name','interaction','centering' and with 
-    values which are any value))
+  covariates: enumerate(('vector','name','interaction','centering'))
   threshold_mask_none: true
   threshold_mask_absolute: 0.0
   threshold_mask_relative: 0.0
@@ -75,8 +72,7 @@ spm_PairedTTestDesign:
   grand_mean_scaling: true
   ancova: true
   spm_mat_dir: 'path'
-  covariates: enumerate(('vector','name','interaction','centering' and with 
-    values which are any value))
+  covariates: enumerate(('vector','name','interaction','centering'))
   threshold_mask_none: true
   threshold_mask_absolute: 0.0
   threshold_mask_relative: 0.0
@@ -108,8 +104,7 @@ spm_TwoSampleTTestDesign:
   dependent: true
   unequal_variance: true
   spm_mat_dir: 'path'
-  covariates: enumerate(('vector','name','interaction','centering' and with 
-    values which are any value))
+  covariates: enumerate(('vector','name','interaction','centering'))
   threshold_mask_none: true
   threshold_mask_absolute: 0.0
   threshold_mask_relative: 0.0
@@ -408,8 +403,7 @@ spm_CalcCoregAffine:
   mfile: true
   use_mcr: true
 spm_DicomImport:
-  output_dir_struct: 
-    enumerate(('flat','series','patname','patid_date','patid','date_time'))
+  output_dir_struct: enumerate(('flat','series','patname','patid_date','patid','date_time'))
   output_dir: ''
   format: enumerate(('nii','img'))
   icedims: true

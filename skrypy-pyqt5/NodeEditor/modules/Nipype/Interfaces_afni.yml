@@ -111,18 +111,15 @@ afni_Allineate:
   in_matrix: 'path'
   overwrite: true
   allcostx: 'path'
-  cost: 
-    enumerate(('leastsq','ls','mutualinfo','mi','corratio_mul','crM','norm_mutualinfo','nmi','hellinger','hel','corratio_add','crA','corratio_uns','crU'))
+  cost: enumerate(('leastsq','ls','mutualinfo','mi','corratio_mul','crM','norm_mutualinfo','nmi','hellinger','hel','corratio_add','crA','corratio_uns','crU'))
   interpolation: enumerate(('nearestneighbour','linear','cubic','quintic'))
-  final_interpolation: 
-    enumerate(('nearestneighbour','linear','cubic','quintic','wsinc5'))
+  final_interpolation: enumerate(('nearestneighbour','linear','cubic','quintic','wsinc5'))
   nmatch: 0
   no_pad: true
   zclip: true
   convergence: 0.0
   usetemp: true
-  check: 
-    enumerate(('leastsq','ls','mutualinfo','mi','corratio_mul','crM','norm_mutualinfo','nmi','hellinger','hel','corratio_add','crA','corratio_uns','crU'))
+  check: enumerate(('leastsq','ls','mutualinfo','mi','corratio_mul','crM','norm_mutualinfo','nmi','hellinger','hel','corratio_add','crA','corratio_uns','crU'))
   one_pass: true
   two_pass: true
   two_blur: 0.0
@@ -139,12 +136,10 @@ afni_Allineate:
   out_weight_file: 'path'
   source_mask: 'path'
   source_automask: 0
-  warp_type: 
-    enumerate(('shift_only','shift_rotate','shift_rotate_scale','affine_general'))
+  warp_type: enumerate(('shift_only','shift_rotate','shift_rotate_scale','affine_general'))
   warpfreeze: true
   replacebase: true
-  replacemeth: 
-    enumerate(('leastsq','ls','mutualinfo','mi','corratio_mul','crM','norm_mutualinfo','nmi','hellinger','hel','corratio_add','crA','corratio_uns','crU'))
+  replacemeth: enumerate(('leastsq','ls','mutualinfo','mi','corratio_mul','crM','norm_mutualinfo','nmi','hellinger','hel','corratio_add','crA','corratio_uns','crU'))
   epi: true
   maxrot: 0.0
   maxshf: 0.0
@@ -152,8 +147,7 @@ afni_Allineate:
   maxshr: 0.0
   master: 'path'
   newgrid: 0.0
-  nwarp: 
-    enumerate(('bilinear','cubic','quintic','heptic','nonic','poly3','poly5','poly7','poly9'))
+  nwarp: enumerate(('bilinear','cubic','quintic','heptic','nonic','poly3','poly5','poly7','poly9'))
   nwarp_fixmot: enumerate(('X','Y','Z','I','J','K'))
   nwarp_fixdep: enumerate(('X','Y','Z','I','J','K'))
   verbose: true
@@ -478,8 +472,7 @@ afni_ROIStats:
   nobriklab: true
   format1D: true
   format1DR: true
-  stat: 
-    enumerate(('mean','sum','voxels','minmax','sigma','median','mode','summary','zerominmax','zerosigma','zeromedian','zeromode'))
+  stat: enumerate(('mean','sum','voxels','minmax','sigma','median','mode','summary','zerominmax','zerosigma','zeromedian','zeromode'))
   out_file: 'path'
   args: ''
 afni_Retroicor:
@@ -592,9 +585,7 @@ afni_TShift:
   tslice: 0
   ignore: 0
   interp: enumerate(('Fourier','linear','cubic','quintic','heptic'))
-  tpattern: 
-    enumerate(('alt+z','altplus','alt+z2','alt-z','altminus','alt-z2','seq+z','seqplus','seq-z','seqminus',a
-    string))
+  tpattern: enumerate(('alt+z','altplus','alt+z2','alt-z','altminus','alt-z2','seq+z','seqplus','seq-z','seqminus'))
   slice_timing: ['path']
   slice_encoding_direction: enumerate(('k','k-'))
   rlt: true
@@ -898,10 +889,8 @@ afni_NwarpAdjust:
 afni_NwarpApply:
   inv_warp: true
   master: 'path'
-  interp: 
-    enumerate(('wsinc5','NN','nearestneighbour','nearestneighbor','linear','trilinear','cubic','tricubic','quintic','triquintic'))
-  ainterp: 
-    enumerate(('NN','nearestneighbour','nearestneighbor','linear','trilinear','cubic','tricubic','quintic','triquintic','wsinc5'))
+  interp: enumerate(('wsinc5','NN','nearestneighbour','nearestneighbor','linear','trilinear','cubic','tricubic','quintic','triquintic'))
+  ainterp: enumerate(('NN','nearestneighbour','nearestneighbor','linear','trilinear','cubic','tricubic','quintic','triquintic','wsinc5'))
   out_file: 'path'
   short: true
   quiet: true
@@ -991,8 +980,7 @@ afni_TStat:
   args: ''
 afni_To3D:
   out_file: 'path'
-  filetype: 
-    enumerate(('spgr','fse','epan','anat','ct','spct','pet','mra','bmap','diff','omri','abuc','fim','fith','fico','fitt','fift','fizt','fict','fibt','fibn','figt','fipt','fbuc'))
+  filetype: enumerate(('spgr','fse','epan','anat','ct','spct','pet','mra','bmap','diff','omri','abuc','fim','fith','fico','fitt','fift','fizt','fict','fibt','fibn','figt','fipt','fbuc'))
   skipoutliers: true
   assumemosaic: true
   datatype: enumerate(('short','float','byte','complex'))

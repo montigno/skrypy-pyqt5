@@ -8,10 +8,12 @@ A documentation is available here : [https://montigno.github.io/skrypy-pyqt5](ht
 
 # Release history
 
+
 <p></p>
 
-	30/03/2026: version 26.03.30a
+	30/03/2026: version 26.03.30b
 	- Loading modules at startup: faster
+	- Nipype: correction of mutually exclusive inputs
 	- Various bugs fixed
 
 <p></p>

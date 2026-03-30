@@ -634,11 +634,10 @@ class ants_DenoiseImage:
         GUI: no
         link_web: (click Ctrl + U)
     """
-    def __init__(self, input_image='path', save_noise=True, **options):
+    def __init__(self, input_image='path', **options):
         from nipype.interfaces.ants import DenoiseImage
         at = DenoiseImage()
         at.inputs.input_image = input_image
-        at.inputs.save_noise = save_noise
         for ef in options:
             setattr(at.inputs, ef, options[ef])
         self.res = at.run()

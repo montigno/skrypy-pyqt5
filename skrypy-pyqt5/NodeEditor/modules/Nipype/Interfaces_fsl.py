@@ -48,12 +48,10 @@ class fsl_BinaryMaths:
         GUI: no
         link_web: (click Ctrl + U)
     """
-    def __init__(self, operation="enumerate(('add','sub','mul','div','rem','max','min'))", operand_file='path', operand_value=0.0, in_file='path', **options):
+    def __init__(self, operation="enumerate(('add','sub','mul','div','rem','max','min'))", in_file='path', **options):
         from nipype.interfaces.fsl import BinaryMaths
         at = BinaryMaths()
         at.inputs.operation = operation
-        at.inputs.operand_file = operand_file
-        at.inputs.operand_value = operand_value
         at.inputs.in_file = in_file
         for ef in options:
             setattr(at.inputs, ef, options[ef])
@@ -137,11 +135,9 @@ class fsl_IsotropicSmooth:
         GUI: no
         link_web: (click Ctrl + U)
     """
-    def __init__(self, fwhm=0.0, sigma=0.0, in_file='path', **options):
+    def __init__(self, in_file='path', **options):
         from nipype.interfaces.fsl import IsotropicSmooth
         at = IsotropicSmooth()
-        at.inputs.fwhm = fwhm
-        at.inputs.sigma = sigma
         at.inputs.in_file = in_file
         for ef in options:
             setattr(at.inputs, ef, options[ef])
@@ -801,13 +797,10 @@ class fsl_TOPUP:
         GUI: no
         link_web: (click Ctrl + U)
     """
-    def __init__(self, in_file='path', encoding_file='path', encoding_direction="enumerate(('y','x','z','x-','y-','z-'))", readout_times=[0.0], **options):
+    def __init__(self, in_file='path', **options):
         from nipype.interfaces.fsl import TOPUP
         at = TOPUP()
         at.inputs.in_file = in_file
-        at.inputs.encoding_file = encoding_file
-        at.inputs.encoding_direction = encoding_direction
-        at.inputs.readout_times = readout_times
         for ef in options:
             setattr(at.inputs, ef, options[ef])
         self.res = at.run()
@@ -1173,12 +1166,9 @@ class fsl_PRELUDE:
         GUI: no
         link_web: (click Ctrl + U)
     """
-    def __init__(self, complex_phase_file='path', magnitude_file='path', phase_file='path', **options):
+    def __init__(self, **options):
         from nipype.interfaces.fsl import PRELUDE
         at = PRELUDE()
-        at.inputs.complex_phase_file = complex_phase_file
-        at.inputs.magnitude_file = magnitude_file
-        at.inputs.phase_file = phase_file
         for ef in options:
             setattr(at.inputs, ef, options[ef])
         self.res = at.run()
@@ -1367,13 +1357,11 @@ class fsl_FilterRegressor:
         GUI: no
         link_web: (click Ctrl + U)
     """
-    def __init__(self, in_file='path', design_file='path', filter_columns=[0], filter_all=True, **options):
+    def __init__(self, in_file='path', design_file='path', **options):
         from nipype.interfaces.fsl import FilterRegressor
         at = FilterRegressor()
         at.inputs.in_file = in_file
         at.inputs.design_file = design_file
-        at.inputs.filter_columns = filter_columns
-        at.inputs.filter_all = filter_all
         for ef in options:
             setattr(at.inputs, ef, options[ef])
         self.res = at.run()
@@ -1526,13 +1514,10 @@ class fsl_Overlay:
         GUI: no
         link_web: (click Ctrl + U)
     """
-    def __init__(self, background_image='path', auto_thresh_bg=True, full_bg_range=True, bg_thresh=(0,), stat_image='path', stat_thresh=(0,), **options):
+    def __init__(self, background_image='path', stat_image='path', stat_thresh=(0,), **options):
         from nipype.interfaces.fsl import Overlay
         at = Overlay()
         at.inputs.background_image = background_image
-        at.inputs.auto_thresh_bg = auto_thresh_bg
-        at.inputs.full_bg_range = full_bg_range
-        at.inputs.bg_thresh = bg_thresh
         at.inputs.stat_image = stat_image
         at.inputs.stat_thresh = stat_thresh
         for ef in options:
@@ -1704,12 +1689,10 @@ class fsl_Smooth:
         GUI: no
         link_web: (click Ctrl + U)
     """
-    def __init__(self, in_file='path', sigma=0.0, fwhm=0.0, **options):
+    def __init__(self, in_file='path', **options):
         from nipype.interfaces.fsl import Smooth
         at = Smooth()
         at.inputs.in_file = in_file
-        at.inputs.sigma = sigma
-        at.inputs.fwhm = fwhm
         for ef in options:
             setattr(at.inputs, ef, options[ef])
         self.res = at.run()
@@ -2848,10 +2831,9 @@ class fsl_SmoothEstimate:
         GUI: no
         link_web: (click Ctrl + U)
     """
-    def __init__(self, dof=0, mask_file='path', **options):
+    def __init__(self, mask_file='path', **options):
         from nipype.interfaces.fsl import SmoothEstimate
         at = SmoothEstimate()
-        at.inputs.dof = dof
         at.inputs.mask_file = mask_file
         for ef in options:
             setattr(at.inputs, ef, options[ef])
@@ -2932,13 +2914,10 @@ class fsl_ICA_AROMA:
         GUI: no
         link_web: (click Ctrl + U)
     """
-    def __init__(self, feat_dir='path', in_file='path', out_dir='path', motion_parameters='path', denoise_type="enumerate(('nonaggr','aggr','both','no'))", **options):
+    def __init__(self, feat_dir='path', in_file='path', out_dir='path', denoise_type="enumerate(('nonaggr','aggr','both','no'))", **options):
         from nipype.interfaces.fsl import ICA_AROMA
         at = ICA_AROMA()
-        at.inputs.feat_dir = feat_dir
-        at.inputs.in_file = in_file
         at.inputs.out_dir = out_dir
-        at.inputs.motion_parameters = motion_parameters
         at.inputs.denoise_type = denoise_type
         for ef in options:
             setattr(at.inputs, ef, options[ef])

@@ -202,6 +202,7 @@ ants_CorticalThickness:
   num_threads: 0
   args: ''
 ants_DenoiseImage:
+  save_noise: true
   dimension: ''
   noise_model: enumerate(('Gaussian','Rician'))
   shrink_factor: 0

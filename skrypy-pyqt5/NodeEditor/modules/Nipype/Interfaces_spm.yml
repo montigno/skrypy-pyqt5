@@ -218,6 +218,9 @@ spm_NewSegment:
   mfile: true
   use_mcr: true
 spm_Normalize:
+  template: 'path'
+  source: ['path']
+  parameter_file: 'path'
   jobtype: enumerate(('estwrite','est','write'))
   apply_to_files: ['path']
   source_weight: 'path'
@@ -239,6 +242,8 @@ spm_Normalize:
   mfile: true
   use_mcr: true
 spm_Normalize12:
+  image_to_align: 'path'
+  deformation_file: 'path'
   apply_to_files: ['path']
   jobtype: enumerate(('estwrite','est','write'))
   bias_regularization: ''

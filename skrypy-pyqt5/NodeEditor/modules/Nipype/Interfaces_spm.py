@@ -395,12 +395,9 @@ class spm_Normalize:
         GUI: no
         link_web: (click Ctrl + U)
     """
-    def __init__(self, template='path', source=['path'], parameter_file='path', **options):
+    def __init__(self, **options):
         from nipype.interfaces.spm import Normalize
         at = Normalize()
-        at.inputs.template = template
-        at.inputs.source = source
-        at.inputs.parameter_file = parameter_file
         for ef in options:
             setattr(at.inputs, ef, options[ef])
         self.res = at.run()
@@ -424,11 +421,9 @@ class spm_Normalize12:
         GUI: no
         link_web: (click Ctrl + U)
     """
-    def __init__(self, image_to_align='path', deformation_file='path', **options):
+    def __init__(self, **options):
         from nipype.interfaces.spm import Normalize12
         at = Normalize12()
-        at.inputs.image_to_align = image_to_align
-        at.inputs.deformation_file = deformation_file
         for ef in options:
             setattr(at.inputs, ef, options[ef])
         self.res = at.run()

@@ -1,4 +1,7 @@
 fsl_ICA_AROMA:
+  feat_dir: 'path'
+  in_file: 'path'
+  motion_parameters: 'path'
   mask: 'path'
   dim: 0
   TR: 0.0
@@ -259,6 +262,9 @@ fsl_SigLoss:
   output_type: enumerate(('NIFTI','NIFTI_PAIR','NIFTI_GZ','NIFTI_PAIR_GZ','GIFTI'))
   args: ''
 fsl_TOPUP:
+  encoding_file: 'path'
+  encoding_direction: enumerate(('y','x','z','x-','y-','z-'))
+  readout_times: [0.0]
   out_base: 'path'
   out_field: 'path'
   out_warp_prefix: ''
@@ -300,6 +306,8 @@ fsl_ApplyMask:
   output_type: enumerate(('NIFTI','NIFTI_PAIR','NIFTI_GZ','NIFTI_PAIR_GZ','GIFTI'))
   args: ''
 fsl_BinaryMaths:
+  operand_file: 'path'
+  operand_value: 0.0
   out_file: 'path'
   internal_datatype: enumerate(('float','char','int','short','double','input'))
   output_datatype: enumerate(('float','char','int','short','double','input'))
@@ -334,6 +342,8 @@ fsl_ErodeImage:
   output_type: enumerate(('NIFTI','NIFTI_PAIR','NIFTI_GZ','NIFTI_PAIR_GZ','GIFTI'))
   args: ''
 fsl_IsotropicSmooth:
+  fwhm: 0.0
+  sigma: 0.0
   out_file: 'path'
   internal_datatype: enumerate(('float','char','int','short','double','input'))
   output_datatype: enumerate(('float','char','int','short','double','input'))
@@ -608,6 +618,7 @@ fsl_SMM:
   output_type: enumerate(('NIFTI','NIFTI_PAIR','NIFTI_GZ','NIFTI_PAIR_GZ','GIFTI'))
   args: ''
 fsl_SmoothEstimate:
+  dof: 0
   residual_fit_file: 'path'
   zstat_file: 'path'
   output_type: enumerate(('NIFTI','NIFTI_PAIR','NIFTI_GZ','NIFTI_PAIR_GZ','GIFTI'))
@@ -893,6 +904,9 @@ fsl_MCFLIRT:
   output_type: enumerate(('NIFTI','NIFTI_PAIR','NIFTI_GZ','NIFTI_PAIR_GZ','GIFTI'))
   args: ''
 fsl_PRELUDE:
+  complex_phase_file: 'path'
+  magnitude_file: 'path'
+  phase_file: 'path'
   unwrapped_phase_file: 'path'
   num_partitions: 0
   labelprocess2d: true
@@ -997,6 +1011,8 @@ fsl_ExtractROI:
   output_type: enumerate(('NIFTI','NIFTI_PAIR','NIFTI_GZ','NIFTI_PAIR_GZ','GIFTI'))
   args: ''
 fsl_FilterRegressor:
+  filter_columns: [0]
+  filter_all: True
   out_file: 'path'
   mask: 'path'
   var_norm: true
@@ -1058,6 +1074,9 @@ fsl_MotionOutliers:
   output_type: enumerate(('NIFTI','NIFTI_PAIR','NIFTI_GZ','NIFTI_PAIR_GZ','GIFTI'))
   args: ''
 fsl_Overlay:
+  auto_thresh_bg: true
+  full_bg_range: true
+  bg_thresh: (0,)
   transparency: true
   out_type: enumerate(('float','int'))
   use_checkerboard: true
@@ -1127,6 +1146,8 @@ fsl_Slicer:
   output_type: enumerate(('NIFTI','NIFTI_PAIR','NIFTI_GZ','NIFTI_PAIR_GZ','GIFTI'))
   args: ''
 fsl_Smooth:
+  sigma: 0.0
+  fwhm: 0.0
   smoothed_file: 'path'
   output_type: enumerate(('NIFTI','NIFTI_PAIR','NIFTI_GZ','NIFTI_PAIR_GZ','GIFTI'))
   args: ''

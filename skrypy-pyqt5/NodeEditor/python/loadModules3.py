@@ -38,6 +38,7 @@ class getlistModules3:
             res =  None
         try:
             res = ast.unparse(value)
+            res = " ".join(res.split())
         except Exception:
             res = None
         # print("get_default=", res)

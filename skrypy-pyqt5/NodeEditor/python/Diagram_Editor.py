@@ -68,7 +68,7 @@ from . import defineTunnels, define_inputs_outputs
 from . import input_output_setName, project_archive
 from . import editCombobox, errorHandler
 from . import editParam, editParamLoopFor
-from . import getlistModules, getlistSubModules, getlistModules2, getlistModules3
+from . import getlistSubModules, getlistModules3
 from . import seeCode, getDocString, manage_pck
 from . import setPreferences, setLimits, TextEditor
 
@@ -6851,6 +6851,11 @@ class NodeEdit(QWidget):
 
         print("Number of blocks in library:", len(libBlocks), ", loading time:", time.time() - start_time) 
         print("Size of blocks dictionnary:", sys.getsizeof(libBlocks), "bytes.")
+        
+        # with open('/tmp/listBlocks.txt', 'w') as fssh:
+        #         fssh.write(str(libBlocks) + "\n")
+        # with open('/tmp/listCat.txt', 'w') as fssh:
+        #         fssh.write(str(self.list_tree) + "\n")
 
         self.setlib(libBlocks)
         self.library_tools = buildLibrary(self.list_tools)

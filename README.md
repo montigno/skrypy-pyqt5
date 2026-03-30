@@ -10,6 +10,12 @@ A documentation is available here : [https://montigno.github.io/skrypy-pyqt5](ht
 
 <p></p>
 
+	30/03/2026: version 26.03.30a
+	- Loading modules at startup: faster
+	- Various bugs fixed
+
+<p></p>
+
 	24/03/2026: version 26.03.24a
 	- Some bugs fixed
 

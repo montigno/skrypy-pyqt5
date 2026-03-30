@@ -68,7 +68,7 @@ from . import defineTunnels, define_inputs_outputs
 from . import input_output_setName, project_archive
 from . import editCombobox, errorHandler
 from . import editParam, editParamLoopFor
-from . import getlistModules, getlistSubModules, getlistModules2
+from . import getlistModules, getlistSubModules, getlistModules2, getlistModules3
 from . import seeCode, getDocString, manage_pck
 from . import setPreferences, setLimits, TextEditor
 
@@ -1496,6 +1496,7 @@ class Clusters(QGraphicsRectItem):
 
         wprox, hprox = 102, 28
         w, h = ncol * wprox + 15, nrow * hprox + 5
+        w, h = round(w / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value, round(h / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
 
         self.setRect(0.0, 0.0, w, h)
 
@@ -6819,43 +6820,43 @@ class NodeEdit(QWidget):
 
         self.get_sub_tree()
         
-        getlistModules2()
-       
-
-# processes blocks
+# # processes blocks
         start_time = time.time()
-        for name in lstmod:
-            tmp = (os.path.join(rep, name))
-            if (os.path.isdir(tmp) and
-                    '__pycache__' not in tmp and
-                    'sources' not in tmp):
-                # library of processes
-                mod_instance = getlistModules(name)
-                infoModules = mod_instance.listInspect()
-                list_cat = sorted(infoModules.keys())
-                self.list_tools[name] = mod_instance.getIconPath()
-                # for category, cl in infoModules.items():
-                list_by_cat = {}
-                for category in list_cat:
-                    self.listCategory.append(category)
-                    list_module = []
-                    for clas in infoModules[category]:
-                        libBlocks[clas[0]] = (name + '.' + category, clas[1:5])
-                        list_module.append(clas[0])
-                    list_by_cat[category] = list_module
-                # if 'Demos' == name:
-                #     print(libBlocks)
-                #     print(mod_instance.listBlocks)
-                #     print(list_by_cat)
-                #     print(mod_instance.listCat())
-            self.list_tree[name] = list_by_cat
+
+        # for name in lstmod:
+        #     tmp = (os.path.join(rep, name))
+        #     if (os.path.isdir(tmp) and
+        #             '__pycache__' not in tmp and
+        #             'sources' not in tmp):
+        #         # library of processes
+        #         mod_instance = getlistModules(name)
+        #         infoModules = mod_instance.listInspect()
+        #         list_cat = sorted(infoModules.keys())
+        #         self.list_tools[name] = mod_instance.getIconPath()
+        #         # for category, cl in infoModules.items():
+        #         list_by_cat = {}
+        #         for category in list_cat:
+        #             self.listCategory.append(category)
+        #             list_module = []
+        #             for clas in infoModules[category]:
+        #                 libBlocks[clas[0]] = (name + '.' + category, clas[1:5])
+        #                 list_module.append(clas[0])
+        #             list_by_cat[category] = list_module
+        #     self.list_tree[name] = list_by_cat
+
+        mod_instance3 = getlistModules3()
+        libBlocks = mod_instance3.getListBlocks()
+        self.list_tools.update(mod_instance3.listIcons())
+        self.list_tree = mod_instance3.listCat()
 
         print("Number of blocks in library:", len(libBlocks), ", loading time:", time.time() - start_time) 
         print("Size of blocks dictionnary:", sys.getsizeof(libBlocks), "bytes.")
+
         self.setlib(libBlocks)
         self.library_tools = buildLibrary(self.list_tools)
         self.library_tools.menu_choosen.connect(self.menu_choosen)
         self.scrollTools = scrollTools(self.library_tools)
+
         # width_lib = self.library_tools.frameGeometry().width()
 
 # add submodules

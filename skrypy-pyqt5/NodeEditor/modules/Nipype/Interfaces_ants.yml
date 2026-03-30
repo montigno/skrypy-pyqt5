@@ -91,7 +91,7 @@ ants_RegistrationSynQuick:
 ants_ApplyTransforms:
   dimension: ''
   input_image_type: ''
-  output_image: ''
+  output_image: 'path'
   out_postfix: ''
   interpolation: enumerate(('Linear','NearestNeighbor','CosineWindowedSinc','WelchWindowedSinc','HammingWindowedSinc','LanczosWindowedSinc','MultiLabel','Gaussian','BSpline','GenericLabel'))
   interpolation_parameters: (0,)
@@ -211,7 +211,7 @@ ants_DenoiseImage:
   num_threads: 0
   args: ''
 ants_LaplacianThickness:
-  output_image: ''
+  output_image: 'path'
   smooth_param: 0.0
   prior_thickness: 0.0
   dT: 0.0
@@ -223,7 +223,7 @@ ants_N4BiasFieldCorrection:
   dimension: ''
   mask_image: 'path'
   weight_image: 'path'
-  output_image: ''
+  output_image: 'path'
   bspline_fitting_distance: 0.0
   bspline_order: 0
   shrink_factor: 0
@@ -310,7 +310,7 @@ ants_ThresholdImage:
   num_threads: 0
   args: ''
 ants_ConvertScalarImageToRGB:
-  output_image: ''
+  output_image: 'path'
   mask_image: 'path'
   custom_color_map_file: ''
   minimum_RGB_output: 0
@@ -320,7 +320,7 @@ ants_ConvertScalarImageToRGB:
 ants_CreateTiledMosaic:
   mask_image: 'path'
   alpha_value: 0.0
-  output_image: ''
+  output_image: 'path'
   tile_geometry: ''
   direction: 0
   pad_or_crop: ''

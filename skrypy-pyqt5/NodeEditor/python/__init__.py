@@ -25,6 +25,7 @@ from NodeEditor.python.fullScreen2 import SubWindow
 from NodeEditor.python.limits_constants import setLimits
 from NodeEditor.python.loadModules import getlistModules
 from NodeEditor.python.loadModules2 import getlistModules2
+from NodeEditor.python.loadModules3 import getlistModules3
 from NodeEditor.python.loadSubModules import getlistSubModules
 from NodeEditor.python.multiExecution import multiple_execution
 from NodeEditor.python.multiExecution_altern import multiple_execution_altern

@@ -15,12 +15,9 @@ class getlistModules3:
 
     def __init__(self):
 
-        # modules_path = os.path.dirname(__file__)
-        # modules_path, _ = os.path.split(modules_path)
-        # modules_path = os.path.join(modules_path, 'modules')
-        
-        modules_path = "/home/olivier/Documents/eclipse-workspace-2026/skrypy-pyqt5/NodeEditor/modules"
-
+        modules_path = os.path.dirname(__file__)
+        modules_path, _ = os.path.split(modules_path)
+        modules_path = os.path.join(modules_path, 'modules')
         self.listBlocks, self.list_tree, self.list_icons = self.build_class_dict(modules_path)
 
     def get_annotation(self, annotation):

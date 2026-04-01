@@ -31,8 +31,7 @@ from PyQt5.QtWidgets import QMenuBar, QGraphicsScene, QDialog, \
     QGraphicsWidget, QGraphicsLinearLayout, QFileSystemModel, QStyle,\
     QAbstractItemView, QHeaderView
 from PyQt5.Qt import Qt, QFont, QComboBox, QSizePolicy, QFileDialog, QPainter, \
-    QGraphicsView, QPalette, QGraphicsItem, QImage, QMessageBox, QMdiArea,\
-    QGraphicsObject, QGraphicsSimpleTextItem
+    QGraphicsView, QPalette, QGraphicsItem, QImage, QMessageBox, QMdiArea
 
 from collections import deque
 from enum import Enum
@@ -226,54 +225,33 @@ class BlockCreate(QGraphicsRectItem):
         if isMod:
             self.setAcceptHoverEvents(True)
             self.setFlag(QGraphicsRectItem.ItemSendsGeometryChanges)
-            
-    #     self.glowSelected = False 
-    #     self.radius = 8
-    #     self.color_bg = QColor(60, 60, 60)
-    #     self.color_border = QColor(120, 120, 120)
-    #     self.color_selected = QColor(255, 180, 60)
-    #
-    # def paint(self, painter, option, widget):
-    #
-    #     rect = self.rect()
-    #
-    #     # --------------------
-    #     # ombre simple
-    #     # --------------------
-    #     painter.setPen(Qt.NoPen)
-    #     painter.setBrush(QColor(0, 0, 0, 80))
-    #     painter.drawRoundedRect(rect.adjusted(3, 3, 3, 3), self.radius, self.radius)
-    #
-    #     # --------------------
-    #     # fond
-    #     # --------------------
-    #     painter.setBrush(self.color_bg)
-    #
-    #     if self.glowSelected:
-    #         pen = QPen(self.color_selected, 2)
-    #     else:
-    #         pen = QPen(self.color_border, 4)
-    #
-    #     painter.setPen(pen)
-    #
-    #     painter.drawRoundedRect(rect, self.radius, self.radius)
-    #
-    #     # --------------------
-    #     # glow sélection
-    #     # --------------------
-    #     if self.glowSelected:
-    #
-    #         glow = QPen(self.color_selected, 2)
-    #         glow.setCosmetic(True)
-    #
-    #         painter.setPen(glow)
-    #         painter.setBrush(Qt.NoBrush)
-    #
-    #         painter.drawRoundedRect(rect, self.radius, self.radius)
-            # for i in range(3):
-            #     glow = QPen(QColor(255,180,60,60-i*20), 6+i*2)
-            #     painter.setPen(glow)
-            #     painter.drawRoundedRect(rect, self.radius, self.radius)
+
+    def paint(self, painter, option, widget=None):
+        # super().paint(painter, option, widget)
+
+        rect = self.rect()
+
+        if self.category:
+            colorGradient1, colorGradient2, colorPen = ItemColor.PROCESS_TOP.value, ItemColor.PROCESS_BOT.value, ItemColor.FRAME_PROCESS.value
+        else:
+            colorGradient1, colorGradient2, colorPen = ItemColor.SUBPROCESS_TOP.value, ItemColor.SUBPROCESS_BOT.value, ItemColor.FRAME_SUBPROCESS.value
+
+        gradient = QLinearGradient(QPointF(0, 0), QPointF(0, 50))
+        gradient.setColorAt(0, colorGradient1)
+        gradient.setColorAt(1, colorGradient2)
+
+        pen = QPen()
+        pen.setColor(colorPen)
+        pen.setStyle(Qt.SolidLine)
+        pen.setWidth(4)
+
+        painter.setPen(pen)
+        painter.setBrush(QBrush(gradient))
+
+        if option.state & QStyle.State_Selected:
+            super().paint(painter, option, widget)
+        radius = 12
+        painter.drawRoundedRect(rect, radius, radius)
 
     def addProbesOutputs(self):
         height = self.boundingRect().height() / 2
@@ -435,7 +413,7 @@ class BlockCreate(QGraphicsRectItem):
         gradient = QLinearGradient(QPointF(0, 0), QPointF(0, 50))
         gradient.setColorAt(0, colorGradient1)
         gradient.setColorAt(1, colorGradient2)
-
+        
         self.setPen(QPen(colorPen, 4))
         self.setBrush(QBrush(gradient))
         
@@ -703,6 +681,7 @@ class BlockCreate(QGraphicsRectItem):
             except Exception:
                 pass
             self.setSelected(True)
+            # self.glowSelected = True
             
         # elif event.button() == 1 and event.modifiers() & Qt.ControlModifier:
         #     pos = self.mapToScene(event.pos())
@@ -3361,6 +3340,8 @@ class DiagramView(QGraphicsView):
 
     def __init__(self, scene, parent=None):
         QGraphicsView.__init__(self, scene, parent)
+        
+        self.show_background = False
         self.setCacheMode(QGraphicsView.CacheBackground)
         self.setViewportUpdateMode(QGraphicsView.SmartViewportUpdate)
         self.setRenderHints(QPainter.Antialiasing |
@@ -3405,10 +3386,17 @@ class DiagramView(QGraphicsView):
     #     self.plate.setPos(w - pw - margin, h - ph - margin)
     #
     #     super().resizeEvent(event)
+
+    def setBackgroundVisible(self, visible):
+        self.show_background = visible
+        self.viewport().update()  # refresh
+        self.scale(1.001, 1.001)
         
     def drawBackground(self, painter, rect):
         super().drawBackground(painter, rect)
-
+        if not self.show_background:
+            return
+    
         zoom = self.transform().m11()
         grid = self.base_grid
         while grid * zoom < 15:
@@ -3417,7 +3405,7 @@ class DiagramView(QGraphicsView):
         top = math.floor(rect.top() / grid) * grid
         minor = []
         major = []
-
+    
         x = left
         while x < rect.right():
             if int(x / grid) % self.major_step == 0:
@@ -3425,7 +3413,7 @@ class DiagramView(QGraphicsView):
             else:
                 minor.append(QLineF(x, rect.top(), x, rect.bottom()))
             x += grid
-
+    
         y = top
         while y < rect.bottom():
             if int(y / grid) % self.major_step == 0:
@@ -3433,7 +3421,7 @@ class DiagramView(QGraphicsView):
             else:
                 minor.append(QLineF(rect.left(), y, rect.right(), y))
             y += grid
-
+    
         painter.setPen(self.pen_minor)
         painter.drawLines(minor)
         painter.setPen(self.pen_major)
@@ -6778,7 +6766,7 @@ class NodeEdit(QWidget):
         self.list_tools, self.list_tree = {}, {}
         self.listItemStored, self.listBlSmStored, self.listLoopStored = {}, {}, {}
         self.listCommentsStored = []
-        self.autofit = True
+        self.autofit, self.grid = True, True
 
         self.currentpathwork = os.path.dirname(os.path.realpath(__file__))
         self.currentpathwork = str(os.path.join(self.currentpathwork, '../examples'))
@@ -10209,6 +10197,10 @@ class ToolBar(QToolBar):
         self.check_box1.stateChanged.connect(self.uncheck)
     #     self.check_box2.stateChanged.connect(self.uncheck)
     #     self.check_box3.stateChanged.connect(self.uncheck)
+        self.check_grid = QCheckBox("Grid")
+        self.check_grid.setChecked(False)
+        editor.grid = False
+        self.check_grid.stateChanged.connect(self.show_grid)
         check_container = QWidget()
         check_container.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
     #     label = QLabel("View mode : ")
@@ -10218,6 +10210,8 @@ class ToolBar(QToolBar):
     #     self.mainLayout.addWidget(self.check_box2, 0, 2)
     #     self.mainLayout.addWidget(self.check_box3, 0, 3)
     #     # self.setLayout(self.mainLayout)
+        self.mainLayout.addWidget(self.check_grid, 0, 2)
+
         wid = QWidget()
         wid.setLayout(self.mainLayout)
         self.addWidget(wid)
@@ -10236,6 +10230,10 @@ class ToolBar(QToolBar):
     #         elif self.sender() == self.check_box3:
     #             self.check_box1.setChecked(False)
     #             self.check_box2.setChecked(False)
+    
+    def show_grid(self, state):
+        for dg in editor.diagramView:
+            dg.setBackgroundVisible(state)
 
     def action(self, txt_action):
         Menu().btnPressed(QAction(txt_action))

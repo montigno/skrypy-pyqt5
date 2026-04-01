@@ -11,6 +11,12 @@ A documentation is available here : [https://montigno.github.io/skrypy-pyqt5](ht
 
 <p></p>
 
+	01/04/2026: version 26.04.01a
+	- Option grid
+	- rounded corners of the blocks
+
+<p></p>
+
 	30/03/2026: version 26.03.30b
 	- Loading modules at startup: faster
 	- Nipype: correction of mutually exclusive inputs

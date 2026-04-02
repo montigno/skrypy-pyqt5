@@ -24,20 +24,26 @@ class BrukerInformationParser():
                           [float(0), float(1), float(0)],
                           [float(0), float(0), float(1)]]
         # and customizing it according to slice and read orientations
-        if (self._sliceOrientation == 'sagittal' and
-                self._readOrientation == 'H_F'):
+        if (
+            self._sliceOrientation == 'sagittal'
+            and self._readOrientation == 'H_F'
+        ):
             self._rotation = [[float(0), float(0), float(1)],
                               [float(0), float(-1), float(0)],
                               [float(1), float(0), float(0)]]
 
-        elif (self._sliceOrientation == 'coronal' and
-                self._readOrientation == 'H_F'):
+        elif (
+            self._sliceOrientation == 'coronal'
+            and self._readOrientation == 'H_F'
+        ):
             self._rotation = [[float(0), float(1), float(0)],
                               [float(0), float(0), float(1)],
                               [float(1), float(0), float(0)]]
 
-        elif (self._sliceOrientation == 'axial' and
-                self._readOrientation == 'L_R'):
+        elif (
+            self._sliceOrientation == 'axial'
+            and self._readOrientation == 'L_R'
+        ):
             self._rotation = [[float(0), float(1), float(0)],
                               [float(0), float(0), float(1)],
                               [float(1), float(0), float(0)]]
@@ -86,8 +92,10 @@ class BrukerInformationParser():
         lines.append(fileNameLines[startIndex]
                                   [len('##$' + fieldName + '='): -1])
         endIndex = startIndex + 1
-        while ('##$' not in fileNameLines[endIndex] and
-               '$$' not in fileNameLines[endIndex]):
+        while (
+            '##$' not in fileNameLines[endIndex]
+            and '$$' not in fileNameLines[endIndex]
+        ):
             lines.append(fileNameLines[endIndex][: -1])
             endIndex += 1
         return lines

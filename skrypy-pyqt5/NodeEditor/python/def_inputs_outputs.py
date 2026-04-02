@@ -81,18 +81,18 @@ class define_inputs_outputs(QDialog):
     def OK(self):
         self.form = []
         if not self.portName.text():
-            self.info.setText("<span style=\" \
-                              font-size:10pt; \
-                              color:#cc0000;\" > error : name " +
-                              self.typeport +
-                              " port  is empty </span>")
+            self.info.setText(
+                f"<span style=\" \
+                font-size:10pt; \
+                color:#cc0000;\" > error : name {self.typeport} port  is empty </span>"
+            )
             return
         if self.portName.text() in self.listPorts and self.portName.text() != self.defaultName:
-            self.info.setText("<span style=\" \
-                              font-size:10pt; \
-                              color:#cc0000;\" > error : name " +
-                              self.typeport +
-                              " is already taken ! </span>")
+            self.info.setText(
+                f"<span style=\" \
+                font-size:10pt; \
+                color:#cc0000;\" > error : name {self.typeport} is already taken ! </span>"
+            )
             return
         self.form.append(self.portName.text())
         if self.comboDim.currentText():

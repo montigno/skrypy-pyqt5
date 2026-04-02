@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLineEdit,\
-    QPushButton, QWidget, QLabel, QCheckBox, QSpinBox, QDoubleSpinBox,\
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLineEdit, \
+    QPushButton, QWidget, QLabel, QCheckBox, QSpinBox, QDoubleSpinBox, \
     QScrollArea
 
 
@@ -89,7 +89,7 @@ class EditDialog(QDialog):
                 if "." in text:
                     return float(text)
                 return int(text)
-            except:
+            except Exception:
                 return text
 
         return None

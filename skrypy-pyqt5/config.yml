@@ -60,4 +60,4 @@ packages:
   transformers: transformers
   typing_inspect: typing_inspect
   vedo: vedo
-version: 26.04.01a
+version: 26.04.02a

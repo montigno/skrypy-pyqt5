@@ -833,5 +833,3 @@ class ants_CreateTiledMosaic:
         return self.res.outputs.output_image
 
 ###############################################################################
-
-

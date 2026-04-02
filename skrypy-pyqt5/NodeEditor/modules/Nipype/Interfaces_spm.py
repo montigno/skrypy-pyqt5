@@ -950,5 +950,3 @@ class spm_SPMCommand:
         return self.res.outputs.spm_mat_file
 
 ###############################################################################
-
-

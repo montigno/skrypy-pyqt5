@@ -308,5 +308,3 @@ class dipy_TrackDensityMap:
         return self.res.outputs.out_file
 
 ###############################################################################
-
-

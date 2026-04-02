@@ -8,6 +8,10 @@ A documentation is available here : [https://montigno.github.io/skrypy-pyqt5](ht
 
 # Release history
 
+<p></p>
+
+	02/04/2026: version 26.04.02a
+	- Various bugs fixed
 
 <p></p>
 

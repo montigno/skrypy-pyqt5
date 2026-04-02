@@ -788,5 +788,3 @@ class mrtrix3_Tractography:
         return self.res.outputs.out_seeds
 
 ###############################################################################
-
-

@@ -497,8 +497,10 @@ class analyze2:
             # if ('A' not in vlan[0] and
             #     'F' not in vlan[0] and
             #     'F' not in vlan[2]):
-            if ('A' not in vlan[0] and 'W' not in vlan[0] and
-                    'F' not in vlan[0]):
+            if (
+                'A' not in vlan[0] and 'W' not in vlan[0]
+                and 'F' not in vlan[0]
+            ):
                 for kfor, vfor in self.listFo.items():
                     # print('    kfor, vfor 1: ', kfor, vfor)
                     for elem in vfor[3]:

@@ -47,7 +47,7 @@ probe=[P5] label=[Value] format=[bool] RectF=[(680.0, -60.0, 70, 24)]
 probe=[P6] label=[Value] format=[bool] RectF=[(720.0, 180.0, 70, 24)] 
 constant=[A12] value=['dict'] format=[enumerate(('int', 'float', 'list', 'complex', 'str', 'dict', 'tuple'))] label=[type_compare] RectF=[(300.0, 220.0, 93.0, 31.0)] 
 constant=[A13] value=['a'] format=[str] label=[key] RectF=[(140.0, 80.0, 32.0, 35.0)] 
-constant=[A14] value=[(-100000.0, 2.0, 100000.0)] format=[float] label=[value] RectF=[(40.0, 140.0, 131.0, 31.0)] 
+constant=[A14] value=[(-100000.0, 0.0, 100000.0)] format=[float] label=[value] RectF=[(40.0, 140.0, 131.0, 31.0)] 
 constant=[A15] value=['set'] format=[enumerate(('int', 'float', 'list', 'complex', 'str', 'dict', 'tuple', 'set'))] label=[type_compare] RectF=[(300.0, 400.0, 93.0, 31.0)] 
 block=[U7] category=[Tools.Dictionnary] class=[dict_new_value] valInputs=[(['key', 'value'], ['Node(N21)', 'Node(N22)'], ['out_dict'], ['dict'])] RectF=[(240.0, 80.0, 160.0, 80.0)] 
 block=[U4] category=[Tools.Boolean_operations] class=[isinstance_var] valInputs=[(['var', 'type_compare'], ['Node(N12)', 'Node(N14)'], ['out'], ['bool'])] RectF=[(460.0, -300.0, 160.0, 80.0)] 
@@ -58,7 +58,7 @@ block=[U1] category=[Tools.Boolean_operations] class=[isinstance_var] valInputs=
 block=[U5] category=[Tools.Boolean_operations] class=[isinstance_var] valInputs=[(['var', 'type_compare'], ['Node(N15)', 'Node(N17)'], ['out'], ['bool'])] RectF=[(460.0, -100.0, 160.0, 80.0)] 
 block=[U6] category=[Tools.Boolean_operations] class=[isinstance_var] valInputs=[(['var', 'type_compare'], ['Node(N20)', 'Node(N19)'], ['out'], ['bool'])] RectF=[(480.0, 140.0, 160.0, 80.0)] 
 block=[U8] category=[Tools.Boolean_operations] class=[isinstance_var] valInputs=[(['var', 'type_compare'], ['Node(N24)', 'Node(N25)'], ['out'], ['bool'])] RectF=[(480.0, 320.0, 160.0, 80.0)] 
-script=[S0] title=[Script_python] inputs=[] outputs=[['out_set', 'out', 'str']] code=[your code] RectF=[(140.0, 300.0, 263.0, 52.0)]
+script=[S0] title=[Script_python] inputs=[] outputs=[['out_set', 'out', 'str']] code=[your code] RectF=[(100.0, 300.0, 280.0, 60.0)]
 [source S0]
 []
 out_set = {11, 22, 33, 44, 55}
@@ -68,7 +68,7 @@ out_set = {11, 22, 33, 44, 55}
 [execution]
 []
 ['S0', 'U0', 'U1', 'U2', 'U3', 'U4', 'U5', 'U7', 'ThreadOn', 'U8', 'U6', 'ThreadOff', 'P0', 'P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7']
-{'U0': ('Tools.Boolean_operations', 'isinstance_var', "(['var', 'type_compare'], [0.0, 'float'], ['out'], ['bool'])"), 'U1': ('Tools.Boolean_operations', 'isinstance_var', "(['var', 'type_compare'], [0, 'int'], ['out'], ['bool'])"), 'U2': ('Tools.Boolean_operations', 'isinstance_var', "(['var', 'type_compare'], [[0, 0, 0], 'list'], ['out'], ['bool'])"), 'U3': ('Tools.Boolean_operations', 'isinstance_var', "(['var', 'type_compare'], ['hello', 'str'], ['out'], ['bool'])"), 'U4': ('Tools.Boolean_operations', 'isinstance_var', "(['var', 'type_compare'], [[[0, 0], [0, 0]], 'list'], ['out'], ['bool'])"), 'U5': ('Tools.Boolean_operations', 'isinstance_var', "(['var', 'type_compare'], [(0,), 'tuple'], ['out'], ['bool'])"), 'U7': ('Tools.Dictionnary', 'dict_new_value', "(['key', 'value'], ['a', 2.0], ['out_dict'], ['dict'])"), 'U8': ('Tools.Boolean_operations', 'isinstance_var', "(['var', 'type_compare'], ['S0:out_set', 'set'], ['out'], ['bool'])"), 'U6': ('Tools.Boolean_operations', 'isinstance_var', "(['var', 'type_compare'], ['U7:out_dict', 'dict'], ['out'], ['bool'])"), 'P0': ('bool', 'Value', 'U0:out'), 'P1': ('bool', 'Value', 'U1:out'), 'P2': ('bool', 'Value', 'U3:out'), 'P3': ('bool', 'Value', 'U2:out'), 'P4': ('bool', 'Value', 'U4:out'), 'P5': ('bool', 'Value', 'U5:out'), 'P6': ('bool', 'Value', 'U6:out'), 'P7': ('bool', 'Value', 'U8:out')}
+{'U0': ('Tools.Boolean_operations', 'isinstance_var', "(['var', 'type_compare'], [0.0, 'float'], ['out'], ['bool'])"), 'U1': ('Tools.Boolean_operations', 'isinstance_var', "(['var', 'type_compare'], [0, 'int'], ['out'], ['bool'])"), 'U2': ('Tools.Boolean_operations', 'isinstance_var', "(['var', 'type_compare'], [[0, 0, 0], 'list'], ['out'], ['bool'])"), 'U3': ('Tools.Boolean_operations', 'isinstance_var', "(['var', 'type_compare'], ['hello', 'str'], ['out'], ['bool'])"), 'U4': ('Tools.Boolean_operations', 'isinstance_var', "(['var', 'type_compare'], [[[0, 0], [0, 0]], 'list'], ['out'], ['bool'])"), 'U5': ('Tools.Boolean_operations', 'isinstance_var', "(['var', 'type_compare'], [(0,), 'tuple'], ['out'], ['bool'])"), 'U7': ('Tools.Dictionnary', 'dict_new_value', "(['key', 'value'], ['a', 0.0], ['out_dict'], ['dict'])"), 'U8': ('Tools.Boolean_operations', 'isinstance_var', "(['var', 'type_compare'], ['S0:out_set', 'set'], ['out'], ['bool'])"), 'U6': ('Tools.Boolean_operations', 'isinstance_var', "(['var', 'type_compare'], ['U7:out_dict', 'dict'], ['out'], ['bool'])"), 'P0': ('bool', 'Value', 'U0:out'), 'P1': ('bool', 'Value', 'U1:out'), 'P2': ('bool', 'Value', 'U3:out'), 'P3': ('bool', 'Value', 'U2:out'), 'P4': ('bool', 'Value', 'U4:out'), 'P5': ('bool', 'Value', 'U5:out'), 'P6': ('bool', 'Value', 'U6:out'), 'P7': ('bool', 'Value', 'U8:out')}
 ['S0:out_set', 'U8:out', 'U7:out_dict', 'U4:out', 'U3:out', 'U2:out', 'U0:out', 'U1:out', 'U5:out', 'U6:out']
 {}
 []

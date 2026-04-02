@@ -22,7 +22,7 @@ class GetValueInBrackets():
                 except Exception:
                     pass
             self.res.append(tmp)
-        
+
         key_index = line.index(args[-1] + '=') + len(args[-1]) + 1
         value = line[key_index:][1:-1]
         self.res.append(value)

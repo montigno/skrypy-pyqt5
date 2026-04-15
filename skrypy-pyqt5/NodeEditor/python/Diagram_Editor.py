@@ -5997,10 +5997,13 @@ class Menu(QMenuBar):
 
         self.menuPack = self.addMenu('Configuration')
         self.menuPack.addAction('Packages manager')
+        self.menuPack.addSeparator()
         self.menuPack.addAction('Block repertory')
         self.menuPack.addAction('Refresh block library')
+        self.menuPack.addSeparator()
         self.menuPack.addAction('Edit environment variables')
         self.menuPack.addAction('Reload environment variables')
+        self.menuPack.addSeparator()
         self.menuPack.addAction('Clusters configuration')
         self.menuPack.triggered[QAction].connect(self.btnPressed)
 

@@ -14,11 +14,11 @@ Last modification on 15 mars 2026
 
 from PyQt5.QtCore import QByteArray, QStringListModel, QLineF, QPointF, \
     QMimeData, QRectF, pyqtSlot, QRunnable, QTimer, pyqtSignal, QDir, \
-    QItemSelectionModel, QModelIndex, QPoint, QObject, QEvent
+    QItemSelectionModel, QModelIndex, QPoint, QObject, QEvent, QUrl
 from PyQt5.QtGui import QStandardItemModel, QPixmap, QPainterPath, QCursor, \
     QBrush, QStandardItem, QTransform, QColor, QPen, \
     QPolygonF, QLinearGradient, QKeySequence, QIcon, QFontMetrics, \
-    QPainterPathStroker
+    QPainterPathStroker, QDesktopServices
 from PyQt5.QtWidgets import QMenuBar, QGraphicsScene, QDialog, \
     QGraphicsPathItem, QGraphicsPolygonItem, \
     QGraphicsRectItem, QSpinBox, QDoubleSpinBox, \
@@ -1447,7 +1447,7 @@ class Clusters(QGraphicsRectItem):
         if w < self.wmin:
             w = self.wmin
 
-        ncol, nrow = round(w / 100), round(h / 25)
+        ncol, nrow = round(w / 100), round(h / 30)
         i, j = 1, 1
         if self.proxyWidget:
             i = len(self.proxyWidget)
@@ -1474,9 +1474,8 @@ class Clusters(QGraphicsRectItem):
             del self.proxyWidget[-1]
 
         wprox, hprox = 102, 28
+        # w, h = round(w / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value, round(h / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
         w, h = ncol * wprox + 15, nrow * hprox + 5
-        w, h = round(w / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value, round(h / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
-
         self.setRect(0.0, 0.0, w, h)
 
         self.format = self.format[self.format.index('_') + 1:] if '_' in self.format else self.format
@@ -1508,8 +1507,8 @@ class Clusters(QGraphicsRectItem):
         tp.setStyleSheet("background-color: rgb" + str(self.color.getRgb()[0:3]))
         tp.setGeometry(3 + col * 102, 3 + row * 28, 100, 25)
         tp.setMinimumSize(100, 28)
-        tp.setMaximumWidth(100)
-        tp.setMaximumHeight(28)
+        # tp.setMaximumWidth(100)
+        # tp.setMaximumHeight(28)
         tp.setEnabled(self.isMod)
         if 'float' in self.format:
             tp.setDecimals(4)
@@ -1583,7 +1582,7 @@ class Clusters(QGraphicsRectItem):
             menu.exec_(event.screenPos())
 
     def mouseMoveEvent(self, event):
-        event.accept()
+        # event.accept()
         editor.loopMouseMoveEvent(self, event.scenePos())
         return QGraphicsRectItem.mouseMoveEvent(self, event)
 
@@ -2621,7 +2620,7 @@ class Constants_Combo(QComboBox):
             UpdateUndoRedo()
         else:
             self.setCurrentText(self.current_value)
-            
+
     def wheelEvent(self, event):
         event.ignore()
 
@@ -5999,6 +5998,7 @@ class Menu(QMenuBar):
 
         self.menuPack = self.addMenu('Configuration')
         self.menuPack.addAction('Packages manager')
+        self.menuPack.addAction('Block repertory')
         self.menuPack.addAction('Edit environment variables')
         self.menuPack.addAction('Reload environment variables')
         self.menuPack.addAction('Clusters configuration')
@@ -6698,6 +6698,12 @@ class Menu(QMenuBar):
 
         elif tmpActText == 'Packages manager':
             self.pack_manager()
+
+        elif tmpActText == 'Block repertory':
+            reps = os.path.dirname(__file__)
+            reps, _ = os.path.split(reps)
+            path_block = os.path.join(reps, 'modules')
+            QDesktopServices.openUrl(QUrl.fromLocalFile(path_block)) 
 
         elif tmpActText == 'Save project':
             self.save_project()
@@ -9636,7 +9642,6 @@ class Slide(QGraphicsPolygonItem):
         self.effectiveOpacity()
         self.setOpacity(0.6)
         self.ongrid = False
-
         self.wmin, self.hmin = 0.0, 0.0
 
     def itemChange(self, change, value):
@@ -9655,7 +9660,7 @@ class Slide(QGraphicsPolygonItem):
                         self.x = self.wmin
                     if self.y < self.hmin:
                         self.y = self.hmin
-                    self.x, self.y = round(self.x / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value, round(self.y / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
+                    # self.x, self.y = round(self.x / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value, round(self.y / ItemGrid.SPACEGRID.value) * ItemGrid.SPACEGRID.value
                     value = QPointF(self.x, self.y)
             return value
         return super(Slide, self).itemChange(change, value)

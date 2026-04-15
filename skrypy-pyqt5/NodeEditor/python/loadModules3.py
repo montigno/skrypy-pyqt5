@@ -99,7 +99,7 @@ class getlistModules3:
                             res = self.extract_function_signature(body_item)
                             list_ports.append(res[0])
                             list_ports.append(res[1])
-                        else:
+                        elif "_" != body_item.name[0]:
                             outs_list.append(body_item.name)
                             res = self.extract_function_signature(body_item)
                             outs_type.append(res[2])

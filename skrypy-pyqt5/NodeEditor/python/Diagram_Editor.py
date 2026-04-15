@@ -52,8 +52,7 @@ import shutil
 from random import randint
 from threading import Timer
 import math
-import nibabel as nib
-import numpy as np
+import types
 
 from . import Config, Plugin, AboutSoft
 from . import DefinitType, EditDialog
@@ -7367,20 +7366,43 @@ class NodeEdit(QWidget):
             tabCurrent.setCurrentIndex(idx)
 
     def refreshBlockLib(self):
-        
+        name, header = '', ''
+        tabCurrent = self.scrollTools.widget()
+        if tabCurrent:
+            try:
+                model = tabCurrent.model()
+                idx = tabCurrent.selectionModel().currentIndex()
+                name = model.name
+                header = model.headerData(0, Qt.Horizontal)
+                # print(name, header, idx.data())
+            except Exception as err:
+                pass
+
         start_time = time.time()
         mod_instance3 = getlistModules3()
         libBlocks = mod_instance3.getListBlocks()
         self.list_tools.update(mod_instance3.listIcons())
         self.list_tree = mod_instance3.listCat()
-
+        
         print("Number of blocks in library:", len(libBlocks), ", loading time:", time.time() - start_time)
         print("Size of blocks dictionnary:", sys.getsizeof(libBlocks), "bytes.")
-
+        
         self.setlib(libBlocks)
         self.return_menu()
-        # self.menu_choosen('Structures')
-        # tabCurrent = self.scrollTools.widget()
+    
+        if name == 'structures_tools':
+            self.menu_choosen('Structures')
+        elif name == 'blocks_SubModules':
+            self.menu_choosen('SubModules')
+        elif name == 'mod_SubMod':
+            self.menu_choosen(header)
+
+        tabCurrent = self.scrollTools.widget()
+        if tabCurrent:
+            try:
+                tabCurrent.setCurrentIndex(idx)
+            except Exception as err:
+                pass
 
     def searchCurrent(self):
         self.lstSearch = {}

@@ -153,7 +153,7 @@ class mri_conv_GUI:
         from glob import glob
 
         command = ['java', '-Xms512m', '-Xmx4096m', '-jar', os.environ['MRIFilePATH'], '[ExportNifti] ' + export_path]
-        command.append('[ExportToMIA]' + nifti_naming)
+        command.append('[ExportToMP3]' + nifti_naming)
         subprocess.call(command)
         list_f = []
         list_f.extend(glob(os.path.join(export_path, '*.json')))

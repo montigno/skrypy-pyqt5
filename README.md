@@ -11,7 +11,7 @@ A documentation is available here : [https://montigno.github.io/skrypy-pyqt5](ht
 <p></p>
 
 	15/04/2026: version 26.04.15a
-	- Menu : add 'Block repertory'
+	- Menu : add 'Block repertory' and 'Refresh block library'
 	- Various bugs fixed
 
 <p></p>

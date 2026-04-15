@@ -5999,6 +5999,7 @@ class Menu(QMenuBar):
         self.menuPack = self.addMenu('Configuration')
         self.menuPack.addAction('Packages manager')
         self.menuPack.addAction('Block repertory')
+        self.menuPack.addAction('Refresh block library')
         self.menuPack.addAction('Edit environment variables')
         self.menuPack.addAction('Reload environment variables')
         self.menuPack.addAction('Clusters configuration')
@@ -6703,7 +6704,10 @@ class Menu(QMenuBar):
             reps = os.path.dirname(__file__)
             reps, _ = os.path.split(reps)
             path_block = os.path.join(reps, 'modules')
-            QDesktopServices.openUrl(QUrl.fromLocalFile(path_block)) 
+            QDesktopServices.openUrl(QUrl.fromLocalFile(path_block))
+            
+        elif tmpActText == 'Refresh block library':
+            editor.refreshBlockLib()
 
         elif tmpActText == 'Save project':
             self.save_project()
@@ -7361,6 +7365,22 @@ class NodeEdit(QWidget):
             tabCurrent.selectionModel().clear()
             idx = model.indexFromItem(model.item(category_idx).child(child_idx))
             tabCurrent.setCurrentIndex(idx)
+
+    def refreshBlockLib(self):
+        
+        start_time = time.time()
+        mod_instance3 = getlistModules3()
+        libBlocks = mod_instance3.getListBlocks()
+        self.list_tools.update(mod_instance3.listIcons())
+        self.list_tree = mod_instance3.listCat()
+
+        print("Number of blocks in library:", len(libBlocks), ", loading time:", time.time() - start_time)
+        print("Size of blocks dictionnary:", sys.getsizeof(libBlocks), "bytes.")
+
+        self.setlib(libBlocks)
+        self.return_menu()
+        # self.menu_choosen('Structures')
+        # tabCurrent = self.scrollTools.widget()
 
     def searchCurrent(self):
         self.lstSearch = {}

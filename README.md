@@ -10,6 +10,11 @@ A documentation is available here : [https://montigno.github.io/skrypy-pyqt5](ht
 
 <p></p>
 
+	30/04/2026: version 26.04.30a
+	- New method for installing Skrypy for Linux, Windows and macOS
+
+<p></p>
+
 	15/04/2026: version 26.04.15a
 	- Menu : add 'Block repertory' and 'Refresh block library'
 	- Various bugs fixed

@@ -79,7 +79,25 @@ echo "Using: $PYTHON"
 
 echo
 echo "=== Pip verification ==="
-python3 -m pip --version &> /dev/null || python3 -m ensurepip --upgrade
+
+if ! python3 -m pip --version >/dev/null 2>&1; then
+    if python3 -m ensurepip --version >/dev/null 2>&1; then
+        python3 -m ensurepip --upgrade
+    else
+        echo "ensurepip non disponible, installation via le système..."
+		case $PKG_MANAGER in
+		        apt)
+		            sudo apt install -y python3-pip
+		            ;;
+		        dnf)
+		            sudo dnf install -y python3-pip
+		            ;;
+		        pacman)
+		            sudo pacman -S python-pip
+		            ;;
+		esac
+    fi
+fi
 
 echo
 echo "=== tkinter verification ==="

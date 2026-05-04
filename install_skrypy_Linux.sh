@@ -148,7 +148,7 @@ cat > "$DESKTOP_FILE" <<EOL
 Version=1.0
 Name=Skrypy
 Comment=Skrypy Application
-Exec=$BASE/bin/python $DEST/main.py
+Exec= Exec=bash -c "$BASE/bin/python $DEST/main.py; echo; read -p 'Press Enter to close...'"
 Path=$DEST
 Icon=$DEST/ressources/skrypy.png
 Terminal=true

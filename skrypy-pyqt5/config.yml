@@ -19,7 +19,7 @@ packages:
   list_imports: list-imports
   lmdb: lmdb
   lmfit: lmfit
-  matplotlib: matplotlib==3.7.4
+  matplotlib: matplotlib --prefer-binary
   mlflow: mlflow
   mss: mss
   nibabel: nibabel
@@ -60,4 +60,4 @@ packages:
   transformers: transformers
   typing_inspect: typing_inspect
   vedo: vedo
-version: 26.05.04a
+version: 26.05.05a

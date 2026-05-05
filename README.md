@@ -10,6 +10,12 @@ A documentation is available here : [https://montigno.github.io/skrypy-pyqt5](ht
 
 <p></p>
 
+	05/05/2026: version 26.05.05a
+	- Linux :
+		- Skrypy installer : some bugs fixed
+
+<p></p>
+
 	04/05/2026: version 26.05.04a
 	- Linux :
 		- Skrypy installer : pip installation if absent

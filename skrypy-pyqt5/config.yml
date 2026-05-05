@@ -50,6 +50,7 @@ packages:
   scikit-image: scikit-image
   scikit-learn: scikit-learn
   scipy: scipy
+  setuptools: setuptools
   simpleITK: simpleITK
   sip: sip
   sympy: sympy

@@ -5,4 +5,5 @@ packages:
   gputil: GPUtil
   list_imports: list-imports
   psutil: psutil
+  setuptools: setuptools
 version: 26.05.04a

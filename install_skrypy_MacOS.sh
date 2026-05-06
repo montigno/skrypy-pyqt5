@@ -168,9 +168,47 @@ EOL
     echo "Linux shortcut created."
 
 elif [[ "$PLATFORM" == "macos" ]]; then
-    echo "macOS detected: skipping .desktop shortcut."
+    echo "Creating macOS .app launcher..."
 
-    echo "You can create an .app using Automator if needed."
+    APP_DIR="$HOME/Applications/Skrypy.app"
+    BIN_DIR="$APP_DIR/Contents/MacOS"
+    RES_DIR="$APP_DIR/Contents/Resources"
+
+    mkdir -p "$BIN_DIR"
+    mkdir -p "$RES_DIR"
+
+    # Script de lancement
+    cat > "$BIN_DIR/skrypy" <<EOL
+#!/bin/bash
+cd "$DEST"
+source "$BASE/bin/activate"
+exec python "$DEST/main.py"
+EOL
+
+    chmod +x "$BIN_DIR/skrypy"
+
+    # Info.plist (obligatoire pour macOS)
+    cat > "$APP_DIR/Contents/Info.plist" <<EOL
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+ "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>Skrypy</string>
+    <key>CFBundleExecutable</key>
+    <string>skrypy</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.skrypy.app</string>
+    <key>CFBundleVersion</key>
+    <string>1.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+</dict>
+</plist>
+EOL
+
+    echo "macOS app created at: $APP_DIR"
 fi
 
 echo

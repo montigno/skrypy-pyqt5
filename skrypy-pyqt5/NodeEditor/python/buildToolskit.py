@@ -5,18 +5,19 @@ from PyQt5.QtWidgets import (QGridLayout, QPushButton,
                              QWidget, QLabel, QVBoxLayout)
 
 
-class buildLibrary(QWidget):
+class BuildLibrary(QWidget):
 
     menu_choosen = pyqtSignal(str)
 
     def __init__(self, listModules, parent=None):
-        super(buildLibrary, self).__init__(parent)
+        super(BuildLibrary, self).__init__(parent)
         ncol = 3
         self.setMinimumWidth(120 + ncol * 40)
         self.setMaximumWidth(120 + ncol * 40)
         # self.setMaximumHeight(100)
 
-        row_number = int(len(listModules) / ncol) + (len(listModules) % ncol > 0)
+        # row_number = int(len(listModules) / ncol) + (len(listModules) % ncol > 0)
+        row_number = (len(listModules) + ncol - 1) // ncol
         # Create a QGridLayout instance
         glayout = QGridLayout()
         Separator = QFrame()
@@ -25,46 +26,28 @@ class buildLibrary(QWidget):
         # Separator.setLineWidth(1)
         # Separator.setFrameShadow(QFrame.Sunken)
 
-        for i in range(row_number):
-            for j in range(ncol):
-                try:
-                    vbox = QVBoxLayout()
-                    if i == -1 and j == -1:
-                        Separador = QFrame()
-                        Separador.Shape(QFrame.HLine)
-                        Separador.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
-                        Separador.setLineWidth(3)
-                        # vbox.addWidget(Separador)
-                    else:
-                        lab = list(listModules)[i * ncol + j]
-                        lab = lab.replace('_', '\n')
-                        ico = list(listModules.values())[i * ncol + j]
-                        label = QLabel()
-                        label.setAlignment(Qt.AlignCenter)
-                        # label.setWordWrap(True)
-                        label.setStyleSheet("QLabel{font-size: 8pt;}")
-                        label.setMinimumHeight(10)
-                        label.setMaximumHeight(20)
-                        label.setText(lab)
-                        label.updateGeometry()
-                        button = QPushButton(self.parent())
-                        button.setObjectName(label.text())
-                        # button.setFixedHeight(50)
-                        button.clicked.connect(self.buttonClik)
-                        button.setIcon(QIcon(ico))
-                        button.setIconSize(QSize(40, 40))
-                        # button.setLayoutDirection(Qt.RightToLeft)
-                        button.setMinimumWidth(70)
-                        button.setMinimumHeight(70)
-                        button.setMaximumWidth(70)
-                        button.setMaximumWidth(70)
-                        vbox.addWidget(button)
-                        vbox.addWidget(label)
-                        # vbox.addWidget(Separator)
-                    # vbox.insertSpacing(50, 5)
-                    glayout.addLayout(vbox, i, j)
-                except Exception:
-                    pass
+        items = list(listModules.items())
+        
+        for index, (lab, ico) in enumerate(items):
+            row = index // ncol
+            col = index % ncol
+        
+            vbox = QVBoxLayout()
+        
+            label = QLabel(lab.replace('_', '\n'))
+            label.setAlignment(Qt.AlignCenter)
+        
+            button = QPushButton()
+            button.setObjectName(lab)
+            button.setIcon(QIcon(ico))
+            button.setIconSize(QSize(40, 40))
+            button.setFixedSize(70, 70)
+            button.clicked.connect(self.buttonClik)
+        
+            vbox.addWidget(button)
+            vbox.addWidget(label)
+        
+            glayout.addLayout(vbox, row, col)
         self.setFixedHeight(row_number * 100)
         self.setLayout(glayout)
 

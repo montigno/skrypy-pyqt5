@@ -1,0 +1,344 @@
+[diagram]
+link=[N1] node=[A1:#Node#S0:img_nii]
+link=[N0] node=[A0:#Node#S0:view]
+constant=[A1] value=['/home/olivier/path/premanip-NR-souris2/j7/4_eb_MGEFIDSE_pre/04/Usereb_MGEFIDSE.nii'] format=[path] label=[img_nii] RectF=[(-760.0, 140.0, 533.0, 35.0)] 
+constant=[A0] value=['radiology'] format=[enumerate(('neurology', 'radiology'))] label=[const] RectF=[(-320.0, 320.0, 101.0, 31.0)] 
+script=[S0] title=[Script_python] inputs=[['img_nii', 'in', 'path'], ['view', 'in', 'str']] outputs=[] code=[your code] RectF=[(-120.0, -20.0, 740.0, 540.0)]
+[source S0]
+["view='radiology'", "img_nii='/home/olivier/path/premanip-NR-souris2/j7/4_eb_MGEFIDSE_pre/04/Usereb_MGEFIDSE.nii'"]
+import nibabel as nib
+import nibabel.orientations as nio
+import matplotlib.pyplot as plt
+from matplotlib.widgets import Slider, Button
+import numpy as np
+import tkinter as tk
+from tkinter import filedialog
+from pathlib import Path
+import json
+
+
+# view = "neurology" # radiology or neurology
+
+
+# ===============================
+# Loading image
+# ===============================
+img = nib.load(img_nii)
+img = nib.as_closest_canonical(img) # Orientation canonique RAS
+orientation = nio.aff2axcodes(img.affine)
+Infotext = f'orientation: {orientation}\n'
+data = img.get_fdata()
+if data.ndim == 4:
+    Infotext += f"Image 4D detected, shape = {data.shape}.\nSelection of the first slice of the 4th dimension.\n"
+    data = data[:, :, :, 0]
+    zoom_x, zoom_y, zoom_z, _ = img.header.get_zooms()
+elif data.ndim == 3:
+    Infotext += f"Image 3D detected, shape = {data.shape}.\n"
+    zoom_x, zoom_y, zoom_z = img.header.get_zooms()
+else:
+    raise ValueError(f"Unexpected format, ndim = {data.ndim}")
+Infotext += f"resolution: {zoom_x:.2f}, {zoom_y:.2f}, {zoom_z:.2f}\n"
+# Coupes centrales
+x = data.shape[0] // 2
+y = data.shape[1] // 2
+z = data.shape[2] // 2
+# bornes des sliders
+data_min = np.min(data)
+data_max = np.max(data)
+
+
+# ===============================
+# Info image (json)
+# ===============================
+param_to_show = ['ReadDirection', 'SliceThickness', 'FOV']
+json_file = Path(img_nii)
+json_file = json_file.with_suffix(".json")
+if json_file.exists():
+    with open(json_file) as f:
+        outJson = json.load(f)
+        for param in param_to_show:
+            tmp = str(outJson[param]['value'])
+            tmp = tmp.replace('[', '').replace(']', '')
+            Infotext += '{}: {}\n'.format(param, tmp)
+else:
+    Infotext += '\n(No json file found)\n'
+
+
+# ===============================
+# Gestion Matplotlib
+# ===============================
+fig, axes = plt.subplots(1, 4, figsize=(15, 5))
+plt.subplots_adjust(bottom=0.22)
+plt.subplots_adjust(left=0.2)
+fig.canvas.manager.set_window_title(view)
+
+
+# ===============================
+# Methods
+# ===============================
+def get_aspect(plane):
+    if plane == "coronal":
+        return zoom_y / zoom_x
+    if plane == "sagittal":
+        return zoom_z / zoom_y
+    if plane == "axial":
+        return zoom_z / zoom_x
+
+
+# ===============================
+# Automatic anatomical labels
+# ===============================
+def get_labels(view_name, mode="radiology"):
+    """
+    Retourne les labels anatomiques :
+    top, bottom, left, right
+    """
+    labels = {
+        "sagittal": {"top": "S", "bottom": "I", "left": "P","right": "A"},
+        "axial": {"top": "S", "bottom": "I", "left": "L" if mode == "radiology" else "R","right": "R" if mode == "radiology" else "L"},
+        "coronal": {"top": "A", "bottom": "P", "left": "L" if mode == "radiology" else "R","right": "R" if mode == "radiology" else "L"}
+    }
+    return labels[view_name]
+
+
+def draw_anatomical_labels(ax, labels, color="red", fontsize=12):
+    ax.text(0.5, 1.01, labels["top"], transform=ax.transAxes, ha="center", va="bottom", color=color, fontsize=fontsize)
+    ax.text(0.5, -0.04, labels["bottom"], transform=ax.transAxes, ha="center", va="top", color=color, fontsize=fontsize)
+    ax.text( -0.04, 0.5, labels["left"], transform=ax.transAxes, ha="right", va="center", color=color,fontsize=fontsize)
+    ax.text(1.04, 0.5, labels["right"], transform=ax.transAxes, ha="left", va="center", color=color,fontsize=fontsize)
+
+
+# ===============================
+# Centering crosshairs
+# ===============================
+def recenter(event):
+    x_center = data.shape[0] // 2
+    y_center = data.shape[1] // 2
+    z_center = data.shape[2] // 2
+    slider_sag.set_val(x_center)
+    slider_ax.set_val(y_center)
+    slider_cor.set_val(z_center)
+    update(None)
+
+
+# ===============================
+# Image autocontrast
+# ===============================   
+def auto_contrast(event):
+    # robust percentiles
+    vmin = np.percentile(data, 2)
+    vmax = np.percentile(data, 99)
+    # conversion vers level/window
+    level = (vmin + vmax) / 2
+    window = vmax - vmin
+    # mise à jour sliders
+    slider_level.set_val(level)
+    slider_window.set_val(window)
+
+
+# ===============================
+# Image contrast
+# ===============================   
+def update_contrast(val):
+    level = slider_level.val
+    window = slider_window.val
+    apply_contrast(level, window)
+
+
+def apply_contrast(level, window):
+    vmin = level - window / 2
+    vmax = level + window / 2
+    for im in [im_sag, im_ax, im_cor]:
+        im.set_clim(vmin, vmax)
+    fig.canvas.draw_idle()
+
+
+# =============================
+# ---------- SAGITTAL ---------
+# =============================
+ax = axes[0]
+im_sag = ax.imshow(data[x, :, :].T, cmap="gray", origin="lower", aspect=get_aspect("sagittal"))
+ax.set_title("Sagittal\n")
+ax.axis("off")
+# labels anatomiques
+draw_anatomical_labels(ax, get_labels("sagittal", view))
+# Crosshairs initiaux
+line_sag_h = ax.axhline(z, color='r')
+line_sag_v = ax.axvline(y, color='r')
+
+
+# =============================
+# ---------- AXIAL ----------
+# =============================
+ax = axes[1]
+im_ax = ax.imshow(data[:, y, :].T, cmap="gray", origin="lower", aspect=get_aspect("axial"))
+ax.set_title("Axial (human) - Coronal (rodent)\n")
+ax.axis("off")
+if view == "neurology":
+    ax.invert_xaxis()
+# labels anatomiques
+draw_anatomical_labels(ax, get_labels("axial", view))
+# Crosshairs initiaux
+line_ax_h = ax.axhline(z, color='r')
+line_ax_v = ax.axvline(x, color='r')
+
+
+# =============================
+# ---------- CORONAL ----------
+# =============================
+ax = axes[2]
+im_cor = ax.imshow(data[:, :, z].T, cmap="gray", origin="lower", aspect=get_aspect("coronal"))
+ax.set_title("Coronal (human) - Axial (rodent)\n")
+ax.axis("off")
+if view == "neurology":
+    ax.invert_xaxis()
+# labels anatomiques
+draw_anatomical_labels(ax, get_labels("coronal", view))
+# Crosshairs initiaux
+line_cor_h = ax.axhline(y, color='r')  # vertical
+line_cor_v = ax.axvline(x, color='r')  # horizontal
+
+
+# =============================
+# ---------- INFO ----------
+# =============================
+ax_text = axes[3]
+ax_text.axis("off")
+ax_text.text(0.05, 0.5, Infotext, transform=ax_text.transAxes, ha="left", va="center", fontsize=10)
+
+
+# =============================
+# --- Sliders ---
+# =============================
+axcolor = 'lightgoldenrodyellow'
+slider_axes = []
+slider_y = 0.15   # hauteur fixe commune
+for ax in axes[:3]:
+    pos = ax.get_position()
+    slider_ax = fig.add_axes([pos.x0, slider_y, pos.width, 0.03], facecolor=axcolor)
+    slider_axes.append(slider_ax)
+ax_sag, ax_ax, ax_cor = slider_axes
+slider_sag = Slider(ax_sag, '', 0, data.shape[0]-1, valinit=x, valstep=1)
+slider_ax  = Slider(ax_ax, '', 0, data.shape[1]-1, valinit=y, valstep=1)
+slider_cor = Slider(ax_cor, '', 0, data.shape[2]-1, valinit=z, valstep=1)
+
+
+# =============================
+# Layout widgets bottom
+# =============================
+widget_y = 0.04
+slider_w, button_w = 0.12, 0.12
+gap = 0.1
+total_width = (slider_w + slider_w + button_w + button_w + 3 * gap)
+x_start = (1 - total_width) / 2
+
+
+# =============================
+# Interactive Contrast
+# =============================
+ax_level = fig.add_axes([x_start, widget_y, slider_w, 0.03])
+ax_window = fig.add_axes([x_start + slider_w + gap, widget_y, slider_w, 0.03])
+slider_level = Slider(ax_level, 'Level', data_min, data_max, valinit=np.mean(data))
+slider_window = Slider(ax_window, 'Window', 0, data_max - data_min, valinit=(data_max - data_min)/2)
+slider_level.on_changed(update_contrast)
+slider_window.on_changed(update_contrast)
+
+
+# =============================
+# Contrast button
+# =============================
+ax_button_contrast = fig.add_axes([x_start + 2*slider_w + 2*gap, widget_y, button_w, 0.04])
+button_contrast = Button(ax_button_contrast, 'Auto Contrast')
+button_contrast.on_clicked(auto_contrast)
+
+
+# =============================
+# Centering button
+# =============================
+ax_button_center = fig.add_axes([x_start + 2*slider_w + button_w + 2*gap, widget_y, button_w, 0.04])
+button_center = Button(ax_button_center, 'recenter')
+button_center.on_clicked(recenter)
+
+
+# =============================
+# Update function
+# =============================
+def update(val):
+    x_idx = int(slider_sag.val)
+    y_idx = int(slider_ax.val)
+    z_idx = int(slider_cor.val)
+    im_sag.set_data(data[x_idx, :, :].T)
+    im_ax.set_data(data[:, y_idx, :].T)
+    im_cor.set_data(data[:, :, z_idx].T)
+    # --- Crosshairs ---
+    # Sagittal: horizontal = Z, vertical = Y
+    line_sag_h.set_ydata([z_idx, z_idx])
+    line_sag_v.set_xdata([y_idx, y_idx])
+     # Axial: horizontal = Z, vertical = X
+    line_ax_h.set_ydata([z_idx, z_idx])
+    line_ax_v.set_xdata([x_idx, x_idx])
+     # Coronal: horizontal = Y, vertical = X
+    line_cor_h.set_ydata([y_idx, y_idx])
+    line_cor_v.set_xdata([x_idx, x_idx])
+    fig.canvas.draw_idle()
+
+
+slider_sag.on_changed(update)
+slider_ax.on_changed(update)
+slider_cor.on_changed(update)
+
+
+dragging = False
+
+
+def on_mouse_press(event):
+    global dragging
+    if event.inaxes in axes:
+        dragging = True
+
+
+def on_mouse_release(event):
+    global dragging
+    dragging = False
+
+
+def on_mouse_move(event):
+    global dragging
+    if not dragging:
+        return
+    if event.inaxes is None:
+        return
+    ax = event.inaxes
+    x_mouse = int(event.xdata)
+    y_mouse = int(event.ydata)
+    if ax == axes[0]:  # Sagittal
+        slider_ax.set_val(x_mouse)
+        slider_cor.set_val(y_mouse)
+    elif ax == axes[1]:  # Axial
+        slider_sag.set_val(x_mouse)
+        slider_cor.set_val(y_mouse)
+    elif ax == axes[2]:  # Coronal
+        slider_sag.set_val(x_mouse)
+        slider_ax.set_val(y_mouse)
+    update(None)
+
+
+fig.canvas.mpl_connect('button_press_event', on_mouse_press)
+fig.canvas.mpl_connect('button_release_event', on_mouse_release)
+fig.canvas.mpl_connect('motion_notify_event', on_mouse_move)
+
+
+# plt.tight_layout()
+plt.show()
+[]
+[/source S0]
+
+[execution]
+[]
+['S0']
+{}
+[]
+{}
+[]
+[interlinks]
+[]

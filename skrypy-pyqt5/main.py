@@ -67,6 +67,8 @@ class Project_Irmage(QMainWindow):
         time.sleep(0.1)
         current_dir_path = os.path.dirname(os.path.realpath(__file__))
         source_disp = os.path.join(current_dir_path, 'NodeEditor', 'python', 'systemControl.py')
+        print("\nExecutable Python used :")
+        print(sys.executable)
         self.sysctrl = subprocess.Popen([sys.executable,
                                          source_disp,
                                          'skrypy control',

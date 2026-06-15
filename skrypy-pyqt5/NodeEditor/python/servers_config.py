@@ -110,9 +110,12 @@ class servers_window(QDialog):
         hbox5.addWidget(cpu_nbr)
         hbox5.addWidget(self.cpu_to_use)
 
-        hbox6 = QHBoxLayout()
+        hbox6 = QVBoxLayout()
+        self.use_venv = QCheckBox("Use the Skrypy venv")
+        self.use_venv.stateChanged.connect(self.field_changed)
         self.use_x11_bool = QCheckBox("X11 forwarding")
         self.use_x11_bool.stateChanged.connect(self.field_changed)
+        hbox6.addWidget(self.use_venv)
         hbox6.addWidget(self.use_x11_bool)
 
         vbox7 = QVBoxLayout()
@@ -188,8 +191,10 @@ class servers_window(QDialog):
         self.skry_dir.setText(self.list_config[current_server]['skrypy_server_directory'])
         self.wrkspace_dir.setText(self.list_config[current_server]['server_workspace_directory'])
         self.cpu_to_use.setText(str(self.list_config[current_server]['cpu_number']))
+        self.use_venv.setChecked(bool(self.list_config[current_server].get('use_Skrypy_venv', True)))
         self.use_x11_bool.setChecked(bool(self.list_config[current_server]['X11_forwarding']))
         self.exec_cmd.setText(self.list_config[current_server]['pre_execution_command'])
+        
         try:
             tmpA = self.list_config[current_server]['fd_command']
             tmpB = self.list_config[current_server]['fk_command']
@@ -209,6 +214,7 @@ class servers_window(QDialog):
                              self.skry_dir.text(),
                              self.wrkspace_dir.text(),
                              self.cpu_to_use.text(),
+                             self.use_venv.isChecked(),
                              self.use_x11_bool.isChecked(),
                              self.exec_cmd.toPlainText(),
                              self.wd_field.text(),
@@ -239,6 +245,7 @@ class servers_window(QDialog):
                                                             'skrypy_server_directory': self.skry_dir.text().strip(),
                                                             'server_workspace_directory': self.wrkspace_dir.text().strip(),
                                                             'cpu_number': self.cpu_to_use.text().strip(),
+                                                            'use_skrypy_venv': self.use_venv.isChecked(),
                                                             'X11_forwarding': self.use_x11_bool.isChecked(),
                                                             'pre_execution_command': self.exec_cmd.toPlainText(),
                                                             'fd_command': tmppd, 'fk_command': tmppk}
@@ -289,6 +296,7 @@ class servers_window(QDialog):
                                                        'skrypy_server_directory': self.skry_dir.text().strip(),
                                                        'server_workspace_directory': self.wrkspace_dir.text().strip(),
                                                        'cpu_number': self.cpu_to_use.text().strip(),
+                                                       'use_skrypy_venv': self.use_venv.isChecked(),
                                                        'X11_forwarding': self.use_x11_bool.isChecked(),
                                                        'pre_execution_command': self.exec_cmd.toPlainText().strip(),
                                                        'fd_command': tmppd, 'fk_command': tmppk}

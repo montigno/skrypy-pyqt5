@@ -10,6 +10,12 @@ A documentation is available here : [https://montigno.github.io/skrypy-pyqt5](ht
 
 <p></p>
 
+	18/06/2026: version 26.06.18a
+	- Clusters configuration :
+		- 'Use the Skrypy venv' option added
+
+<p></p>
+
 	06/05/2026: version 26.05.06a
 	- MacOS :
 		- Skrypy installer : improvements

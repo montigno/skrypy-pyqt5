@@ -4,6 +4,7 @@ packages:
   dirsync: dirsync
   gputil: GPUtil
   list_imports: list-imports
+  matplotlib: matplotlib --prefer-binary
   psutil: psutil
   setuptools: setuptools
 version: 26.05.04a

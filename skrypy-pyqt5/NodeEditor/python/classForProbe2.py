@@ -3,36 +3,33 @@ class printProbe():
 
         col = ''
 
-        if console:
-            if 'int' in form:
-                col = '#0064FF'
-            elif 'float' in form:
-                col = '#C86400'
-            elif 'tuple' in form:
-                col = '#B4B4B4'
-            elif 'str' in form:
-                col = '#c800FA'
-            elif 'bool' in form:
-                col = '#32FA32'
-            elif 'path' in form:
-                col = '#FF6464'
-            elif 'dict' in form:
-                col = '#C8FA00'
-        else:
-            if 'int' in form:
-                col = '\x1b[38;2;0;100;255m'
-            elif 'float' in form:
-                col = '\x1b[38;2;200;100;0m'
-            elif 'tuple' in form:
-                col = '\x1b[38;2;200;180;180m'
-            elif 'str' in form:
-                col = '\x1b[38;2;200;0;250m'
-            elif 'bool' in form:
-                col = '\x1b[38;2;50;250;50m'
-            elif 'path' in form:
-                col = '\x1b[38;2;255;100;100m'
-            elif 'dict' in form:
-                col = '\x1b[38;2;200;250;0m'
+        HTML_COLORS = {
+            'int': '#0064FF',
+            'float': '#C86400',
+            'tuple': '#B4B4B4',
+            'str': '#C800FA',
+            'bool': '#32FA32',
+            'path': '#FF6464',
+            'dict': '#C8FA00',
+        }
+        
+        ANSI_COLORS = {
+            'int': '\x1b[38;2;0;100;255m',
+            'float': '\x1b[38;2;200;100;0m',
+            'tuple': '\x1b[38;2;200;180;180m',
+            'str': '\x1b[38;2;200;0;250m',
+            'bool': '\x1b[38;2;50;250;50m',
+            'path': '\x1b[38;2;255;100;100m',
+            'dict': '\x1b[38;2;200;250;0m',
+        }
+
+        colors = HTML_COLORS if console else ANSI_COLORS
+
+        col = ''
+        for key, color in colors.items():
+            if key in form:
+                col = color
+                break
 
         if label == 'Type':
             tmpval = val

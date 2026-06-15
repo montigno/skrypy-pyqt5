@@ -60,7 +60,7 @@ from . import GetValueInBrackets, SetValueInBrackets
 from . import PythonHighlighter, skrypy_update
 from . import multiple_execution, multiple_execution_altern
 from . import analyze2, execution2, servers_window
-from . import buildLibrary, SubWindow
+from . import BuildLibrary, SubWindow
 from . import changeLabel, changeTitle, chOptions
 from . import defineTunnels, define_inputs_outputs
 from . import input_output_setName, project_archive
@@ -6872,7 +6872,7 @@ class NodeEdit(QWidget):
         #         fssh.write(str(self.list_tree) + "\n")
 
         self.setlib(libBlocks)
-        self.library_tools = buildLibrary(self.list_tools)
+        self.library_tools = BuildLibrary(self.list_tools)
         self.library_tools.menu_choosen.connect(self.menu_choosen)
         self.scrollTools = scrollTools(self.library_tools)
 
@@ -7135,7 +7135,7 @@ class NodeEdit(QWidget):
         self.exp_lib.setEnabled(True)
 
     def return_menu(self):
-        self.library_tools = buildLibrary(self.list_tools)
+        self.library_tools = BuildLibrary(self.list_tools)
         self.library_tools.menu_choosen.connect(self.menu_choosen)
         self.scrollTools.setWidget(self.library_tools)
         self.coll_lib.setEnabled(False)
@@ -9754,25 +9754,26 @@ class ssh_diagram_execution():
         # host_password = self.passwd_dialog(param_ssh[0]).passwd()
         # if host_password == 'None':
         #     return
-
+        
         diagram = []
         host_name = param_ssh[0]
         host_skrypy_path = param_ssh[1]
         host_path = param_ssh[2]
         n_cpu = int(param_ssh[3])
-        opx = param_ssh[4]
+        active_venv = param_ssh[4]
+        opx = param_ssh[5]
         if opx:
             opx = '-X'
         else:
             opx = ''
-        pre_exec = param_ssh[5]
-        host_password = param_ssh[6]
+        pre_exec = param_ssh[6]
+        host_password = param_ssh[7]
         if not host_password:
             host_password = self.passwd_dialog(param_ssh[0]).passwd()
             if host_password == 'None':
                 return
         if not self.cluster:
-            self.cluster = param_ssh[7]
+            self.cluster = param_ssh[8]
 
         host = host_name
         hnm = host.split()
@@ -9869,10 +9870,12 @@ class ssh_diagram_execution():
             with open(path_ssh_cmd_file, 'w') as fssh:
                 fssh.write(pre_exec + "\n")
                 fssh.write("cd {}\n".format(host_skrypy_path))
-                fssh.write("source bin/activate\n")
+                if active_venv:
+                    fssh.write("source bin/activate\n")
                 fssh.write("cd skrypy-pyqt5\n")
                 fssh.write("python3 Execution_ssh.py {} {} {} {} {} {}\n".format(host_path, diagram, n_cpu, self.mode, opx, self.cluster))
-                fssh.write("deactivate\n")
+                if active_venv:
+                    fssh.write("deactivate\n")
                 fssh.write("echo\n")
                 # fssh.write("echo \"\033[1;34mfinished.. you can close this window\033[0m\"\n")
                 # fssh.write("echo \n")

@@ -156,9 +156,22 @@ class copy_file():
     """
 
     def __init__(self, src_file='path', dest_file='path'):
-        from shutil import copy2
+        import shutil
+        import os
+        self.cf = None
         if dest_file != src_file:
-            self.cf = copy2(src_file, dest_file)
+            if os.path.isdir(src_file):
+                last_dir = os.path.basename(os.path.normpath(src_file))
+                new_dest = os.path.join(dest_file, last_dir)
+                print(src_file, last_dir, new_dest)
+                if os.path.exists(new_dest):
+                    self.cf = shutil.copytree(src_file, new_dest, dirs_exist_ok=True)
+                else:
+                    self.cf = shutil.copytree(src_file, new_dest)
+            else:
+                self.cf = shutil.copy2(src_file, dest_file)
+        else:
+            print("error: src_file and dest_file are the same !")
 
     def copied_file(self) -> None:
         return self.cf

@@ -191,7 +191,7 @@ class servers_window(QDialog):
         self.skry_dir.setText(self.list_config[current_server]['skrypy_server_directory'])
         self.wrkspace_dir.setText(self.list_config[current_server]['server_workspace_directory'])
         self.cpu_to_use.setText(str(self.list_config[current_server]['cpu_number']))
-        self.use_venv.setChecked(bool(self.list_config[current_server].get('use_Skrypy_venv', True)))
+        self.use_venv.setChecked(bool(self.list_config[current_server].get('use_skrypy_venv', True)))
         self.use_x11_bool.setChecked(bool(self.list_config[current_server]['X11_forwarding']))
         self.exec_cmd.setText(self.list_config[current_server]['pre_execution_command'])
         

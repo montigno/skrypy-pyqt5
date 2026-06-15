@@ -46,6 +46,7 @@ class servers_window(QDialog):
                              clust['skrypy_server_directory'],
                              clust['server_workspace_directory'],
                              str(clust['cpu_number']),
+                             bool(clust.get('use_skrypy_venv', True)),
                              bool(clust['X11_forwarding']),
                              clust['pre_execution_command'],
                              tmppd,
@@ -194,7 +195,7 @@ class servers_window(QDialog):
         self.use_venv.setChecked(bool(self.list_config[current_server].get('use_skrypy_venv', True)))
         self.use_x11_bool.setChecked(bool(self.list_config[current_server]['X11_forwarding']))
         self.exec_cmd.setText(self.list_config[current_server]['pre_execution_command'])
-        
+
         try:
             tmpA = self.list_config[current_server]['fd_command']
             tmpB = self.list_config[current_server]['fk_command']

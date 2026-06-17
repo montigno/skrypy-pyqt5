@@ -12,7 +12,7 @@ class printProbe():
             'path': '#FF6464',
             'dict': '#C8FA00',
         }
-        
+
         ANSI_COLORS = {
             'int': '\x1b[38;2;0;100;255m',
             'float': '\x1b[38;2;200;100;0m',

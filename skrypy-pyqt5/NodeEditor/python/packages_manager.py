@@ -5,6 +5,7 @@ from PyQt5.Qt import QFont, Qt
 
 import sys
 
+
 class manage_pck(QDialog):
 
     def __init__(self, parent=None):
@@ -92,5 +93,6 @@ class manage_pck(QDialog):
             self.histories.append(command)
             completer = QCompleter(self.histories)
             self.cmd.setCompleter(completer)
+
         self.cmd.setEnabled(True)
         self.button_run.setEnabled(True)

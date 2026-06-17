@@ -6707,7 +6707,7 @@ class Menu(QMenuBar):
             reps, _ = os.path.split(reps)
             path_block = os.path.join(reps, 'modules')
             QDesktopServices.openUrl(QUrl.fromLocalFile(path_block))
-            
+
         elif tmpActText == 'Refresh block library':
             editor.refreshBlockLib()
 
@@ -7386,13 +7386,13 @@ class NodeEdit(QWidget):
         libBlocks = mod_instance3.getListBlocks()
         self.list_tools.update(mod_instance3.listIcons())
         self.list_tree = mod_instance3.listCat()
-        
+
         print("Number of blocks in library:", len(libBlocks), ", loading time:", time.time() - start_time)
         print("Size of blocks dictionnary:", sys.getsizeof(libBlocks), "bytes.")
-        
+
         self.setlib(libBlocks)
         self.return_menu()
-    
+
         if name == 'structures_tools':
             self.menu_choosen('Structures')
         elif name == 'blocks_SubModules':
@@ -9180,7 +9180,7 @@ class ScriptItem(QGraphicsRectItem):
                     self.insertPlainText(' ' * 4)
                     return
                 super(TextEditPy, self).keyPressEvent(event)
-                
+
             def mousePressEvent(self, event):
                 editor.diagramScene[editor.currentTab].clearSelection()
                 return super().mousePressEvent(event)
@@ -9758,7 +9758,7 @@ class ssh_diagram_execution():
         # host_password = self.passwd_dialog(param_ssh[0]).passwd()
         # if host_password == 'None':
         #     return
-        
+
         diagram = []
         host_name = param_ssh[0]
         host_skrypy_path = param_ssh[1]

@@ -9180,6 +9180,10 @@ class ScriptItem(QGraphicsRectItem):
                     self.insertPlainText(' ' * 4)
                     return
                 super(TextEditPy, self).keyPressEvent(event)
+                
+            def mousePressEvent(self, event):
+                editor.diagramScene[editor.currentTab].clearSelection()
+                return super().mousePressEvent(event)
 
         if self.isMod:
             self.setFlags(self.ItemIsSelectable | self.ItemIsMovable | self.ItemIsFocusable | self.ItemSendsGeometryChanges)

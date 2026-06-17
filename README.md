@@ -8,9 +8,15 @@ A documentation is available here : [https://montigno.github.io/skrypy-pyqt5](ht
 
 # Release history
 
+
 <p></p>
 
-	18/06/2026: version 26.06.18a
+	17/06/2026: version 26.06.17a
+	- Script tool: improvements
+
+<p></p>
+
+	15/06/2026: version 26.06.15a
 	- Clusters configuration :
 		- 'Use the Skrypy venv' option added
 

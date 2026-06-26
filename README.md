@@ -11,6 +11,11 @@ A documentation is available here : [https://montigno.github.io/skrypy-pyqt5](ht
 
 <p></p>
 
+	26/06/2026: version 26.06.26a
+	- better management of the number of cores
+
+<p></p>
+
 	17/06/2026: version 26.06.17a
 	- Script tool: improvements
 

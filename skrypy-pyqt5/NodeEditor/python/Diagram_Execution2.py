@@ -370,6 +370,8 @@ class execution2(QObject):
                     super().__init__()
                     process = []
                     n_cpu = Config().getCpuCount()
+                    if n_cpu > os.cpu_count():
+                        n_cpu = os.cpu_count()
                     sema = Semaphore(n_cpu)
                     pool = Pool(processes=n_cpu)
 

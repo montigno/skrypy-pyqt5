@@ -4647,8 +4647,8 @@ class ForLoopItem(QGraphicsRectItem):
                     for i in range(len(self.outputs)):
                         self.outputs[i].unit = self.unit
                     UpdateUndoRedo()
-            if cpu_ct > os.cpu_count():
-                cpu_ct = os.cpu_count()
+            # if cpu_ct > os.cpu_count():
+            #     cpu_ct = os.cpu_count()
 
             Config().setCpuCount(cpu_ct)
 

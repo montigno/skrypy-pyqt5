@@ -11,60 +11,65 @@ A documentation is available here : [https://montigno.github.io/skrypy-pyqt5](ht
 
 <p></p>
 
+	30/06/2026: version 26.06.30a
+	- connection bug between Explorer and the script editor resolved.
+
+<p></p>
+
 	26/06/2026: version 26.06.26a
-	- better management of the number of cores
+	- better management of the number of cores.
 
 <p></p>
 
 	17/06/2026: version 26.06.17a
-	- Script tool: improvements
+	- Script tool: improvements.
 
 <p></p>
 
 	15/06/2026: version 26.06.15a
 	- Clusters configuration :
-		- 'Use the Skrypy venv' option added
+		- 'Use the Skrypy venv' option added.
 
 <p></p>
 
 	06/05/2026: version 26.05.06a
 	- MacOS :
-		- Skrypy installer : improvements
+		- Skrypy installer : improvements.
 
 <p></p>
 
 	05/05/2026: version 26.05.05a
 	- Linux :
-		- Skrypy installer : some bugs fixed
+		- Skrypy installer : some bugs fixed.
 
 <p></p>
 
 	04/05/2026: version 26.05.04a
 	- Linux :
-		- Skrypy installer : pip installation if absent
-		- bug if Git not installed resolved
+		- Skrypy installer : pip installation if absent.
+		- bug if Git not installed resolved.
 
 <p></p>
 
 	30/04/2026: version 26.04.30a
-	- New method for installing Skrypy for Linux, Windows and macOS
+	- New method for installing Skrypy for Linux, Windows and macOS.
 
 <p></p>
 
 	15/04/2026: version 26.04.15a
-	- Menu : add 'Block repertory' and 'Refresh block library'
-	- Various bugs fixed
+	- Menu : add 'Block repertory' and 'Refresh block library'.
+	- Various bugs fixed.
 
 <p></p>
 
 	02/04/2026: version 26.04.02a
-	- Various bugs fixed
+	- Various bugs fixed.
 
 <p></p>
 
 	01/04/2026: version 26.04.01a
-	- Option grid
-	- rounded corners of the blocks
+	- Option grid.
+	- rounded corners of the blocks.
 
 <p></p>
 

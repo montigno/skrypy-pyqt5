@@ -4742,7 +4742,7 @@ class FileExplorer(QWidget):
             del editor.listExplorers[editor.currentTab][self.unit]
             editor.listExplorers[editor.currentTab][self.unit] = (label, self.save_tree_state())
         except Exception as err:
-            pass
+            print("error with Explorer:", err)
 
     def get_selected_files(self):
         indexes = self.tree.selectionModel().selectedIndexes()
@@ -5661,7 +5661,7 @@ class LoadCodeScript:
             if unitScript + ':' in tmpout:
                 tmpIn = tmpout[tmpout.index(':') + 1:]
                 tmpVal = val[0:val.index('#Node#')]
-                if 'A' in tmpVal[0:1]:
+                if tmpVal[0] is 'A':
                     tmpConstName = tmpVal[0:-1]
                     tmpIt = editor.listItems[editor.currentTab][tmpConstName]
                     tmpVal = editor.listConstants[editor.currentTab][tmpConstName][1]
@@ -5678,6 +5678,11 @@ class LoadCodeScript:
                     if type(tmpIt).__name__ == 'Checkbox':
                         tmpVal = [i[0:-1] for i in tmpVal if '*' in i]
                     tmpVal = repr(tmpVal)
+                elif tmpVal[0] is 'W':
+                    tmpConstName = tmpVal[0:-1]
+                    tmpVal = editor.listItems[editor.currentTab][tmpConstName].widget.state['selected_paths']
+                    tmpVal = repr(tmpVal)
+                    
                 listInputVal.append(tmpIn + '=' + tmpVal)
         return listInputVal
 

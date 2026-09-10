@@ -13,6 +13,12 @@ If you encounter problems with Skrypy, see [here](https://montigno.github.io/skr
 
 # Release history
 
+
+<p></p>
+
+	10/09/2026: version 26.09.10a
+	- News blocs : Nifti_analyses
+
 <p></p>
 
 	08/09/2026: version 26.09.08a

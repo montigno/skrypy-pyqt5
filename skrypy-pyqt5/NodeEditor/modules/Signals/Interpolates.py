@@ -1,6 +1,20 @@
 class interpolate_cubic_spline():
     """
-    docstring to be completed
+    Interpolate data with a piecewise cubic polynomial which is twice continuously differentiable
+
+    Args:
+        x: (ndarray)
+        y: (ndarray)
+        n: interval (must be non-negative)
+
+    Returns:
+        spline_cubic: (ndarray)
+        x_new: (ndarray)
+
+    Note:
+        dependencies: Numpy, scipy
+        GUI: no
+        link_web: https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.CubicSpline.html
     """
     def __init__(self,
                  x=[0.0],

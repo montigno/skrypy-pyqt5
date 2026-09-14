@@ -421,3 +421,6 @@ class TextEditPy(CodeEditor):
             self.editor.clearSelection()
     
         super().mousePressEvent(event)
+        
+    def returnText(self):
+        return self.toPlainText()

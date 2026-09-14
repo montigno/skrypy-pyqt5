@@ -3295,7 +3295,7 @@ class DiagramScene(QGraphicsScene):
                 edit.loadScriptItem(changeUnit[nameUnit], ins.name, posRe,
                                     ins.inout[0], ins.inout[1])
                 ball = edit.returnBlockSystem()
-                ball.elemProxy.setText(list_Bl_Sm[nameUnit])
+                ball.elemProxy.setPlainText(list_Bl_Sm[nameUnit])
             elif 'P' in nameUnit:
                 edit.loadProbe(changeUnit[nameUnit],
                                ins.label, ins.format, posRe)

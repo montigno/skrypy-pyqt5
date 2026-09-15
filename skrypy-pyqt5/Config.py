@@ -74,7 +74,8 @@ class Config():
 
     def loadEnvDiagram(self):
         if not os.path.exists(self.env_param_path):
-            open(self.env_param_path, 'w+')
+            with open(self.env_param_path, 'w+', encoding="utf-8") as f:
+                f.write(self.templateEnvVariable())
 
     def loadServerFile(self):
         if not os.path.exists(self.servers_list):
@@ -159,6 +160,46 @@ class Config():
     def setRunStart(self, start_run):
         self.config_user["paths"]["run_at_start:"] = start_run
         self.saveConfigUser()
+        
+    def templateEnvVariable(self):
+        env_template = """# ==========================================================================
+# Replace <***> with the path and remove the # at the beginning of the line.
+# ==========================================================================
+
+#ImageJ
+#export PATH=/<imagej_root>/ImageJ/
+
+#Matlab
+#export PATH=/<matlab_root>/MATLAB/R2024b/bin
+#export MATLABCMD=/<matlab_root>/MATLAB/R2024b/bin/glnxa64/MATLAB
+#export MATLABPATH=/home/<user>/Documents/MATLAB
+
+#FSL
+#export PATH=/<fsl_root>/fsl/bin
+#sh /<fsl_root>/fsl/etc/fslconf/fsl.sh
+
+#ANTs
+#export PATH=/<ants_root>/ants-2.5.0/bin
+#export ANTSPATH=/<ants_root>/ants-2.5.0/bin
+
+#MRTrix3
+#export PATH=/<mrtrix3_root>/mrtrix3/bin
+
+#FreeSurfer
+#export FREESURFER_HOME=/<freesurfer_root>/freesurfer
+
+#AFNI
+#export PATH=/<afni_root>/abin
+
+#SPM
+#export PATH=/<matlab_root>/MATLAB/R2024b/toolbox/spm12
+
+#mri_conv
+#export MRIFilePATH=/<mriconv_roor>/mri_conv/MRIFileManager/MRIManager.jar
+
+"""
+        
+        return env_template
 
     # def getShowGrid(self):
     #     return self.config_user["show_grid"]

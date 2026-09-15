@@ -3,6 +3,7 @@ from PyQt5.QtCore import Qt, QRect, QSize
 from PyQt5.QtGui import QPainter, QColor, QTextCursor
 
 import jedi
+import re
 
 
 class LineNumberArea(QWidget):
@@ -252,8 +253,23 @@ class TextEditPy(CodeEditor):
         # -----------------------------------------------------
 
         if event.text() == ".":
-
-            self.showCompletion()
+        
+            cursor = self.textCursor()
+        
+            position = cursor.position()
+        
+            text = self.toPlainText()
+        
+            before = text[:position]
+        
+            # Cherche ce qui se trouve juste avant le point
+            match = re.search(
+                r"([A-Za-z_][A-Za-z0-9_]*)\.$",
+                before
+            )
+        
+            if match:
+                self.showCompletion()
 
     # ---------------------------------------------------------
     # SHOW COMPLETION

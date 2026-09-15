@@ -16,6 +16,11 @@ If you encounter problems with Skrypy, see [here](https://montigno.github.io/skr
 
 <p></p>
 
+	15/09/2026: version 26.09.15a
+	- Script item autocompletion problem resolved.
+
+<p></p>
+
 	14/09/2026: version 26.09.14a
 	- Bug with copying/pasting the script element resolved.
 

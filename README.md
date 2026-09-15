@@ -13,6 +13,10 @@ If you encounter problems with Skrypy, see [here](https://montigno.github.io/skr
 
 # Release history
 
+<p></p>
+
+	15/09/2026: version 26.09.15b
+	- Skrypy Installer: modification for better compatibility with dependencies 
 
 <p></p>
 

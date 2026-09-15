@@ -210,6 +210,10 @@ echo "=== Activating virtual environment ==="
 
 source "$BASE/bin/activate"
 
+echo "Python after activation:"
+which python
+python --version
+
 # ============================================================
 # Installing PyYAML
 # ============================================================
@@ -251,8 +255,27 @@ cat > "$LAUNCHER" <<EOL
 #!/usr/bin/env bash
 
 SKRYPY_DIR="$DEST"
-PYTHON="$BASE/bin/python"
+VENV="$BASE"
 MAIN="$DEST/main.py"
+
+# ============================================================
+# Activation de l'environnement virtuel
+# ============================================================
+
+source "\$VENV/bin/activate" || {
+    echo "========================================"
+    echo " ERROR : Unable to activate Skrypy venv"
+    echo "========================================"
+    echo
+    echo "Virtual environment : \$VENV"
+    echo
+    read -r -p "Press Enter to close..."
+    exit 1
+}
+
+# ============================================================
+# Accès au répertoire de Skrypy
+# ============================================================
 
 cd "\$SKRYPY_DIR" || {
     echo "========================================"
@@ -265,17 +288,23 @@ cd "\$SKRYPY_DIR" || {
     exit 1
 }
 
+# ============================================================
+# Lancement de Skrypy
+# ============================================================
+
 echo "========================================"
 echo "              SKRYPY"
 echo "========================================"
 echo
-echo "Python : \$PYTHON"
-echo "Script : \$MAIN"
+echo "Virtual environment : \$VENV"
+echo "Python               : \$(which python)"
+echo "Python version       : \$(python --version)"
+echo "Script               : \$MAIN"
 echo
 echo "----------------------------------------"
 echo
 
-"\$PYTHON" "\$MAIN" "\$@"
+python "\$MAIN" "\$@"
 STATUS=\$?
 
 echo

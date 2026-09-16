@@ -327,6 +327,7 @@ class chOptions(QDialog):
                 aze.setChecked(False)
 
     def getOptionsHelp(self, modules, nameClass):
+        print("get options desc", modules, nameClass)
         try:
             imp = importlib.import_module(modules)
             MyClass = getattr(imp, nameClass)

@@ -13,6 +13,12 @@ If you encounter problems with Skrypy, see [here](https://montigno.github.io/skr
 
 # Release history
 
+
+<p></p>
+
+	16/09/2026: version 26.09.16a
+	- Blocks added: Atlas_erosion, load_Atlas_labels_ITK in MRImaging/Atlas
+
 <p></p>
 
 	15/09/2026: version 26.09.15b

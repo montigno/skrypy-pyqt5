@@ -11,6 +11,7 @@ packages:
   dcmstack: dcmstack
   dirsync: dirsync
   einops: einops
+  fsleyes: fsleyes
   gdown: gdown
   gitpython: GitPython
   gputil: GPUtil
@@ -63,4 +64,4 @@ packages:
   transformers: transformers
   typing_inspect: typing_inspect
   vedo: vedo
-version: 26.09.15b
+version: 26.09.16a

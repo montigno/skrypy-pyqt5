@@ -5,24 +5,25 @@
 # https://cecill.info/licences/Licence_CeCILL_V2-en.html
 # for details.
 ##########################################################################
-from PyQt5.QtCore import QRegExp
 
 '''
-Last modification on 14 mars 2023
+Last modification on 22 sept. 2026
 @author: omonti
 '''
 
-from PyQt5.Qt import Qt
-from PyQt5.QtGui import QFontMetrics, QSyntaxHighlighter, QTextCharFormat,\
-    QColor
-from PyQt5.QtWidgets import QDialog, QCheckBox, QVBoxLayout, QHBoxLayout, \
-    QPushButton, QScrollArea, QWidget, QMenuBar, QAction, QTextEdit
 import importlib
 import os
 # import yaml
 import ast
 import re
 from ruamel.yaml import YAML
+
+from PyQt5.Qt import Qt
+from PyQt5.QtGui import QFontMetrics, QSyntaxHighlighter, QTextCharFormat,\
+    QColor
+from PyQt5.QtWidgets import QDialog, QCheckBox, QVBoxLayout, QHBoxLayout, \
+    QPushButton, QScrollArea, QWidget, QMenuBar, QAction, QTextEdit
+from PyQt5.QtCore import QRegExp
 
 
 class chOptions(QDialog):
@@ -62,7 +63,7 @@ class chOptions(QDialog):
         self.list1 = [] #  port list
         self.list2 = [] # 
         self.list3 = [] # 
-        self.list_excl, self.list_req = {}, {}
+        self.list_excl, self.list_req, self.list_mand = {}, {}, {}
 
         for tr in _ss[0]:
             self.list1.append(tr)
@@ -122,6 +123,13 @@ class chOptions(QDialog):
                     b = QCheckBox(el, self)
                     b.setChecked(checkedTo)
                     b.setEnabled(enableTo)
+                    if el in self.list_mand.keys():
+                        b.setStyleSheet("""
+                            QCheckBox {
+                                color: #0066CC;
+                                font-weight: bold;
+                            }
+                        """)
                     # b.clicked.connect(self.manageOptions)
                     self.listCh.append(b)
                     listLabels.append(b.text())
@@ -201,11 +209,19 @@ class chOptions(QDialog):
                         self.list_excl[key] = list_excl[0]
                     if list_excl[1]:
                         self.list_req[key] = list_excl[1]
-                        
-        # print(self.list_excl)
-        # print(self.list_req)
+                    if list_excl[2]:
+                        self.list_mand[key] = list_excl[2]
+
+        # print("mutually exclusive:", self.list_excl)
+        # print("requirements:", self.list_req)
+        # print("mandatory exclusive:", self.list_mand)
 
     def get_list_in_comments(self, line):
+
+        match_mand = re.search(
+            r'# Mandatory Mutually exclusive with:\s*\[([^\]]*)\]',
+            line
+        )
 
         match_excl = re.search(
             r'#\s*(Optional|Mandatory)\s+Mutually exclusive with:\s*\[([^\]]*)\]',
@@ -217,7 +233,7 @@ class chOptions(QDialog):
             line
         )
 
-        list_excl, list_req = [], []
+        list_excl, list_req, list_mand = [], [], []
         
         if match_excl:
             type_option = match_excl.group(1)
@@ -236,8 +252,17 @@ class chOptions(QDialog):
                 for item in match_req.group(1).split(',')
                 if item.strip()
             ]
+            
+        if match_mand:
+            type_option = match_mand.group(1)
+        
+            list_mand = [
+                item.strip()
+                for item in match_mand.group(1).split(',')
+                if item.strip()
+            ]            
 
-        return (list_excl, list_req)
+        return (list_excl, list_req, list_mand)
         
     def CANCEL(self):
         self.answer = "cancel"
@@ -374,7 +399,6 @@ class chOptions(QDialog):
                 aze.setChecked(False)
 
     def getOptionsHelp(self, modules, nameClass):
-        print("get options desc", modules, nameClass)
         try:
             imp = importlib.import_module(modules)
             MyClass = getattr(imp, nameClass)

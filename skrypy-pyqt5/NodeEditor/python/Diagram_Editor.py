@@ -6701,7 +6701,7 @@ class Menu(QMenuBar):
                 self.btnPressed(QAction("Fit to window"))
 
         elif tmpActText == 'Tiled':
-            editor.mdi.cascadeSubWindows()
+            # editor.mdi.cascadeSubWindows()
             editor.mdi.tileAlphabetical()
             # editor.mdi.tileSubWindows()
             for lstWid in editor.mdi.subWindowList():
@@ -9751,6 +9751,10 @@ class SkrypyMdiArea(QMdiArea):
         if not windows:
             return
 
+        # Repasser toutes les fenêtres en mode normal
+        for window in windows:
+            window.showNormal()
+
         # Tri alphabétique croissant
         windows.sort(
             key=lambda w: w.windowTitle().casefold()
@@ -9768,11 +9772,7 @@ class SkrypyMdiArea(QMdiArea):
         cell_width = rect.width() // columns
         cell_height = rect.height() // rows
 
-        # Placement :
-        # 0 -> haut gauche
-        # 1 -> haut droite
-        # 2 -> bas gauche
-        # 3 -> bas droite
+        # Placement
         for i, window in enumerate(windows):
 
             row = i // columns
@@ -9787,6 +9787,8 @@ class SkrypyMdiArea(QMdiArea):
                 cell_width,
                 cell_height
             )
+
+            window.show()
 
 
 class Slide(QGraphicsPolygonItem):

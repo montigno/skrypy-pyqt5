@@ -24,6 +24,7 @@ class load_Atlas_labels_ITK():
 
 ##############################################################################
 
+
 class Atlas_erosion():
     def __init__(self,
                  atlas_file='path',

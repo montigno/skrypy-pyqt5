@@ -38,7 +38,7 @@ from functools import partial
 import gc
 import importlib
 import inspect
-from math import atan, cos, sin
+from math import atan, cos, sin, sqrt, ceil
 import os
 import subprocess
 import sys
@@ -6701,11 +6701,13 @@ class Menu(QMenuBar):
                 self.btnPressed(QAction("Fit to window"))
 
         elif tmpActText == 'Tiled':
-            editor.mdi.tileSubWindows()
+            editor.mdi.cascadeSubWindows()
+            editor.mdi.tileAlphabetical()
+            # editor.mdi.tileSubWindows()
             for lstWid in editor.mdi.subWindowList():
                 editor.mdi.setActiveSubWindow(lstWid)
                 self.btnPressed(QAction("Fit to window"))
-            editor.mdi.WindowOrder(2)
+            # editor.mdi.WindowOrder(2)
 
         elif tmpActText == 'Maximized':
             for lstWid in editor.mdi.subWindowList():
@@ -7001,7 +7003,8 @@ class NodeEdit(QWidget):
 
         #######################################################################
 
-        self.mdi = QMdiArea()
+        # self.mdi = QMdiArea()
+        self.mdi = SkrypyMdiArea()
         self.mdi.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.mdi.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.mdi.setViewMode(QMdiArea.TabbedView)
@@ -9736,6 +9739,54 @@ class ShowLegend:
 
         editor.legendDiagram.setEnabled(True)
         editor.legendDiagram.setInteractive(False)
+
+
+class SkrypyMdiArea(QMdiArea):
+
+    def tileAlphabetical(self):
+        """Tile les fenêtres dans l'ordre alphabétique."""
+
+        windows = self.subWindowList()
+
+        if not windows:
+            return
+
+        # Tri alphabétique croissant
+        windows.sort(
+            key=lambda w: w.windowTitle().casefold()
+        )
+
+        count = len(windows)
+
+        # Dimensions de la zone disponible
+        rect = self.viewport().rect()
+
+        # Nombre de colonnes / lignes
+        columns = ceil(sqrt(count))
+        rows = ceil(count / columns)
+
+        cell_width = rect.width() // columns
+        cell_height = rect.height() // rows
+
+        # Placement :
+        # 0 -> haut gauche
+        # 1 -> haut droite
+        # 2 -> bas gauche
+        # 3 -> bas droite
+        for i, window in enumerate(windows):
+
+            row = i // columns
+            column = i % columns
+
+            x = column * cell_width
+            y = row * cell_height
+
+            window.setGeometry(
+                x,
+                y,
+                cell_width,
+                cell_height
+            )
 
 
 class Slide(QGraphicsPolygonItem):

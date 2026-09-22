@@ -5,6 +5,7 @@
 # https://cecill.info/licences/Licence_CeCILL_V2-en.html
 # for details.
 ##########################################################################
+from PyQt5.QtCore import QRegExp
 
 '''
 Last modification on 14 mars 2023
@@ -12,7 +13,8 @@ Last modification on 14 mars 2023
 '''
 
 from PyQt5.Qt import Qt
-from PyQt5.QtGui import QFontMetrics
+from PyQt5.QtGui import QFontMetrics, QSyntaxHighlighter, QTextCharFormat,\
+    QColor
 from PyQt5.QtWidgets import QDialog, QCheckBox, QVBoxLayout, QHBoxLayout, \
     QPushButton, QScrollArea, QWidget, QMenuBar, QAction, QTextEdit
 import importlib
@@ -83,6 +85,9 @@ class chOptions(QDialog):
         desc.setPlainText(doc)
         desc.setReadOnly(True)
         desc.setLineWrapMode(True)
+        self.highlighter = NipypeOptionHighlighter(
+            desc.document()
+            )
 
         font = desc.document().defaultFont()
         fontMetrics = QFontMetrics(font)
@@ -147,13 +152,13 @@ class chOptions(QDialog):
                             break
                         if tmp.strip() in listLabels:
                             n = n - 1
-                        doc = doc + "<br><span style=\" font-size:10pt; font-weight:600; color:#222222;\" >" + tmp + " : </span><br>"
+                        doc = doc + "<br><span style=\" font-size:10pt; font-weight:600; color:#2222ee;\" >" + tmp + " : </span><br>"
                     except Exception:
                         pass
                     comm = ''
                     try:
                         comm = lst[lst.index('#') + 1:]
-                        doc = doc + "<span style=\" font-size:10pt; font-weight:600; color:#2222ee;\" >" + comm + "</span><br>"
+                        doc = doc + "<span style=\" font-size:10pt; color:#222222;\" >" + comm + "</span><br>"
                     except Exception:
                         pass
 
@@ -310,6 +315,48 @@ class chOptions(QDialog):
         self.newports = (self.list1, self.list2, self.poqs[2], self.poqs[3])
         self.close()
         self.answer = "ok"
+        
+    def sort_nipype_options(self, text):
+        """
+        Sorts the options of a Nipype help text alphabetically. 
+        
+        Options must start with a line of the form:
+        option_name: (...)
+        
+        The content of each option is preserved as-is.
+        """
+    
+        # Detects the start of an option
+        pattern = re.compile(
+            r'(?m)^        ([A-Za-z_][A-Za-z0-9_]*)\s*:'
+        )
+    
+        matches = list(pattern.finditer(text))
+    
+        if not matches:
+            return text
+    
+        blocks = []
+    
+        for i, match in enumerate(matches):
+            start = match.start()
+    
+            if i + 1 < len(matches):
+                end = matches[i + 1].start()
+            else:
+                end = len(text)
+    
+            option_name = match.group(1)
+    
+            blocks.append((
+                option_name.lower(),
+                text[start:end]
+            ))
+    
+        # Alphabetical sort
+        blocks.sort(key=lambda x: x[0])
+    
+        return ''.join(block[1] for block in blocks)
 
     def getNewValues(self):
         return self.newports, list(self.list3)
@@ -333,6 +380,7 @@ class chOptions(QDialog):
             MyClass = getattr(imp, nameClass)
             doc_help = MyClass.help(True)
             doc_help = doc_help[doc_help.index('[Optional]') + 11: doc_help.index('Outputs::')]
+            doc_help = self.sort_nipype_options(doc_help)
         except Exception as err:
             doc_help = 'error : {}'.format(str(err))
         return doc_help
@@ -340,3 +388,43 @@ class chOptions(QDialog):
     def closeEvent(self, closeEvent):
         self.answer = "cancel"
         self.close()
+
+
+class NipypeOptionHighlighter(QSyntaxHighlighter):
+
+    def __init__(self, document):
+        super().__init__(document)
+
+        self.option_format = QTextCharFormat()
+        self.option_format.setForeground(QColor("#0066CC"))
+        self.option_format.setFontWeight(600)
+
+        # Option au début d'une ligne :
+        #        option_name:
+        self.option_pattern = QRegExp(
+            r"^\s{8}([A-Za-z_][A-Za-z0-9_]*)\s*:"
+        )
+
+    def highlightBlock(self, text):
+
+        index = self.option_pattern.indexIn(text)
+
+        while index >= 0:
+
+            # Position du nom de l'option
+            start = index + self.option_pattern.cap(0).find(
+                self.option_pattern.cap(1)
+            )
+
+            length = len(self.option_pattern.cap(1))
+
+            self.setFormat(
+                start,
+                length,
+                self.option_format
+            )
+
+            index = self.option_pattern.indexIn(
+                text,
+                index + self.option_pattern.matchedLength()
+            )

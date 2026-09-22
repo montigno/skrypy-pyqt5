@@ -18,6 +18,7 @@ If you encounter problems with Skrypy, see [here](https://montigno.github.io/skr
 
 	22/09/2026: version 26.09.22a
 	- Tiled window mode: improved alphabetical sorting
+	- The options described in the 'Options' window are color-coded and ordered.
 
 <p></p>
 

@@ -137,7 +137,8 @@ class CompletionPopup(QListWidget):
         self.editor = editor
 
         self.setWindowFlags(Qt.Popup)
-        self.setFocusPolicy(Qt.StrongFocus)
+        # self.setFocusPolicy(Qt.StrongFocus)
+        self.setFocusPolicy(Qt.NoFocus)
         self.setMouseTracking(True)
 
     def keyPressEvent(self, event):
@@ -201,75 +202,109 @@ class TextEditPy(CodeEditor):
 
     def keyPressEvent(self, event):
 
+        popup = self.completion_popup
+    
+        # -----------------------------------------------------
+        # Popup de complétion visible
+        # -----------------------------------------------------
+    
+        if popup.isVisible():
+    
+            # ENTER
+            if event.key() in (Qt.Key_Return, Qt.Key_Enter):
+                self.acceptCompletion()
+                event.accept()
+                return
+    
+            # TAB
+            if event.key() == Qt.Key_Tab:
+                self.acceptCompletion()
+                event.accept()
+                return
+    
+            # ESC
+            if event.key() == Qt.Key_Escape:
+                popup.hide()
+                event.accept()
+                return
+    
+            # DOWN
+            if event.key() == Qt.Key_Down:
+                row = popup.currentRow()
+    
+                if row < popup.count() - 1:
+                    popup.setCurrentRow(row + 1)
+    
+                event.accept()
+                return
+    
+            # UP
+            if event.key() == Qt.Key_Up:
+                row = popup.currentRow()
+    
+                if row > 0:
+                    popup.setCurrentRow(row - 1)
+    
+                event.accept()
+                return
+    
         # -----------------------------------------------------
         # Ctrl + Space
         # -----------------------------------------------------
-
+    
         if (
             event.key() == Qt.Key_Space
             and event.modifiers() & Qt.ControlModifier
         ):
-
             self.showCompletion()
-
             event.accept()
-
             return
-
+    
         # -----------------------------------------------------
-        # TAB
+        # TAB sans popup
         # -----------------------------------------------------
-
+    
         if event.key() == Qt.Key_Tab:
-
             self.insertPlainText("    ")
-
             event.accept()
-
             return
-
+    
         # -----------------------------------------------------
-        # ESC
+        # ESC sans popup
         # -----------------------------------------------------
-
+    
         if event.key() == Qt.Key_Escape:
-
-            if self.completion_popup.isVisible():
-
-                self.completion_popup.hide()
-
-                event.accept()
-
-                return
-
+            if popup.isVisible():
+                popup.hide()
+    
+            event.accept()
+            return
+    
         # -----------------------------------------------------
         # comportement normal
         # -----------------------------------------------------
-
+    
         super().keyPressEvent(event)
-
+    
         # -----------------------------------------------------
         # AUTO COMPLETION après "."
         # -----------------------------------------------------
-
-        if event.text() == ".":
-        
-            cursor = self.textCursor()
-        
-            position = cursor.position()
-        
-            text = self.toPlainText()
-        
-            before = text[:position]
-        
-            # Cherche ce qui se trouve juste avant le point
-            match = re.search(
-                r"([A-Za-z_][A-Za-z0-9_]*)\.$",
-                before
-            )
-        
-            if match:
-                self.showCompletion()
+    
+        # if event.text() == ".":
+        #
+        #     cursor = self.textCursor()
+        #     position = cursor.position()
+        #
+        #     text = self.toPlainText()
+        #     before = text[:position]
+        #
+        #     match = re.search(
+        #         r"([A-Za-z_][A-Za-z0-9_]*)\.$",
+        #         before
+        #     )
+        #
+        #     if match:
+        #         self.showCompletion()
 
     # ---------------------------------------------------------
     # SHOW COMPLETION
@@ -369,7 +404,7 @@ class TextEditPy(CodeEditor):
 
         # Très important :
         # le popup reçoit le clavier
-        popup.setFocus()
+        # popup.setFocus()
 
     # ---------------------------------------------------------
     # ACCEPT COMPLETION
@@ -398,31 +433,45 @@ class TextEditPy(CodeEditor):
     # ---------------------------------------------------------
 
     def insertCompletionItem(self, item):
-
+    
         if item is None:
-
             return
-
+    
         completion = item.text()
-
+    
         if not completion:
-
             return
-
+    
         cursor = self.textCursor()
-
-        cursor.select(
-            QTextCursor.WordUnderCursor
+    
+        # Position actuelle du curseur
+        position = cursor.position()
+    
+        # Récupère tout le texte avant le curseur
+        text = self.toPlainText()
+        before = text[:position]
+    
+        # Cherche le début du mot en cours
+        match = re.search(
+            r"[A-Za-z_][A-Za-z0-9_]*$",
+            before
         )
-
-        cursor.insertText(
-            completion
-        )
-
+    
+        if match:
+            start = match.start()
+    
+            cursor.setPosition(start)
+            cursor.setPosition(
+                position,
+                QTextCursor.KeepAnchor
+            )
+    
+        # Insère la complétion
+        cursor.insertText(completion)
+    
         self.setTextCursor(cursor)
-
+    
         self.completion_popup.hide()
-
         self.setFocus()
 
     # ---------------------------------------------------------

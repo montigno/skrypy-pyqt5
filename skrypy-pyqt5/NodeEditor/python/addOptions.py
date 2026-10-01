@@ -58,17 +58,17 @@ class chOptions(QDialog):
 
         vbox = QVBoxLayout(self)
 
-        _ss = ports
+        # _ss = ports
 
         self.list1 = [] #  port list
         self.list2 = [] # 
         self.list3 = [] # 
         self.list_excl, self.list_req, self.list_mand = {}, {}, {}
 
-        for tr in _ss[0]:
+        for tr in ports[0]:
             self.list1.append(tr)
 
-        for tr in _ss[1]:
+        for tr in ports[1]:
             self.list2.append(tr)
             self.list3.append(tr)
 

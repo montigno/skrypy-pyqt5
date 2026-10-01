@@ -456,14 +456,26 @@ class list_files_in_directory:
 
         import os
         import glob
+    
         self.lstfiles = []
         if RepDefault:
             if os.path.isdir(RepDefault):
-                if recursive:
-                    self.lstfiles = [f for f in glob.glob(os.path.join(RepDefault, "**", filter), recursive=True) if os.path.isfile(f)]
-                else:
-                    self.lstfiles = [f for f in glob.glob(os.path.join(RepDefault, filter)) if os.path.isfile(f)]
-
+                filters = filter.split()
+                for pattern in filters:
+                    if recursive:
+                        files = glob.glob(
+                            os.path.join(RepDefault, "**", pattern),
+                            recursive=True
+                        )
+                    else:
+                        files = glob.glob(
+                            os.path.join(RepDefault, pattern)
+                        )
+                    self.lstfiles.extend(
+                        f for f in files
+                        if os.path.isfile(f)
+                    )
+    
     def listFiles(self) -> list[None]:
         return self.lstfiles
 

@@ -435,6 +435,23 @@ class filter_directory_files_extension:
 
 ##############################################################################
 
+class find_syntax:
+    """
+    docstring to be completed
+    """
+    
+    def __init__(self,
+                 filename='path',
+                 syntaxes= ['']):
+        self.synt_found = next(
+                            (syntax for syntax in syntaxes if syntax in filename),
+                                None)
+        
+    def syntax_found(self) -> str:
+        return self.synt_found
+
+##############################################################################
+
 
 class list_files_in_directory:
     """

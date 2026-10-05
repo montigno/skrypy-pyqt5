@@ -13,6 +13,12 @@ If you encounter problems with Skrypy, see [here](https://montigno.github.io/skr
 
 # Release history
 
+
+<p></p>
+
+	05/10/2026: version 26.10.05a
+	- Block added: find_syntax in FileIO/Tools
+
 <p></p>
 
 	01/10/2026: version 26.10.01a

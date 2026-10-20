@@ -1,6 +1,9 @@
 CEST:
   n_interp: 100
   kind_interp: 'cubic'
+CEST_2:
+  n_interp: 100
+  kind_interp: 'cubic'
 Non_linear_registration_for_Atlases:
   initial_transform: 'identity' # (list of strings (optional)) – transforms to prepend. If None, a translation is computed to align the image centers of mass, unless the type of transform is deformable-only (time-varying diffeomorphisms, SyNOnly, or antsRegistrationSyN*[so|bo]). To force initialization with an identity transform, set this to ‘Identity’.
   grad_step: 0.2 # (scalar) – gradient step size (not for all tx)

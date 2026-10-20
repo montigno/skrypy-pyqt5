@@ -16,6 +16,11 @@ If you encounter problems with Skrypy, see [here](https://montigno.github.io/skr
 
 <p></p>
 
+	20/10/2026: version 26.10.20a
+	- CEST_2 block : options added
+
+<p></p>
+
 	05/10/2026: version 26.10.05a
 	- Block added: find_syntax in FileIO/Tools
 

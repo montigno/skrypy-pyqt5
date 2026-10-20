@@ -9,5 +9,4 @@ packages:
   psutil: psutil
   ruamel: ruamel.yaml
   setuptools: setuptools
-version: 26.10.05a
-
+version: 26.10.20a

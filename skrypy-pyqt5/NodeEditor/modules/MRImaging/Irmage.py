@@ -596,8 +596,8 @@ class CEST_2():
             # S0_new = y_corrected[0]
             delta_w_neg = y_corrected[indice_mini_y_corr + j]
             delta_w_pos = y_corrected[i]
-            asym.append(abs(100 * (delta_w_neg - delta_w_pos) / 100))
-
+            #asym.append(abs(100 * (delta_w_neg - delta_w_pos) / 100))
+            asym.append(delta_w_neg - delta_w_pos)
         # ind_ppm = list(x_asym).index(mapping_ppm)
         # self.out_map = asym[ind_ppm]
 
@@ -634,6 +634,147 @@ class CEST_2():
 ##############################################################################
 
 
+class CEST_IA:
+    def __init__(
+        self,
+        y=[0.0],
+        x=[0.0],
+        center_freq=0.0,
+        mapping_ppm=1.0,
+        delta_mapping=0.1,
+        cest_center=False,
+        **options
+    ):
+        import numpy as np
+        from scipy.interpolate import interp1d
+
+        if y is None or x is None:
+            raise ValueError("Les tableaux x et y sont obligatoires.")
+
+        x = np.asarray(x, dtype=float)
+        y = np.asarray(y, dtype=float)
+
+        if len(y) != len(x) + 1:
+            raise ValueError(
+                "y doit contenir S0 suivi des signaux de saturation : "
+                "len(y) doit être égal à len(x) + 1."
+            )
+
+        S0 = y[0]
+        if not np.isfinite(S0) or S0 == 0:
+            raise ValueError("Le signal de référence S0 est nul ou invalide.")
+
+        if not np.all(np.isfinite(x)) or not np.all(np.isfinite(y)):
+            raise ValueError("x et y doivent contenir des valeurs finies.")
+
+        if len(x) < 4 and options.get("kind_interp", "cubic") == "cubic":
+            raise ValueError("L'interpolation cubique nécessite au moins 4 points.")
+
+        # Normalisation en pourcentage de S0
+        z = 100.0 * y[1:] / S0
+
+        # Tri des offsets et vérification des doublons
+        order = np.argsort(x)
+        x = x[order]
+        z = z[order]
+
+        if np.any(np.diff(x) <= 0):
+            raise ValueError("Les offsets x doivent être distincts.")
+
+        n_interp = int(options.get("n_interp", 100))
+        kind_interp = options.get("kind_interp", "cubic")
+
+        if n_interp < 1:
+            raise ValueError("n_interp doit être supérieur ou égal à 1.")
+
+        f = interp1d(
+            x, z,
+            kind=kind_interp,
+            bounds_error=False,
+            fill_value=np.nan
+        )
+
+        # Grille d'interpolation
+        xnew = np.linspace(
+            x[0], x[-1],
+            n_interp * (len(x) - 1) + 1
+        )
+        znew = f(xnew)
+
+        # Détermination du centre fréquentiel
+        if cest_center:
+            center_offset = xnew[np.nanargmin(znew)]
+        else:
+            center_offset = float(center_freq)
+
+        # Recentrage : le centre choisi devient 0 ppm
+        x_corr = xnew - center_offset
+
+        # Le signal reste associé à sa position d'origine
+        self.xspectr = x_corr
+        self.zspectr = znew
+
+        # Calcul de MTRasym sur les offsets positifs
+        f_corr = interp1d(
+            x_corr, znew,
+            kind=kind_interp,
+            bounds_error=False,
+            fill_value=np.nan
+        )
+
+        x_asym = x_corr[x_corr >= 0]
+        valid = (
+            (x_asym > 0)
+            & (-x_asym >= x_corr[0])
+            & (x_asym <= x_corr[-1])
+        )
+        x_asym = x_asym[valid]
+
+        z_neg = f_corr(-x_asym)
+        z_pos = f_corr(x_asym)
+
+        asym = z_neg - z_pos
+
+        self.xasym = x_asym
+        self.asym = asym
+
+        # Moyenne de l'asymétrie dans la plage demandée
+        lo = mapping_ppm - delta_mapping
+        hi = mapping_ppm + delta_mapping
+
+        if delta_mapping < 0:
+            raise ValueError("delta_mapping doit être positif ou nul.")
+
+        mask = (
+            (x_asym >= lo)
+            & (x_asym <= hi)
+            & np.isfinite(asym)
+        )
+
+        if not np.any(mask):
+            self.out_map = np.nan
+        else:
+            self.out_map = float(np.mean(asym[mask]))
+
+    def out_xspectra(self) -> list[float]:
+        return self.xspectr.tolist()
+
+    def out_zspectra(self) -> list[float]:
+        return self.zspectr.tolist()
+
+    def out_xasym(self) -> list[float]:
+        return self.xasym.tolist()
+
+    def out_asym(self) -> list[float]:
+        return self.asym.tolist()
+
+    def out_mapping(self) -> float:
+        return self.out_map
+    
+
+##############################################################################
+
+
 class WASSR():
     def __init__(self,
                  y=[0.0],
@@ -663,6 +804,104 @@ class WASSR():
     def _f(self, xd, c):
         x_arr = 2 * c - xd
         return f_interp(x_arr)
+
+    def estimated_center_freq(self) -> float:
+        return self.center
+
+    def center_wassr(self) -> float:
+        return self.center_wass
+
+##############################################################################
+
+
+class WASSR_IA:
+    def __init__(self, y=[0.0], x=[0.0]):
+        
+        import numpy as np
+        from scipy.interpolate import interp1d
+        from scipy.optimize import minimize_scalar
+
+        if x is None or y is None:
+            raise ValueError("Les tableaux x et y sont obligatoires.")
+
+        x = np.asarray(x, dtype=float)
+        y = np.asarray(y, dtype=float)
+
+        # y[0] = signal de référence S0
+        if len(y) != len(x) + 1:
+            raise ValueError(
+                "Il faut len(y) = len(x) + 1 : "
+                "y contient S0 puis les signaux WASSR."
+            )
+
+        S0 = y[0]
+        if not np.isfinite(S0) or S0 == 0:
+            raise ValueError("S0 doit être non nul et fini.")
+
+        y = 100.0 * y[1:] / S0
+
+        valid = np.isfinite(x) & np.isfinite(y)
+        x, y = x[valid], y[valid]
+
+        order = np.argsort(x)
+        x, y = x[order], y[order]
+
+        if len(x) < 4 or np.any(np.diff(x) <= 0):
+            raise ValueError(
+                "Il faut au moins 4 offsets distincts."
+            )
+
+        # Interpolation sans extrapolation
+        self.f_interp = interp1d(
+            x, y,
+            kind="cubic",
+            bounds_error=False,
+            fill_value=np.nan
+        )
+
+        self.x = x
+        self.y = y
+
+        # Centre initial : minimum observé
+        c0 = x[np.argmin(y)]
+
+        # Recherche du centre maximisant la symétrie
+        def objective(c):
+            # Comparaison des signaux aux offsets réfléchis
+            x_reflected = 2.0 * c - x
+
+            # Ne conserver que les points dont la réflexion
+            # reste dans le domaine réellement mesuré
+            mask = (
+                (x_reflected >= x[0])
+                & (x_reflected <= x[-1])
+            )
+
+            if np.count_nonzero(mask) < 4:
+                return np.inf
+
+            y_original = y[mask]
+            y_reflected = self.f_interp(x_reflected[mask])
+
+            if not np.all(np.isfinite(y_reflected)):
+                return np.inf
+
+            # Erreur quadratique de symétrie
+            return np.mean((y_original - y_reflected) ** 2)
+
+        result = minimize_scalar(
+            objective,
+            bounds=(x[0], x[-1]),
+            method="bounded"
+        )
+
+        if not result.success or not np.isfinite(result.fun):
+            raise RuntimeError(
+                "Impossible d'estimer le centre WASSR."
+            )
+
+        self.center = float(result.x)
+        self.center_wass = self.center
 
     def estimated_center_freq(self) -> float:
         return self.center

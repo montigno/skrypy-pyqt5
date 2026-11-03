@@ -513,6 +513,7 @@ class execution2(QObject):
                 try:
                     a = executionScript(execution, listScriptExecution[execution], listDynamicValue, textEditor)
                     outVals = a.getOutValues()
+                    a.delInputs()
                     for uj in outVals.keys():
                         listDynamicValue[uj] = outVals[uj]
                 except Exception as e:
@@ -622,18 +623,18 @@ class execution2(QObject):
 class executionScript:
 
     def __init__(self, unitName, txt, listDynamicValue, textEditor):
-        current_module = sys.modules[__name__]
+        self.current_module = sys.modules[__name__]
         self.listDynamicValueToReturn = {}
-        inputsList = eval(txt[0:txt.index('\n')])
+        self.inputsList = eval(txt[0:txt.index('\n')])
         textScript = '\n'.join(txt.split('\n')[1:-2])
         outputsList = eval(txt.splitlines()[-1])
         code = ''
-        for lst in inputsList:
+        for lst in self.inputsList:
             az = lst.split('=')
             if ':' in az[1]:
-                setattr(current_module, az[0], listDynamicValue[az[1]])
+                setattr(self.current_module, az[0], listDynamicValue[az[1]])
             else:
-                setattr(current_module, az[0], eval(az[1]))
+                setattr(self.current_module, az[0], eval(az[1]))
         code += textScript + '\n'
         for lst in outputsList:
             az = lst.split(':')
@@ -656,6 +657,11 @@ class executionScript:
 
     def getOutValues(self):
         return self.listDynamicValueToReturn
+    
+    def delInputs(self):
+        for lst in self.inputsList:
+            az = lst.split('=')
+            delattr(self.current_module, az[0])
 
 
 class executionMacro:
@@ -809,3 +815,4 @@ class Data_analyse():
                 print(item, dftype, data_out.shape)
             else:
                 print(item, dftype, len(data_out))
+

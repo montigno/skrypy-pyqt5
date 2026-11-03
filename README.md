@@ -13,6 +13,10 @@ If you encounter problems with Skrypy, see [here](https://montigno.github.io/skr
 
 # Release history
 
+<p></p>
+
+	03/11/2026: version 26.11.03a
+	- Bug with Script editor fixed
 
 <p></p>
 

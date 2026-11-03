@@ -71,7 +71,6 @@ class float_array_concatenate_dyn():
 
         import numpy as np
         self.arr = np.array(array_float_in)
-        print(dynamicsInputs)
         for di, vi in dynamicsInputs.items():
             self.arr = np.concatenate((self.arr, vi), dtype=float)
 

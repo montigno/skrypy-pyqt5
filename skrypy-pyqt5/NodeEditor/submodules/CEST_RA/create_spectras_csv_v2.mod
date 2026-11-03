@@ -1,8 +1,18 @@
 [diagram]
+link=[N87] node=[A9:#Node#U21:stringIn_5]
+link=[N86] node=[A9:#Node#U19:stringIn_5]
+link=[N85] node=[A14:#Node#U21:stringIn_4]
+link=[N84] node=[A14:#Node#U19:stringIn_4]
+link=[N63] node=[A5:#Node#U19:stringIn_3]
+link=[N60] node=[A5:#Node#U21:stringIn_3]
+link=[N83] node=[A7:#Node#U20:stringIn_5]
+link=[N82] node=[A7:#Node#U17:stringIn_5]
+link=[N81] node=[A14:#Node#U20:stringIn_4]
+link=[N80] node=[A14:#Node#U17:stringIn_4]
+link=[N41] node=[A1:#Node#U20:stringIn_3]
+link=[N39] node=[A1:#Node#U17:stringIn_3]
 link=[N79] node=[U10:csv_out#Node#C7:asym_out_mean]
 link=[N78] node=[U23:csv_out#Node#C8:asym_out]
-link=[N63] node=[A9:#Node#U19:stringIn_3]
-link=[N60] node=[A9:#Node#U21:stringIn_3]
 link=[N59] node=[A6:#Node#U19:stringIn_2]
 link=[N58] node=[A8:#Node#U21:stringIn_2]
 link=[N57] node=[A5:#Node#U19:stringIn_0]
@@ -43,8 +53,6 @@ link=[N47] node=[C1:roi_name#Node#S1:roi_name]
 link=[N44] node=[A0:#Node#S0:ppm]
 link=[N34] node=[C0:subject#Node#U17:stringIn]
 link=[N38] node=[C0:subject#Node#U20:stringIn]
-link=[N39] node=[A7:#Node#U17:stringIn_3]
-link=[N41] node=[A7:#Node#U20:stringIn_3]
 link=[N28] node=[A10:#Node#U17:stringIn_2]
 link=[N36] node=[A11:#Node#U20:stringIn_2]
 link=[N45] node=[A1:#Node#U17:stringIn_0]
@@ -79,24 +87,21 @@ link=[N76] node=[U27:np_transpose#Node#U26:data]
 link=[N77] node=[U28:np_transpose#Node#U23:data]
 link=[N40] node=[U26:csv_out#Node#C5:z_spectra_out]
 link=[N43] node=[U16:csv_out#Node#C6:z_spectra_mean]
-constant=[A9] value=['.csv'] format=[str] label=[stringIn_2] RectF=[(-740.0, 800.0, 49.0, 33.0)] 
-constant=[A8] value=['_asym_all'] format=[str] label=[new_str] RectF=[(-760.0, 900.0, 84.0, 33.0)] 
-constant=[A6] value=['_zspectra_all'] format=[str] label=[new_str] RectF=[(-920.0, 720.0, 103.0, 33.0)] 
-constant=[A5] value=['_'] format=[str] label=[stringIn_1] RectF=[(-900.0, 800.0, 32.0, 33.0)] 
-constant=[A4] value=['value'] format=[str] label=[tag_0] RectF=[(-600.0, -1080.0, 58.0, 33.0)] 
-constant=[A3] value=['SatTransFreqRanges'] format=[str] label=[tag] RectF=[(-680.0, -1180.0, 147.0, 33.0)] 
-constant=[A2] value=['.json'] format=[str] label=[new_extension] RectF=[(-1400.0, -1260.0, 54.0, 33.0)] 
-constant=[A14] value=['wassr'] format=[enumerate(('no', 'wassr', 'cest_center'))] label=[A9] RectF=[(-120.0, -640.0, 115.0, 29.0)] 
-constant=[A0] value=[(-100000.0, 3.0, 100000.0)] format=[float] label=[ppm] RectF=[(-100.0, -780.0, 142.0, 29.0)] 
-constant=[A11] value=['_asym_mean'] format=[str] label=[new_str] RectF=[(-920.0, -100.0, 104.0, 33.0)] 
-constant=[A10] value=['_zspectra_mean'] format=[str] label=[new_str] RectF=[(-940.0, -280.0, 123.0, 33.0)] 
-constant=[A7] value=['.csv'] format=[str] label=[stringIn_2] RectF=[(-760.0, -200.0, 49.0, 33.0)] 
-constant=[A1] value=['_'] format=[str] label=[stringIn_1] RectF=[(-920.0, -200.0, 32.0, 33.0)] 
+constant=[A9] value=['.csv'] format=[str] label=[stringIn_2] RectF=[(200.0, 840.0, 47.0, 35.0)] 
+constant=[A8] value=['_asym_all'] format=[str] label=[new_str] RectF=[(180.0, 940.0, 79.0, 35.0)] 
+constant=[A6] value=['_zspectra_all'] format=[str] label=[new_str] RectF=[(20.0, 760.0, 96.0, 35.0)] 
+constant=[A5] value=['_'] format=[str] label=[stringIn_1] RectF=[(40.0, 840.0, 32.0, 35.0)] 
+constant=[A4] value=['value'] format=[str] label=[tag_0] RectF=[(-600.0, -1080.0, 56.0, 35.0)] 
+constant=[A3] value=['SatTransFreqRanges'] format=[str] label=[tag] RectF=[(-680.0, -1180.0, 140.0, 35.0)] 
+constant=[A2] value=['.json'] format=[str] label=[new_extension] RectF=[(-1400.0, -1260.0, 52.0, 35.0)] 
+constant=[A14] value=['cest_center'] format=[enumerate(('no', 'wassr_IA', 'cest_center', 'wassr_RA'))] label=[A9] RectF=[(-120.0, -640.0, 109.0, 31.0)] 
+constant=[A0] value=[(-100000.0, 1.8, 100000.0)] format=[float] label=[ppm] RectF=[(-120.0, -740.0, 131.0, 31.0)] 
+constant=[A11] value=['_asym_mean'] format=[str] label=[new_str] RectF=[(20.0, 60.0, 98.0, 35.0)] 
+constant=[A10] value=['_zspectra_mean'] format=[str] label=[new_str] RectF=[(0.0, -120.0, 115.0, 35.0)] 
+constant=[A7] value=['.csv'] format=[str] label=[stringIn_2] RectF=[(180.0, -40.0, 47.0, 35.0)] 
+constant=[A1] value=['_'] format=[str] label=[stringIn_1] RectF=[(20.0, -40.0, 32.0, 35.0)] 
 block=[U28] category=[Numpy.Nd_manipulation] class=[numpy_transpose] valInputs=[(['a'], ['Node(N73)'], ['np_transpose'], ['array_float'])] RectF=[(1720.0, -940.0, 160.0, 80.0)] 
-block=[U21] category=[Tools.String] class=[string_concatenat_dyn] valInputs=[(['stringIn', 'stringIn_0', 'stringIn_1', 'stringIn_2', 'stringIn_3'], ['Node(N65)', 'Node(N56)', 'Node(N67)', 'Node(N58)', 'Node(N60)'], ['str_conc'], ['str'])] RectF=[(-580.0, 840.0, 180.0, 120.0)] 
-block=[U19] category=[Tools.String] class=[string_concatenat_dyn] valInputs=[(['stringIn', 'stringIn_0', 'stringIn_1', 'stringIn_2', 'stringIn_3'], ['Node(N64)', 'Node(N57)', 'Node(N66)', 'Node(N59)', 'Node(N63)'], ['str_conc'], ['str'])] RectF=[(-580.0, 640.0, 180.0, 120.0)] 
 block=[U13] category=[Tools.Float_array] class=[float_array_concatenate_dyn] valInputs=[(['array_float_in', 'array_float_in_0'], ['Node(N30)', 'Node(N31)'], ['outArray'], ['array_float'])] RectF=[(1380.0, -920.0, 220.0, 80.0)] 
-block=[U17] category=[Tools.String] class=[string_concatenat_dyn] valInputs=[(['stringIn', 'stringIn_0', 'stringIn_1', 'stringIn_2', 'stringIn_3'], ['Node(N34)', 'Node(N45)', 'Node(N49)', 'Node(N28)', 'Node(N39)'], ['str_conc'], ['str'])] RectF=[(-600.0, -360.0, 180.0, 120.0)] 
 connt=[C6] name=[z_spectra_mean] type=[out] format=[path] RectF=[(2260.0, -1100.0, 70, 24)] 
 connt=[C5] name=[z_spectra_out] type=[out] format=[path] RectF=[(2280.0, -1380.0, 70, 24)] 
 connt=[C4] name=[treatment_dir] type=[in] format=[path] valOut=[path] RectF=[(-2580.0, 220.0, 70, 24)] 
@@ -105,7 +110,7 @@ connt=[C2] name=[data_list] type=[in] format=[path] valOut=[path] RectF=[(-2580.
 block=[U10] category=[FileIO.Csv] class=[csv_save_file] valInputs=[(['file_output', 'header', 'data'], ['Node(N37)', [''], 'Node(N62)'], ['csv_out'], ['path'])] RectF=[(2000.0, -660.0, 160.0, 80.0)] 
 block=[U9] category=[Tools.Float_list] class=[float_list_to_array_dyn] valInputs=[(['list_float_in', 'list_float_in_0'], ['Node(N51)', 'Node(N54)'], ['array'], ['array_float'])] RectF=[(1420.0, -740.0, 180.0, 80.0)] 
 block=[U22] category=[Tools.Float_list] class=[float_list_to_array_dyn] valInputs=[(['list_float_in', 'list_float_in_0'], ['Node(N26)', 'Node(N27)'], ['array'], ['array_float'])] RectF=[(1400.0, -1220.0, 180.0, 80.0)] 
-block=[U14] category=[Tools.Path] class=[path_join_dyn] valInputs=[(['path_in', 'path_name'], ['Node(N20)', 'Node(N21)'], ['outFile'], ['path'])] RectF=[(440.0, -80.0, 180.0, 120.0)] 
+block=[U14] category=[Tools.Path] class=[path_join_dyn] valInputs=[(['path_in', 'path_name'], ['Node(N20)', 'Node(N21)'], ['outFile'], ['path'])] RectF=[(800.0, -20.0, 180.0, 120.0)] 
 block=[U5] category=[Tools.Dictionnary] class=[dict_get_value_dyn] valInputs=[(['input_dict', 'tag', 'tag_0'], ['Node(N7)', 'Node(N8)', 'Node(N9)'], ['out_value', 'out_value_dict'], ['str', 'dict'])] RectF=[(-340.0, -1320.0, 220.0, 140.0)] 
 block=[U3] category=[Tools.Path] class=[path_change_extension] valInputs=[(['path_in', 'new_extension'], ['Node(N3)', 'Node(N5)'], ['newPath'], ['path'])] RectF=[(-1200.0, -1100.0, 200.0, 80.0)] 
 block=[U2] category=[Tools.Path] class=[path_change_extension] valInputs=[(['path_in', 'new_extension'], ['Node(N0)', 'Node(N4)'], ['newPath'], ['path'])] RectF=[(-1200.0, -1460.0, 200.0, 80.0)] 
@@ -121,22 +126,47 @@ block=[U24] category=[Numpy.Nd_manipulation] class=[numpy_transpose] valInputs=[
 block=[U25] category=[Numpy.Nd_manipulation] class=[numpy_transpose] valInputs=[(['a'], ['Node(N55)'], ['np_transpose'], ['array_float'])] RectF=[(1720.0, -800.0, 160.0, 80.0)] 
 connt=[C0] name=[subject] type=[in] format=[str] valOut=[] RectF=[(-2600.0, -780.0, 70, 24)] 
 connt=[C1] name=[roi_name] type=[in] format=[str] valOut=[] RectF=[(-2600.0, -680.0, 70, 24)] 
-block=[U12] category=[Tools.Path] class=[path_join_dyn] valInputs=[(['path_in', 'path_name'], ['Node(N33)', 'Node(N32)'], ['outFile'], ['path'])] RectF=[(440.0, 120.0, 180.0, 120.0)] 
-block=[U20] category=[Tools.String] class=[string_concatenat_dyn] valInputs=[(['stringIn', 'stringIn_0', 'stringIn_1', 'stringIn_2', 'stringIn_3'], ['Node(N38)', 'Node(N46)', 'Node(N48)', 'Node(N36)', 'Node(N41)'], ['str_conc'], ['str'])] RectF=[(-600.0, -160.0, 180.0, 120.0)] 
+block=[U12] category=[Tools.Path] class=[path_join_dyn] valInputs=[(['path_in', 'path_name'], ['Node(N33)', 'Node(N32)'], ['outFile'], ['path'])] RectF=[(800.0, 180.0, 180.0, 120.0)] 
 block=[U8] category=[Images.ImageJ] class=[ImageJ_get_coord_roi] valInputs=[(['image_in', 'roiIJ_file', 'roi_name'], ['Node(N53)', 'Node(N52)', 'Node(N50)'], ['coord_roi'], ['list_float'])] RectF=[(-340.0, -560.0, 180.0, 160.0)] 
 block=[U11] category=[Tools.Float_array] class=[float_array_concatenate_dyn] valInputs=[(['array_float_in', 'array_float_in_0'], ['Node(N23)', 'Node(N24)'], ['outArray'], ['array_float'])] RectF=[(1360.0, -1420.0, 220.0, 80.0)] 
-block=[U15] category=[Tools.Path] class=[path_join_dyn] valInputs=[(['path_in', 'path_name'], ['Node(N68)', 'Node(N70)'], ['outFile'], ['path'])] RectF=[(460.0, 320.0, 180.0, 120.0)] 
-block=[U18] category=[Tools.Path] class=[path_join_dyn] valInputs=[(['path_in', 'path_name'], ['Node(N69)', 'Node(N71)'], ['outFile'], ['path'])] RectF=[(460.0, 520.0, 180.0, 120.0)] 
+block=[U15] category=[Tools.Path] class=[path_join_dyn] valInputs=[(['path_in', 'path_name'], ['Node(N68)', 'Node(N70)'], ['outFile'], ['path'])] RectF=[(820.0, 380.0, 180.0, 120.0)] 
+block=[U18] category=[Tools.Path] class=[path_join_dyn] valInputs=[(['path_in', 'path_name'], ['Node(N69)', 'Node(N71)'], ['outFile'], ['path'])] RectF=[(820.0, 580.0, 180.0, 120.0)] 
 block=[U23] category=[FileIO.Csv] class=[csv_save_file] valInputs=[(['file_output', 'header', 'data'], ['Node(N75)', [''], 'Node(N77)'], ['csv_out'], ['path'])] RectF=[(2020.0, -940.0, 160.0, 80.0)] 
 block=[U26] category=[FileIO.Csv] class=[csv_save_file] valInputs=[(['file_output', 'header', 'data'], ['Node(N74)', [''], 'Node(N76)'], ['csv_out'], ['path'])] RectF=[(2020.0, -1400.0, 160.0, 80.0)] 
 block=[U27] category=[Numpy.Nd_manipulation] class=[numpy_transpose] valInputs=[(['a'], ['Node(N72)'], ['np_transpose'], ['array_float'])] RectF=[(1680.0, -1380.0, 160.0, 80.0)] 
 connt=[C7] name=[asym_out_mean] type=[out] format=[path] RectF=[(2260.0, -640.0, 70, 24)] 
 connt=[C8] name=[asym_out] type=[out] format=[path] RectF=[(2280.0, -920.0, 70, 24)] 
+block=[U17] category=[Tools.String] class=[string_concatenat_dyn] valInputs=[(['stringIn', 'stringIn_0', 'stringIn_1', 'stringIn_2', 'stringIn_3', 'stringIn_4', 'stringIn_5'], ['Node(N34)', 'Node(N45)', 'Node(N49)', 'Node(N28)', 'Node(N39)', 'Node(N80)', 'Node(N82)'], ['str_conc'], ['str'])] RectF=[(360.0, -240.0, 180.0, 160.0)] 
+block=[U20] category=[Tools.String] class=[string_concatenat_dyn] valInputs=[(['stringIn', 'stringIn_0', 'stringIn_1', 'stringIn_2', 'stringIn_3', 'stringIn_4', 'stringIn_5'], ['Node(N38)', 'Node(N46)', 'Node(N48)', 'Node(N36)', 'Node(N41)', 'Node(N81)', 'Node(N83)'], ['str_conc'], ['str'])] RectF=[(340.0, 0.0, 180.0, 160.0)] 
+block=[U19] category=[Tools.String] class=[string_concatenat_dyn] valInputs=[(['stringIn', 'stringIn_0', 'stringIn_1', 'stringIn_2', 'stringIn_3', 'stringIn_4', 'stringIn_5'], ['Node(N64)', 'Node(N57)', 'Node(N66)', 'Node(N59)', 'Node(N63)', 'Node(N84)', 'Node(N86)'], ['str_conc'], ['str'])] RectF=[(360.0, 680.0, 180.0, 160.0)] 
+block=[U21] category=[Tools.String] class=[string_concatenat_dyn] valInputs=[(['stringIn', 'stringIn_0', 'stringIn_1', 'stringIn_2', 'stringIn_3', 'stringIn_4', 'stringIn_5'], ['Node(N65)', 'Node(N56)', 'Node(N67)', 'Node(N58)', 'Node(N60)', 'Node(N85)', 'Node(N87)'], ['str_conc'], ['str'])] RectF=[(360.0, 880.0, 180.0, 160.0)] 
+[source S1]
+['roi_name=C1:roi_name', 'subject=C0:subject', 'file_list=C2:data_list', 'dir_root=C3:dir_root']
+from NodeEditor.modules.FileIO.Yml import yaml_open_file
+from NodeEditor.modules.Images.ImageJ import ImageJ_read_roi
+import os
+
+lst_f = yaml_open_file(file_list).dict_yaml()
+
+cest_path = os.path.join(dir_root, lst_f[subject]['path_cest'])
+wassr_path = os.path.join(dir_root, lst_f[subject]['path_wassr'])
+roi_path = os.path.join(dir_root, lst_f[subject]['roi_zip_path'])
+
+lst_roi = list(ImageJ_read_roi(roi_path).list_Rois().keys())
+print('Roi list :', lst_roi)
+roi_nameout = roi_name
+
+if roi_name not in lst_roi:
+    roi_nameout = lst_roi[0]
+
+['S1:cest_path', 'S1:wassr_path', 'S1:roi_path', 'S1:roi_nameout']
+[/source S1]
 [source S0]
-['ppm=3.0', 'wassr_img=U1:image', 'cest_img=U0:image', 'cest_range=U5:out_value', 'wassr_range=U6:out_value', "correction_B0='wassr'", 'coord_roi=U8:coord_roi']
+['ppm=1.8', 'wassr_img=U1:image', 'cest_img=U0:image', 'cest_range=U5:out_value', 'wassr_range=U6:out_value', "correction_B0='cest_center'", 'coord_roi=U8:coord_roi']
 from NodeEditor.modules.Tools.Float_array import float_array_add_row
 from NodeEditor.modules.MRImaging.Irmage import CEST_2
 from NodeEditor.modules.MRImaging.Irmage import WASSR_IA
+from NodeEditor.modules.MRImaging.Irmage import WASSR
 import numpy as np
 
 xmin = cest_range[0][0]
@@ -172,8 +202,11 @@ for i in range(x_img):
             try:
                 cp = 0.0
                 cest_cent = False
-                if correction_B0 == 'wassr':
+                if correction_B0 == 'wassr_IA':
                     cp = WASSR_IA(sub_wassr[i, j, :], x_wassr).estimated_center_freq()
+                    cest_cent = False
+                elif correction_B0 == 'wassr_RA':
+                    cp = WASSR(sub_wassr[i, j, :], x_wassr).estimated_center_freq()
                     cest_cent = False
                 elif correction_B0 == 'cest_center':
                     cest_cent = True
@@ -207,32 +240,11 @@ x_asym_mean = x_asym
 x_asym = [x_asym]
 ['S0:x_cest', 'S0:y_cest', 'S0:x_cest_mean', 'S0:y_cest_mean', 'S0:x_asym', 'S0:y_asym', 'S0:x_asym_mean', 'S0:y_asym_mean']
 [/source S0]
-[source S1]
-['roi_name=C1:roi_name', 'subject=C0:subject', 'file_list=C2:data_list', 'dir_root=C3:dir_root']
-from NodeEditor.modules.FileIO.Yml import yaml_open_file
-from NodeEditor.modules.Images.ImageJ import ImageJ_read_roi
-import os
-
-lst_f = yaml_open_file(file_list).dict_yaml()
-
-cest_path = os.path.join(dir_root, lst_f[subject]['path_cest'])
-wassr_path = os.path.join(dir_root, lst_f[subject]['path_wassr'])
-roi_path = os.path.join(dir_root, lst_f[subject]['roi_zip_path'])
-
-lst_roi = list(ImageJ_read_roi(roi_path).list_Rois().keys())
-print('Roi list :', lst_roi)
-roi_nameout = roi_name
-
-if roi_name not in lst_roi:
-    roi_nameout = lst_roi[0]
-
-['S1:cest_path', 'S1:wassr_path', 'S1:roi_path', 'S1:roi_nameout']
-[/source S1]
 
 [execution]
 ['C2:data_list=', 'C3:dir_root=', 'C0:subject=', 'C1:roi_name=', 'C4:treatment_dir=']
 ['S1', 'ThreadOn', 'U2', 'U0', 'U1', 'U3', 'U20', 'U17', 'U19', 'U21', 'ThreadOff', 'ThreadOn', 'U8', 'U12', 'U14', 'U7', 'U4', 'U15', 'U18', 'ThreadOff', 'ThreadOn', 'U5', 'U6', 'ThreadOff', 'S0', 'ThreadOn', 'U11', 'U22', 'U13', 'U9', 'ThreadOff', 'ThreadOn', 'U24', 'U25', 'U27', 'U28', 'ThreadOff', 'U10', 'U16', 'U23', 'U26']
-{'U2': ('Tools.Path', 'path_change_extension', "(['path_in', 'new_extension'], ['S1:cest_path', '.json'], ['newPath'], ['path'])"), 'U0': ('Images.Nifti', 'nifti_open_file', "(['nifti_file'], ['S1:cest_path'], ['image', 'dim', 'pixdim'], ['array_float', 'int', 'list_float'])"), 'U1': ('Images.Nifti', 'nifti_open_file', "(['nifti_file'], ['S1:wassr_path'], ['image', 'dim', 'pixdim'], ['array_float', 'int', 'list_float'])"), 'U3': ('Tools.Path', 'path_change_extension', "(['path_in', 'new_extension'], ['S1:wassr_path', '.json'], ['newPath'], ['path'])"), 'U20': ('Tools.String', 'string_concatenat_dyn', "(['stringIn', 'stringIn_0', 'stringIn_1', 'stringIn_2', 'stringIn_3'], ['C0:subject', '_', 'S1:roi_nameout', '_asym_mean', '.csv'], ['str_conc'], ['str'])"), 'U17': ('Tools.String', 'string_concatenat_dyn', "(['stringIn', 'stringIn_0', 'stringIn_1', 'stringIn_2', 'stringIn_3'], ['C0:subject', '_', 'S1:roi_nameout', '_zspectra_mean', '.csv'], ['str_conc'], ['str'])"), 'U19': ('Tools.String', 'string_concatenat_dyn', "(['stringIn', 'stringIn_0', 'stringIn_1', 'stringIn_2', 'stringIn_3'], ['C0:subject', '_', 'S1:roi_nameout', '_zspectra_all', '.csv'], ['str_conc'], ['str'])"), 'U21': ('Tools.String', 'string_concatenat_dyn', "(['stringIn', 'stringIn_0', 'stringIn_1', 'stringIn_2', 'stringIn_3'], ['C0:subject', '_', 'S1:roi_nameout', '_asym_all', '.csv'], ['str_conc'], ['str'])"), 'U8': ('Images.ImageJ', 'ImageJ_get_coord_roi', "(['image_in', 'roiIJ_file', 'roi_name'], ['U0:image', 'S1:roi_path', 'S1:roi_nameout'], ['coord_roi'], ['list_float'])"), 'U12': ('Tools.Path', 'path_join_dyn', "(['path_in', 'path_name'], ['C4:treatment_dir', 'U20:str_conc'], ['outFile'], ['path'])"), 'U14': ('Tools.Path', 'path_join_dyn', "(['path_in', 'path_name'], ['C4:treatment_dir', 'U17:str_conc'], ['outFile'], ['path'])"), 'U7': ('FileIO.Json', 'json_open_file', "(['json_file'], ['U3:newPath'], ['dict_json'], ['dict'])"), 'U4': ('FileIO.Json', 'json_open_file', "(['json_file'], ['U2:newPath'], ['dict_json'], ['dict'])"), 'U15': ('Tools.Path', 'path_join_dyn', "(['path_in', 'path_name'], ['C4:treatment_dir', 'U19:str_conc'], ['outFile'], ['path'])"), 'U18': ('Tools.Path', 'path_join_dyn', "(['path_in', 'path_name'], ['C4:treatment_dir', 'U21:str_conc'], ['outFile'], ['path'])"), 'U5': ('Tools.Dictionnary', 'dict_get_value_dyn', "(['input_dict', 'tag', 'tag_0'], ['U4:dict_json', 'SatTransFreqRanges', 'value'], ['out_value', 'out_value_dict'], ['str', 'dict'])"), 'U6': ('Tools.Dictionnary', 'dict_get_value_dyn', "(['input_dict', 'tag', 'tag_0'], ['U7:dict_json', 'SatTransFreqRanges', 'value'], ['out_value', 'out_value_dict'], ['str', 'dict'])"), 'U11': ('Tools.Float_array', 'float_array_concatenate_dyn', "(['array_float_in', 'array_float_in_0'], ['S0:x_cest', 'S0:y_cest'], ['outArray'], ['array_float'])"), 'U22': ('Tools.Float_list', 'float_list_to_array_dyn', "(['list_float_in', 'list_float_in_0'], ['S0:x_cest_mean', 'S0:y_cest_mean'], ['array'], ['array_float'])"), 'U13': ('Tools.Float_array', 'float_array_concatenate_dyn', "(['array_float_in', 'array_float_in_0'], ['S0:x_asym', 'S0:y_asym'], ['outArray'], ['array_float'])"), 'U9': ('Tools.Float_list', 'float_list_to_array_dyn', "(['list_float_in', 'list_float_in_0'], ['S0:x_asym_mean', 'S0:y_asym_mean'], ['array'], ['array_float'])"), 'U24': ('Numpy.Nd_manipulation', 'numpy_transpose', "(['a'], ['U22:array'], ['np_transpose'], ['array_float'])"), 'U25': ('Numpy.Nd_manipulation', 'numpy_transpose', "(['a'], ['U9:array'], ['np_transpose'], ['array_float'])"), 'U27': ('Numpy.Nd_manipulation', 'numpy_transpose', "(['a'], ['U11:outArray'], ['np_transpose'], ['array_float'])"), 'U28': ('Numpy.Nd_manipulation', 'numpy_transpose', "(['a'], ['U13:outArray'], ['np_transpose'], ['array_float'])"), 'U10': ('FileIO.Csv', 'csv_save_file', "(['file_output', 'header', 'data'], ['U12:outFile', [''], 'U25:np_transpose'], ['csv_out'], ['path'])"), 'U16': ('FileIO.Csv', 'csv_save_file', "(['file_output', 'header', 'data'], ['U14:outFile', [''], 'U24:np_transpose'], ['csv_out'], ['path'])"), 'U23': ('FileIO.Csv', 'csv_save_file', "(['file_output', 'header', 'data'], ['U18:outFile', [''], 'U28:np_transpose'], ['csv_out'], ['path'])"), 'U26': ('FileIO.Csv', 'csv_save_file', "(['file_output', 'header', 'data'], ['U15:outFile', [''], 'U27:np_transpose'], ['csv_out'], ['path'])")}
+{'U2': ('Tools.Path', 'path_change_extension', "(['path_in', 'new_extension'], ['S1:cest_path', '.json'], ['newPath'], ['path'])"), 'U0': ('Images.Nifti', 'nifti_open_file', "(['nifti_file'], ['S1:cest_path'], ['image', 'dim', 'pixdim'], ['array_float', 'int', 'list_float'])"), 'U1': ('Images.Nifti', 'nifti_open_file', "(['nifti_file'], ['S1:wassr_path'], ['image', 'dim', 'pixdim'], ['array_float', 'int', 'list_float'])"), 'U3': ('Tools.Path', 'path_change_extension', "(['path_in', 'new_extension'], ['S1:wassr_path', '.json'], ['newPath'], ['path'])"), 'U20': ('Tools.String', 'string_concatenat_dyn', "(['stringIn', 'stringIn_0', 'stringIn_1', 'stringIn_2', 'stringIn_3', 'stringIn_4', 'stringIn_5'], ['C0:subject', '_', 'S1:roi_nameout', '_asym_mean', '_', 'cest_center', '.csv'], ['str_conc'], ['str'])"), 'U17': ('Tools.String', 'string_concatenat_dyn', "(['stringIn', 'stringIn_0', 'stringIn_1', 'stringIn_2', 'stringIn_3', 'stringIn_4', 'stringIn_5'], ['C0:subject', '_', 'S1:roi_nameout', '_zspectra_mean', '_', 'cest_center', '.csv'], ['str_conc'], ['str'])"), 'U19': ('Tools.String', 'string_concatenat_dyn', "(['stringIn', 'stringIn_0', 'stringIn_1', 'stringIn_2', 'stringIn_3', 'stringIn_4', 'stringIn_5'], ['C0:subject', '_', 'S1:roi_nameout', '_zspectra_all', '_', 'cest_center', '.csv'], ['str_conc'], ['str'])"), 'U21': ('Tools.String', 'string_concatenat_dyn', "(['stringIn', 'stringIn_0', 'stringIn_1', 'stringIn_2', 'stringIn_3', 'stringIn_4', 'stringIn_5'], ['C0:subject', '_', 'S1:roi_nameout', '_asym_all', '_', 'cest_center', '.csv'], ['str_conc'], ['str'])"), 'U8': ('Images.ImageJ', 'ImageJ_get_coord_roi', "(['image_in', 'roiIJ_file', 'roi_name'], ['U0:image', 'S1:roi_path', 'S1:roi_nameout'], ['coord_roi'], ['list_float'])"), 'U12': ('Tools.Path', 'path_join_dyn', "(['path_in', 'path_name'], ['C4:treatment_dir', 'U20:str_conc'], ['outFile'], ['path'])"), 'U14': ('Tools.Path', 'path_join_dyn', "(['path_in', 'path_name'], ['C4:treatment_dir', 'U17:str_conc'], ['outFile'], ['path'])"), 'U7': ('FileIO.Json', 'json_open_file', "(['json_file'], ['U3:newPath'], ['dict_json'], ['dict'])"), 'U4': ('FileIO.Json', 'json_open_file', "(['json_file'], ['U2:newPath'], ['dict_json'], ['dict'])"), 'U15': ('Tools.Path', 'path_join_dyn', "(['path_in', 'path_name'], ['C4:treatment_dir', 'U19:str_conc'], ['outFile'], ['path'])"), 'U18': ('Tools.Path', 'path_join_dyn', "(['path_in', 'path_name'], ['C4:treatment_dir', 'U21:str_conc'], ['outFile'], ['path'])"), 'U5': ('Tools.Dictionnary', 'dict_get_value_dyn', "(['input_dict', 'tag', 'tag_0'], ['U4:dict_json', 'SatTransFreqRanges', 'value'], ['out_value', 'out_value_dict'], ['str', 'dict'])"), 'U6': ('Tools.Dictionnary', 'dict_get_value_dyn', "(['input_dict', 'tag', 'tag_0'], ['U7:dict_json', 'SatTransFreqRanges', 'value'], ['out_value', 'out_value_dict'], ['str', 'dict'])"), 'U11': ('Tools.Float_array', 'float_array_concatenate_dyn', "(['array_float_in', 'array_float_in_0'], ['S0:x_cest', 'S0:y_cest'], ['outArray'], ['array_float'])"), 'U22': ('Tools.Float_list', 'float_list_to_array_dyn', "(['list_float_in', 'list_float_in_0'], ['S0:x_cest_mean', 'S0:y_cest_mean'], ['array'], ['array_float'])"), 'U13': ('Tools.Float_array', 'float_array_concatenate_dyn', "(['array_float_in', 'array_float_in_0'], ['S0:x_asym', 'S0:y_asym'], ['outArray'], ['array_float'])"), 'U9': ('Tools.Float_list', 'float_list_to_array_dyn', "(['list_float_in', 'list_float_in_0'], ['S0:x_asym_mean', 'S0:y_asym_mean'], ['array'], ['array_float'])"), 'U24': ('Numpy.Nd_manipulation', 'numpy_transpose', "(['a'], ['U22:array'], ['np_transpose'], ['array_float'])"), 'U25': ('Numpy.Nd_manipulation', 'numpy_transpose', "(['a'], ['U9:array'], ['np_transpose'], ['array_float'])"), 'U27': ('Numpy.Nd_manipulation', 'numpy_transpose', "(['a'], ['U11:outArray'], ['np_transpose'], ['array_float'])"), 'U28': ('Numpy.Nd_manipulation', 'numpy_transpose', "(['a'], ['U13:outArray'], ['np_transpose'], ['array_float'])"), 'U10': ('FileIO.Csv', 'csv_save_file', "(['file_output', 'header', 'data'], ['U12:outFile', [''], 'U25:np_transpose'], ['csv_out'], ['path'])"), 'U16': ('FileIO.Csv', 'csv_save_file', "(['file_output', 'header', 'data'], ['U14:outFile', [''], 'U24:np_transpose'], ['csv_out'], ['path'])"), 'U23': ('FileIO.Csv', 'csv_save_file', "(['file_output', 'header', 'data'], ['U18:outFile', [''], 'U28:np_transpose'], ['csv_out'], ['path'])"), 'U26': ('FileIO.Csv', 'csv_save_file', "(['file_output', 'header', 'data'], ['U15:outFile', [''], 'U27:np_transpose'], ['csv_out'], ['path'])")}
 ['U10:csv_out', 'U23:csv_out', 'U8:coord_roi', 'S1:roi_path', 'U12:outFile', 'U14:outFile', 'U20:str_conc', 'U17:str_conc', 'U25:np_transpose', 'U6:out_value', 'U5:out_value', 'U3:newPath', 'U2:newPath', 'U4:dict_json', 'U7:dict_json', 'U0:image', 'U1:image', 'S1:cest_path', 'S1:cest_path', 'S1:wassr_path', 'S1:wassr_path', 'U24:np_transpose', 'S1:roi_nameout', 'S1:roi_nameout', 'S1:roi_nameout', 'U0:image', 'S0:x_cest', 'S0:y_cest', 'S0:x_cest_mean', 'S0:y_cest_mean', 'S0:x_asym', 'S0:y_asym', 'S0:x_asym_mean', 'S0:y_asym_mean', 'S1:roi_nameout', 'S1:roi_nameout', 'U19:str_conc', 'U21:str_conc', 'U22:array', 'U9:array', 'U15:outFile', 'U18:outFile', 'U11:outArray', 'U13:outArray', 'U27:np_transpose', 'U28:np_transpose', 'U26:csv_out', 'U16:csv_out']
 {}
 ['C5:z_spectra_out=U26:csv_out', 'C6:z_spectra_mean=U16:csv_out', 'C8:asym_out=U23:csv_out', 'C7:asym_out_mean=U10:csv_out']

@@ -6557,7 +6557,8 @@ class Menu(QMenuBar):
                     editor.pathDiagram[editor.currentTab] = file
                     fileNameonly = os.path.basename(file)
                     current_dir = os.path.basename(os.path.dirname(file))
-                    editor.mdi.currentSubWindow().setWindowTitle(fileNameonly)
+                    editor.setSubWindowCurrentTitle(fileNameonly)
+                    # editor.mdi.currentSubWindow().setWindowTitle(fileNameonly)
                     editor.refreshSubModLib(fileNameonly[0:-4], current_dir)
                 except Exception as e:
                     pass
@@ -7403,7 +7404,7 @@ class NodeEdit(QWidget):
                 try:
                     self.UnsavedDiagram.remove(f"{currentTitle}")
                 except Exception as err:
-                    pass
+                    print('error:', err)
 
     def saveDiagramDialog(self, title):
         choice = QMessageBox.question(self, 'Save resource',

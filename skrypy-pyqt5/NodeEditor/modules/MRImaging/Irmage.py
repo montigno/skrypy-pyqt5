@@ -770,7 +770,7 @@ class CEST_IA:
 
     def out_mapping(self) -> float:
         return self.out_map
-    
+
 
 ##############################################################################
 
@@ -793,7 +793,7 @@ class WASSR():
 
         f_interp = interp1d(x, y, kind='cubic', bounds_error=False, fill_value=(y[0], y[-1]))
         # (c_), q_ = opt.curve_fit(f, x, y, bounds=(0., 1.))
-        (c_), _ = opt.curve_fit(self._f, x, y, c)
+        (c_), _ = opt.curve_fit(self._f, x, y, c) # curve_fit is a least-squares optimizer.
         n_interpol = 100
         xnew = np.linspace(x[0], x[-1], n_interpol * (len(x) - 1) + len(x), endpoint=True)
         y_fit = self._f(xnew, c_)

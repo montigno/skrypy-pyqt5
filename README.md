@@ -15,6 +15,11 @@ If you encounter problems with Skrypy, see [here](https://montigno.github.io/skr
 
 <p></p>
 
+	09/11/2026: version 26.11.09a
+	- Some bugs that appeared when closing the software have been resolved.
+
+<p></p>
+
 	03/11/2026: version 26.11.03a
 	- Bug with Script editor fixed
 

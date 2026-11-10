@@ -41,3 +41,24 @@ class signal_filter_moving_averages:
         return self.res
 
 ##############################################################################
+
+
+class signal_filter_polynomial:
+    """
+    docstring to be completed
+    """
+    def __init__(self,
+                 x=[0.0],
+                 y=[0.0],
+                 degree=3):
+
+        import numpy as np
+        x_pol = x.copy()
+        y_pol = y.copy()
+        coeff = np.polyfit(x_pol, y_pol, deg=degree)
+        self.y_pol = np.polyval(coeff, x_pol)
+
+    def y_polynomial(self) -> list[float]:
+        return self.y_pol
+
+##############################################################################

@@ -6588,7 +6588,8 @@ class Menu(QMenuBar):
                     f.write(analyze2(txt.toPlainText(), [False, True]).get_analyze(editor.textEdit))
                     f.close()
                     editor.pathDiagram[editor.currentTab] = file
-                    editor.mdi.currentSubWindow().setWindowTitle(fileNameonly)
+                    editor.setSubWindowCurrentTitle(fileNameonly)
+                    # editor.mdi.currentSubWindow().setWindowTitle(fileNameonly)
                     editor.refreshSubModLib(fileNameonly[0:-4], current_dir)
                 except Exception as e:
                     pass
@@ -7143,6 +7144,7 @@ class NodeEdit(QWidget):
         sub.signal1.connect(self.closeSubWindow)
         sub.signal2.connect(self.windSelection)
         sub.show()
+        self.setSubWindowCurrentTitle(title)
 
     def searchFreeNameWindow(self):
         listTitle = [nm.windowTitle() for nm in self.mdi.subWindowList()]

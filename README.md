@@ -15,6 +15,11 @@ If you encounter problems with Skrypy, see [here](https://montigno.github.io/skr
 
 <p></p>
 
+	10/11/2026: version 26.11.10a
+	- Bug with unsaved diagrams resolved.
+
+<p></p>
+
 	09/11/2026: version 26.11.09a
 	- Some bugs that appeared when closing the software have been resolved.
 

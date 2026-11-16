@@ -575,10 +575,7 @@ class CEST_2():
         if cest_center:
             ind = xnew[np.where(y_fit == min(y_fit))[0][0]]
         else:
-            if center_freq < 0:
-                ind = abs(center_freq)
-            else:
-                ind = center_freq
+            ind = center_freq
 
         for i, el in enumerate(xnew):
             xnew_corrected.append(el + ind)
@@ -818,87 +815,66 @@ class WASSR_IA:
     def __init__(self, y=[0.0], x=[0.0]):
         
         import numpy as np
-        from scipy.interpolate import interp1d
+        import pandas as pd
+        import matplotlib.pyplot as plt
+        from scipy.interpolate import PchipInterpolator
         from scipy.optimize import minimize_scalar
+        
+        global np, PchipInterpolator,minimize_scalar
 
         if x is None or y is None:
-            raise ValueError("Les tableaux x et y sont obligatoires.")
+            raise ValueError("Tables x and y are mandatory..")
 
-        x = np.asarray(x, dtype=float)
-        y = np.asarray(y, dtype=float)
+        x_wassr = np.asarray(x, dtype=float)
+        y_wassr = np.asarray(y, dtype=float)
+        
+        self.center, error = self.__wassr_correction(
+            x_wassr,
+            y_wassr,
+            search_range=0.5
+        )
 
-        # y[0] = signal de référence S0
-        if len(y) != len(x) + 1:
-            raise ValueError(
-                "Il faut len(y) = len(x) + 1 : "
-                "y contient S0 puis les signaux WASSR."
-            )
-
-        S0 = y[0]
-        if not np.isfinite(S0) or S0 == 0:
-            raise ValueError("S0 doit être non nul et fini.")
-
-        y = 100.0 * y[1:] / S0
-
-        valid = np.isfinite(x) & np.isfinite(y)
-        x, y = x[valid], y[valid]
-
-        order = np.argsort(x)
-        x, y = x[order], y[order]
-
-        if len(x) < 4 or np.any(np.diff(x) <= 0):
-            raise ValueError(
-                "Il faut au moins 4 offsets distincts."
-            )
-
-        # Interpolation sans extrapolation
-        self.f_interp = interp1d(
+    def __wassr_correction(self, x, y, search_range=0.5):
+    
+   
+        # Tri des données
+        idx = np.argsort(x)
+        x = x[idx]
+        y = y[idx]
+    
+        # Interpolation
+        interp = PchipInterpolator(
             x, y,
-            kind="cubic",
-            bounds_error=False,
-            fill_value=np.nan
+            extrapolate=False
         )
-
-        self.x = x
-        self.y = y
-
-        # Centre initial : minimum observé
-        c0 = x[np.argmin(y)]
-
-        # Recherche du centre maximisant la symétrie
-        def objective(c):
-            # Comparaison des signaux aux offsets réfléchis
-            x_reflected = 2.0 * c - x
-
-            # Ne conserver que les points dont la réflexion
-            # reste dans le domaine réellement mesuré
-            mask = (
-                (x_reflected >= x[0])
-                & (x_reflected <= x[-1])
+    
+        # Fonction coût miroir
+        def cost(delta):
+    
+            x_mirror = 2 * delta - x
+            y_mirror = interp(x_mirror)
+    
+            # Conservation de tous les points valides
+            valid = np.isfinite(y_mirror)
+    
+            if np.sum(valid) < 5:
+                return np.inf
+    
+            return np.mean(
+                (y[valid] - y_mirror[valid]) ** 2
             )
-
-            if np.count_nonzero(mask) < 4:
-                return np.inf
-
-            y_original = y[mask]
-            y_reflected = self.f_interp(x_reflected[mask])
-
-            if not np.all(np.isfinite(y_reflected)):
-                return np.inf
-
-            # Erreur quadratique de symétrie
-            return np.mean((y_original - y_reflected) ** 2)
-
+    
+        # Minimisation
         result = minimize_scalar(
-            objective,
-            bounds=(x[0], x[-1]),
-            method="bounded"
+            cost,
+            bounds=(-search_range, search_range),
+            method="bounded",
+            options={"xatol": 1e-8}
         )
-
-        if not result.success or not np.isfinite(result.fun):
-            raise RuntimeError(
-                "Impossible d'estimer le centre WASSR."
-            )
+    
+        delta = result.x
+    
+        return delta, result.fun
 
         self.center = float(result.x)
         self.center_wass = self.center
@@ -906,8 +882,6 @@ class WASSR_IA:
     def estimated_center_freq(self) -> float:
         return self.center
 
-    def center_wassr(self) -> float:
-        return self.center_wass
 
 ##############################################################################
 

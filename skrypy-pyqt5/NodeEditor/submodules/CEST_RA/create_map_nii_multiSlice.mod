@@ -108,8 +108,8 @@ roi_path = os.path.join(dir_root, lst_f[subject]['roi_zip_path'])
 [source S0]
 ['ppm=C3:ppm', 'wassr_img=U1:image', 'cest_img=U0:image', 'cest_range=U5:out_value', 'wassr_range=U6:out_value', "correction_B0='cest_center'"]
 from NodeEditor.modules.Tools.Float_array import float_array_add_row
-from NodeEditor.modules.MRImaging.Irmage import CEST_IA
-from NodeEditor.modules.MRImaging.Irmage import WASSR_IA
+from NodeEditor.modules.MRImaging.Irmage import CEST
+from NodeEditor.modules.MRImaging.Irmage import WASSR
 import numpy as np
 
 xmin = cest_range[0][0]
@@ -142,11 +142,11 @@ for i in range(x_img):
                 cp = 0.0
                 cest_cent = False
                 if correction_B0 == 'wassr':
-                    cp = WASSR_IA(sub_wassr[i, j, :], x_wassr).estimated_center_freq()
+                    cp = WASSR(sub_wassr[i, j, :], x_wassr).estimated_center_freq()
                     cest_cent = False
                 elif correction_B0 == 'cest_center':
                     cest_cent = True
-                vr = CEST_IA(sub_cest[i, j, :], x_cest, cp, ppm, 0.1, cest_cent)
+                vr = CEST(sub_cest[i, j, :], x_cest, cp, ppm, 0.1, cest_cent)
                 map_asym[i, j] = vr.out_mapping()
             except Exception as err:
                 print('error :', err)

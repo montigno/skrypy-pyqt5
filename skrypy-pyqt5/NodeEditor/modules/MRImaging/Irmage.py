@@ -460,94 +460,7 @@ class TIMap_LevenbergM():
 
 ##############################################################################
 
-
 class CEST():
-    def __init__(self,
-                 y=[0.0],
-                 x=[0.0],
-                 center_freq=0.0,
-                 mapping_ppm=1.0,
-                 delta_mapping=0.1,
-                 cest_center=False,
-                 **options):
-
-        import numpy as np
-        from scipy.interpolate import interp1d
-
-        S0 = y[0]
-        y = 100 * y[1:] / S0
-
-        n_interp = options.get('n_interp', 100)
-        kind_interp = options.get('kind_interp', 'cubic')
-
-        f2 = interp1d(x, y, kind=kind_interp, bounds_error=False, fill_value=(y[0], y[-1]))
-        xnew = np.linspace(x[0], x[-1], n_interp * (len(x) - 1) + len(x))
-        y_fit = f2(xnew)
-
-        xnew_corrected = []
-
-        if cest_center:
-            ind = xnew[np.where(y_fit == min(y_fit))[0][0]]
-        else:
-            if center_freq < 0:
-                ind = abs(center_freq)
-            else:
-                ind = center_freq
-
-        for i, el in enumerate(xnew):
-            xnew_corrected.append(el + ind)
-        y_corrected = f2(xnew_corrected)
-
-        # indice_mini_y_corr = np.argmin(y_corrected)
-        indice_mini_y_corr = int(len(xnew) / 2)
-
-        asym = []
-        # x_asym = list(xnew)[indice_mini_y_corr:]
-        x_asym = list(xnew)[indice_mini_y_corr:]
-
-        for i in range(indice_mini_y_corr, len(xnew_corrected)):
-            j = indice_mini_y_corr - i
-            delta_w_neg = y_corrected[indice_mini_y_corr + j]
-            delta_w_pos = y_corrected[i]
-            asym.append(abs(100 * (delta_w_neg - delta_w_pos) / S0))
-
-        # ind_ppm = list(x_asym).index(mapping_ppm)
-        # self.out_map = asym[ind_ppm]
-
-        area_map = [0, 0]
-        area_map[0] = mapping_ppm - delta_mapping
-        area_map[1] = mapping_ppm + delta_mapping
-        indx = []
-        for lsm in area_map:
-            absolute_difference_function = lambda list_value: abs(list_value - lsm)
-            closest_value = min(x_asym, key=absolute_difference_function)
-            indx.append(x_asym.index(closest_value))
-        sublist_asym = asym[indx[0]:indx[1]]
-        self.xspectr = xnew
-        self.zpectr = y_corrected
-        self.xasym = x_asym
-        self.asym = asym
-        self.out_map = np.mean(sublist_asym)
-
-    def out_xspectra(self) -> list[float]:
-        return self.xspectr
-
-    def out_zspectra(self) -> list[float]:
-        return self.zpectr
-
-    def out_xasym(self) -> list[float]:
-        return self.xasym
-
-    def out_asym(self) -> list[float]:
-        return self.asym
-
-    def out_mapping(self) -> float:
-        return self.out_map
-
-##############################################################################
-
-
-class CEST_2():
     def __init__(self,
                  y=[0.0],
                  x=[0.0],
@@ -631,142 +544,142 @@ class CEST_2():
 ##############################################################################
 
 
-class CEST_IA:
-    def __init__(
-        self,
-        y=[0.0],
-        x=[0.0],
-        center_freq=0.0,
-        mapping_ppm=1.0,
-        delta_mapping=0.1,
-        cest_center=False,
-        **options
-    ):
-        import numpy as np
-        from scipy.interpolate import interp1d
-
-        if y is None or x is None:
-            raise ValueError("Les tableaux x et y sont obligatoires.")
-
-        x = np.asarray(x, dtype=float)
-        y = np.asarray(y, dtype=float)
-
-        if len(y) != len(x) + 1:
-            raise ValueError(
-                "y doit contenir S0 suivi des signaux de saturation : "
-                "len(y) doit être égal à len(x) + 1."
-            )
-
-        S0 = y[0]
-        if not np.isfinite(S0) or S0 == 0:
-            raise ValueError("Le signal de référence S0 est nul ou invalide.")
-
-        if not np.all(np.isfinite(x)) or not np.all(np.isfinite(y)):
-            raise ValueError("x et y doivent contenir des valeurs finies.")
-
-        if len(x) < 4 and options.get("kind_interp", "cubic") == "cubic":
-            raise ValueError("L'interpolation cubique nécessite au moins 4 points.")
-
-        # Normalisation en pourcentage de S0
-        z = 100.0 * y[1:] / S0
-
-        # Tri des offsets et vérification des doublons
-        order = np.argsort(x)
-        x = x[order]
-        z = z[order]
-
-        if np.any(np.diff(x) <= 0):
-            raise ValueError("Les offsets x doivent être distincts.")
-
-        n_interp = int(options.get("n_interp", 100))
-        kind_interp = options.get("kind_interp", "cubic")
-
-        if n_interp < 1:
-            raise ValueError("n_interp doit être supérieur ou égal à 1.")
-
-        f = interp1d(
-            x, z,
-            kind=kind_interp,
-            bounds_error=False,
-            fill_value=np.nan
-        )
-
-        # Grille d'interpolation
-        xnew = np.linspace(
-            x[0], x[-1],
-            n_interp * (len(x) - 1) + 1
-        )
-        znew = f(xnew)
-
-        # Détermination du centre fréquentiel
-        if cest_center:
-            center_offset = xnew[np.nanargmin(znew)]
-        else:
-            center_offset = float(center_freq)
-
-        # Recentrage : le centre choisi devient 0 ppm
-        x_corr = xnew - center_offset
-
-        # Le signal reste associé à sa position d'origine
-        self.xspectr = x_corr
-        self.zspectr = znew
-
-        # Calcul de MTRasym sur les offsets positifs
-        f_corr = interp1d(
-            x_corr, znew,
-            kind=kind_interp,
-            bounds_error=False,
-            fill_value=np.nan
-        )
-
-        x_asym = x_corr[x_corr >= 0]
-        valid = (
-            (x_asym > 0)
-            & (-x_asym >= x_corr[0])
-            & (x_asym <= x_corr[-1])
-        )
-        x_asym = x_asym[valid]
-
-        z_neg = f_corr(-x_asym)
-        z_pos = f_corr(x_asym)
-
-        asym = z_neg - z_pos
-
-        self.xasym = x_asym
-        self.asym = asym
-
-        # Moyenne de l'asymétrie dans la plage demandée
-        lo = mapping_ppm - delta_mapping
-        hi = mapping_ppm + delta_mapping
-
-        if delta_mapping < 0:
-            raise ValueError("delta_mapping doit être positif ou nul.")
-
-        mask = (
-            (x_asym >= lo)
-            & (x_asym <= hi)
-            & np.isfinite(asym)
-        )
-
-        if not np.any(mask):
-            self.out_map = np.nan
-        else:
-            self.out_map = float(np.mean(asym[mask]))
-
-    def out_xspectra(self) -> list[float]:
-        return self.xspectr.tolist()
-
-    def out_zspectra(self) -> list[float]:
-        return self.zspectr.tolist()
-
-    def out_xasym(self) -> list[float]:
-        return self.xasym.tolist()
-
-    def out_asym(self) -> list[float]:
-        return self.asym.tolist()
-
-    def out_mapping(self) -> float:
-        return self.out_map
+# class CEST_IA:
+#     def __init__(
+#         self,
+#         y=[0.0],
+#         x=[0.0],
+#         center_freq=0.0,
+#         mapping_ppm=1.0,
+#         delta_mapping=0.1,
+#         cest_center=False,
+#         **options
+#     ):
+#         import numpy as np
+#         from scipy.interpolate import interp1d
+#
+#         if y is None or x is None:
+#             raise ValueError("Les tableaux x et y sont obligatoires.")
+#
+#         x = np.asarray(x, dtype=float)
+#         y = np.asarray(y, dtype=float)
+#
+#         if len(y) != len(x) + 1:
+#             raise ValueError(
+#                 "y doit contenir S0 suivi des signaux de saturation : "
+#                 "len(y) doit être égal à len(x) + 1."
+#             )
+#
+#         S0 = y[0]
+#         if not np.isfinite(S0) or S0 == 0:
+#             raise ValueError("Le signal de référence S0 est nul ou invalide.")
+#
+#         if not np.all(np.isfinite(x)) or not np.all(np.isfinite(y)):
+#             raise ValueError("x et y doivent contenir des valeurs finies.")
+#
+#         if len(x) < 4 and options.get("kind_interp", "cubic") == "cubic":
+#             raise ValueError("L'interpolation cubique nécessite au moins 4 points.")
+#
+#         # Normalisation en pourcentage de S0
+#         z = 100.0 * y[1:] / S0
+#
+#         # Tri des offsets et vérification des doublons
+#         order = np.argsort(x)
+#         x = x[order]
+#         z = z[order]
+#
+#         if np.any(np.diff(x) <= 0):
+#             raise ValueError("Les offsets x doivent être distincts.")
+#
+#         n_interp = int(options.get("n_interp", 100))
+#         kind_interp = options.get("kind_interp", "cubic")
+#
+#         if n_interp < 1:
+#             raise ValueError("n_interp doit être supérieur ou égal à 1.")
+#
+#         f = interp1d(
+#             x, z,
+#             kind=kind_interp,
+#             bounds_error=False,
+#             fill_value=np.nan
+#         )
+#
+#         # Grille d'interpolation
+#         xnew = np.linspace(
+#             x[0], x[-1],
+#             n_interp * (len(x) - 1) + 1
+#         )
+#         znew = f(xnew)
+#
+#         # Détermination du centre fréquentiel
+#         if cest_center:
+#             center_offset = xnew[np.nanargmin(znew)]
+#         else:
+#             center_offset = float(center_freq)
+#
+#         # Recentrage : le centre choisi devient 0 ppm
+#         x_corr = xnew - center_offset
+#
+#         # Le signal reste associé à sa position d'origine
+#         self.xspectr = x_corr
+#         self.zspectr = znew
+#
+#         # Calcul de MTRasym sur les offsets positifs
+#         f_corr = interp1d(
+#             x_corr, znew,
+#             kind=kind_interp,
+#             bounds_error=False,
+#             fill_value=np.nan
+#         )
+#
+#         x_asym = x_corr[x_corr >= 0]
+#         valid = (
+#             (x_asym > 0)
+#             & (-x_asym >= x_corr[0])
+#             & (x_asym <= x_corr[-1])
+#         )
+#         x_asym = x_asym[valid]
+#
+#         z_neg = f_corr(-x_asym)
+#         z_pos = f_corr(x_asym)
+#
+#         asym = z_neg - z_pos
+#
+#         self.xasym = x_asym
+#         self.asym = asym
+#
+#         # Moyenne de l'asymétrie dans la plage demandée
+#         lo = mapping_ppm - delta_mapping
+#         hi = mapping_ppm + delta_mapping
+#
+#         if delta_mapping < 0:
+#             raise ValueError("delta_mapping doit être positif ou nul.")
+#
+#         mask = (
+#             (x_asym >= lo)
+#             & (x_asym <= hi)
+#             & np.isfinite(asym)
+#         )
+#
+#         if not np.any(mask):
+#             self.out_map = np.nan
+#         else:
+#             self.out_map = float(np.mean(asym[mask]))
+#
+#     def out_xspectra(self) -> list[float]:
+#         return self.xspectr.tolist()
+#
+#     def out_zspectra(self) -> list[float]:
+#         return self.zspectr.tolist()
+#
+#     def out_xasym(self) -> list[float]:
+#         return self.xasym.tolist()
+#
+#     def out_asym(self) -> list[float]:
+#         return self.asym.tolist()
+#
+#     def out_mapping(self) -> float:
+#         return self.out_map
 
 
 ##############################################################################
@@ -811,76 +724,76 @@ class WASSR():
 ##############################################################################
 
 
-class WASSR_IA:
-    def __init__(self, y=[0.0], x=[0.0]):
-        
-        import numpy as np
-        import pandas as pd
-        import matplotlib.pyplot as plt
-        from scipy.interpolate import PchipInterpolator
-        from scipy.optimize import minimize_scalar
-        
-        global np, PchipInterpolator,minimize_scalar
-
-        if x is None or y is None:
-            raise ValueError("Tables x and y are mandatory..")
-
-        x_wassr = np.asarray(x, dtype=float)
-        y_wassr = np.asarray(y, dtype=float)
-        
-        self.center, error = self.__wassr_correction(
-            x_wassr,
-            y_wassr,
-            search_range=0.5
-        )
-
-    def __wassr_correction(self, x, y, search_range=0.5):
-    
-   
-        # Tri des données
-        idx = np.argsort(x)
-        x = x[idx]
-        y = y[idx]
-    
-        # Interpolation
-        interp = PchipInterpolator(
-            x, y,
-            extrapolate=False
-        )
-    
-        # Fonction coût miroir
-        def cost(delta):
-    
-            x_mirror = 2 * delta - x
-            y_mirror = interp(x_mirror)
-    
-            # Conservation de tous les points valides
-            valid = np.isfinite(y_mirror)
-    
-            if np.sum(valid) < 5:
-                return np.inf
-    
-            return np.mean(
-                (y[valid] - y_mirror[valid]) ** 2
-            )
-    
-        # Minimisation
-        result = minimize_scalar(
-            cost,
-            bounds=(-search_range, search_range),
-            method="bounded",
-            options={"xatol": 1e-8}
-        )
-    
-        delta = result.x
-    
-        return delta, result.fun
-
-        self.center = float(result.x)
-        self.center_wass = self.center
-
-    def estimated_center_freq(self) -> float:
-        return self.center
+# class WASSR_IA:
+#     def __init__(self, y=[0.0], x=[0.0]):
+#
+#         import numpy as np
+#         import pandas as pd
+#         import matplotlib.pyplot as plt
+#         from scipy.interpolate import PchipInterpolator
+#         from scipy.optimize import minimize_scalar
+#
+#         global np, PchipInterpolator,minimize_scalar
+#
+#         if x is None or y is None:
+#             raise ValueError("Tables x and y are mandatory..")
+#
+#         x_wassr = np.asarray(x, dtype=float)
+#         y_wassr = np.asarray(y, dtype=float)
+#
+#         self.center, error = self.__wassr_correction(
+#             x_wassr,
+#             y_wassr,
+#             search_range=0.5
+#         )
+#
+#     def __wassr_correction(self, x, y, search_range=0.5):
+#
+#
+#         # Tri des données
+#         idx = np.argsort(x)
+#         x = x[idx]
+#         y = y[idx]
+#
+#         # Interpolation
+#         interp = PchipInterpolator(
+#             x, y,
+#             extrapolate=False
+#         )
+#
+#         # Fonction coût miroir
+#         def cost(delta):
+#
+#             x_mirror = 2 * delta - x
+#             y_mirror = interp(x_mirror)
+#
+#             # Conservation de tous les points valides
+#             valid = np.isfinite(y_mirror)
+#
+#             if np.sum(valid) < 5:
+#                 return np.inf
+#
+#             return np.mean(
+#                 (y[valid] - y_mirror[valid]) ** 2
+#             )
+#
+#         # Minimisation
+#         result = minimize_scalar(
+#             cost,
+#             bounds=(-search_range, search_range),
+#             method="bounded",
+#             options={"xatol": 1e-8}
+#         )
+#
+#         delta = result.x
+#
+#         return delta, result.fun
+#
+#         self.center = float(result.x)
+#         self.center_wass = self.center
+#
+#     def estimated_center_freq(self) -> float:
+#         return self.center
 
 
 ##############################################################################

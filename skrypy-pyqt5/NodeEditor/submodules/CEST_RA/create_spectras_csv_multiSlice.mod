@@ -1,6 +1,5 @@
 [diagram]
 link=[N67] node=[U2:newPath#Node#P0:Value]
-probe=[P0] label=[Value] format=[path] RectF=[(-800.0, -1240.0, 70, 24)] 
 link=[N66] node=[U26:temp_folder#Node#U27:path_in]
 link=[N59] node=[A8:#Node#U27:path_name]
 link=[N27] node=[U11:temp_folder#Node#U23:path_in]
@@ -68,6 +67,7 @@ link=[N63] node=[S1:roi_nameout#Node#U21:roi_name]
 link=[N65] node=[U0:image#Node#U21:image_in]
 link=[N51] node=[U23:outFile#Node#U13:out_path]
 link=[N60] node=[U27:outFile#Node#U15:out_path]
+probe=[P0] label=[Value] format=[path] RectF=[(-800.0, -1240.0, 70, 24)] 
 constant=[A8] value=['wassr_spectr'] format=[str] label=[path_name] RectF=[(-1740.0, -660.0, 98.0, 35.0)] 
 constant=[A12] value=['cest_spectr'] format=[str] label=[path_name] RectF=[(-1820.0, -1560.0, 88.0, 35.0)] 
 constant=[A6] value=['.json'] format=[str] label=[new_extension] RectF=[(-1160.0, -1300.0, 52.0, 35.0)] 
@@ -122,8 +122,8 @@ block=[U13] category=[Nipype.Interfaces_dcmstack] class=[dcmstack_SplitNifti] va
 [source S0]
 ["correction_B0='wassr'", 'wassr_range=U6:out_value', 'cest_range=U5:out_value', 'cest_img=U0:image', 'wassr_img=U1:image', 'ppm=3.0', 'coord_roi=U21:coord_roi']
 from NodeEditor.modules.Tools.Float_array import float_array_add_row
-from NodeEditor.modules.MRImaging.Irmage import CEST_IA
-from NodeEditor.modules.MRImaging.Irmage import WASSR_IA
+from NodeEditor.modules.MRImaging.Irmage import CEST
+from NodeEditor.modules.MRImaging.Irmage import WASSR
 import numpy as np
 
 xmin = cest_range[0][0]
@@ -158,11 +158,11 @@ for i in range(x_img):
                 cp = 0.0
                 cest_cent = False
                 if correction_B0 == 'wassr':
-                    cp = WASSR_IA(sub_wassr[i, j, :], x_wassr).estimated_center_freq()
+                    cp = WASSR(sub_wassr[i, j, :], x_wassr).estimated_center_freq()
                     cest_cent = False
                 elif correction_B0 == 'cest_center':
                     cest_cent = True
-                vr = CEST_IA(sub_cest[i, j, :], x_cest, cp, ppm, 0.1, cest_cent)
+                vr = CEST(sub_cest[i, j, :], x_cest, cp, ppm, 0.1, cest_cent)
                 so = sub_cest[i, j, 0]
                 map_asym[i, j] = vr.out_mapping()
                 if [j, i] in coord_roi.tolist():

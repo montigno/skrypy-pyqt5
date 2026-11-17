@@ -13,6 +13,12 @@ If you encounter problems with Skrypy, see [here](https://montigno.github.io/skr
 
 # Release history
 
+
+<p></p>
+
+	16/11/2026: version 26.11.16a
+	- CEST/WASSR blocks: significant changes
+
 <p></p>
 
 	10/11/2026: version 26.11.10a

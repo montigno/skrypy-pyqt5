@@ -84,115 +84,68 @@ link=[N79] node=[S0:out_f#Node#U19:list_float_in]
 link=[N66] node=[U19:length#Node#U20:x]
 link=[N80] node=[U20:out#Node#I0:val]
 link=[N81] node=[A0:#Node#U20:y]
-probe=[P3] label=[Value] format=[list_float] RectF=[(-1675.0, 275.0, 70, 24)] 
+probe=[P3] label=[Value] format=[list_float] RectF=[(-1640.0, 260.0, 70, 24)] 
 probe=[P2] label=[Value] format=[str] RectF=[(-1100.0, 1300.0, 70, 24)] 
-probe=[P1] label=[Value] format=[str] RectF=[(-1100.0, 850.0, 70, 24)] 
-probe=[P0] label=[Value] format=[tuple] RectF=[(-850.0, -250.0, 70, 24)] 
-constant=[A11] value=['VisuCoreDim'] format=[str] label=[param] RectF=[(-2250.0, -375.0, 114.0, 33.0)] 
-constant=[A9] value=['VisuCoreDataOffs'] format=[str] label=[param] RectF=[(-2300.0, 2275.0, 149.0, 33.0)] 
-probe=[P6] label=[Value] format=[list_float] RectF=[(-1200.0, 2225.0, 70, 24)] 
-constant=[A7] value=['ACQ_slice_thick'] format=[str] label=[param] RectF=[(-2275.0, 550.0, 134.0, 33.0)] 
-constant=[A4] value=['VisuCoreWordType'] format=[str] label=[param] RectF=[(-2300.0, 1325.0, 156.0, 33.0)] 
-constant=[A2] value=['VisuCoreSize'] format=[str] label=[param] RectF=[(-2275.0, 100.0, 113.0, 33.0)] 
-constant=[A3] value=['VisuCoreByteOrder'] format=[str] label=[param] RectF=[(-2250.0, 775.0, 158.0, 33.0)] 
-constant=[A5] value=['PVM_SpatResol'] format=[str] label=[param] RectF=[(-2275.0, 325.0, 133.0, 33.0)] 
-probe=[P5] label=[Value] format=[list_float] RectF=[(-1225.0, 1975.0, 70, 24)] 
-constant=[A8] value=['VisuCoreDataSlope'] format=[str] label=[param] RectF=[(-2300.0, 1950.0, 157.0, 33.0)] 
-constant=[A10] value=['VisuFGOrderDesc'] format=[str] label=[param] RectF=[(-2275.0, -125.0, 145.0, 33.0)] 
-constant=[A14] value=['pixdim'] format=[enumerate(('sizeof_hdr','data_type','db_name','extents','session_error','regular','dim_info','dim','intent_p1','intent_p2','intent_p3','intent_code','datatype','bitpix','slice_start','pixdim','vox_offset','scl_slope','scl_inter','slice_end','slice_code','xyzt_units','cal_max','cal_min','slice_duration','toffset','glmax','glmin','descrip','aux_file','qform_code','sform_code','quatern_b','quatern_c','quatern_d','qoffset_x','qoffset_y','qoffset_z','srow_x','srow_y','srow_z','intent_name','magic'))] label=[structarr] RectF=[(1475.0, -200.0, 141.0, 31.0)] 
-constant=[A16] value=['datatype'] format=[enumerate(('sizeof_hdr','data_type','db_name','extents','session_error','regular','dim_info','dim','intent_p1','intent_p2','intent_p3','intent_code','datatype','bitpix','slice_start','pixdim','vox_offset','scl_slope','scl_inter','slice_end','slice_code','xyzt_units','cal_max','cal_min','slice_duration','toffset','glmax','glmin','descrip','aux_file','qform_code','sform_code','quatern_b','quatern_c','quatern_d','qoffset_x','qoffset_y','qoffset_z','srow_x','srow_y','srow_z','intent_name','magic'))] label=[structarr] RectF=[(2075.0, 275.0, 141.0, 31.0)] 
-probe=[P4] label=[Value] format=[int] RectF=[(-1125.0, 1525.0, 70, 24)] 
-cluster=[A0] value=[(-10000, 1, 10000)] format=[int] label=[A0] RectF=[(50.0, -650.0, 117.0, 33.0)] 
-cluster=[A13] value=[(-10000, 16, 10000)] format=[int] label=[A13] RectF=[(825.0, -275.0, 117.0, 33.0)] 
-block=[U16] category=[Tools.Float_list] class=[float_list_getElement] valInputs=[(['list_float_in', 'index'], ['Node(N73)', 'Node(N77)'], ['out_list_indexed'], ['float'])] RectF=[(750.0, -550.0, 225.0, 75.0)] 
-constant=[A6] value=[(-100000.0, 0.0, 100000.0)] format=[float] label=[out2] RectF=[(725.0, -375.0, 152.0, 31.0)] 
-constant=[A1] value=[(-100000.0, 1.0, 100000.0)] format=[float] label=[out1] RectF=[(725.0, -425.0, 152.0, 31.0)] 
-block=[U13] category=[MRImaging.Bruker] class=[bruker_normalize_image] valInputs=[(['image', 'slope', 'offsets'], ['Node(N61)', 'Node(N63)', 'Node(N64)'], ['image_normalized'], ['array_float'])] RectF=[(700.0, -600.0, 200.0, 125.0)] 
-block=[U18] category=[Tools.Float_list] class=[float_list_getElement] valInputs=[(['list_float_in', 'index'], ['Node(N75)', 'Node(N78)'], ['out_list_indexed'], ['float'])] RectF=[(775.0, -425.0, 225.0, 75.0)] 
-constant=[A12] value=[(-100000, 0, 100000)] format=[int] label=[index] RectF=[(600.0, -450.0, 98.0, 31.0)] 
-block=[U15] category=[Images.Nifti] class=[nifti_set_slope_inter] valInputs=[(['nifti_file', 'slope', 'intercept', 'outfile'], ['Node(N69)', 'Node(N71)', 'Node(N72)', 'Node(N70)'], ['outfile'], ['path'])] RectF=[(2050.0, 25.0, 175.0, 125.0)] 
-loopIf=[I0] inputs=[[[['in0', 'in', 'array_float'], ['in0', 'out', 'array_float']], [['in1', 'in', 'list_float'], ['in1', 'out', 'list_float']], [['in2', 'in', 'list_float'], ['in2', 'out', 'list_float']], [['in3', 'in', 'int'], ['in3', 'out', 'int']]]] outputs=[[[['out0', 'in', 'array_float'], ['out0', 'out', 'array_float']], [['out1', 'in', 'float'], ['out1', 'out', 'float']], [['out2', 'in', 'float'], ['out2', 'out', 'float']], [['out3', 'in', 'int'], ['out3', 'out', 'int']]]] listItems=[[['U13', 'A6', 'A13', 'A1'], ['U16', 'U18', 'A12', 'N51', 'N82']]] RectF=[(600.0, -675.0, 480.14979858888546, 496.6435575348192)] 
+probe=[P1] label=[Value] format=[str] RectF=[(-1100.0, 840.0, 70, 24)] 
+probe=[P0] label=[Value] format=[tuple] RectF=[(-840.0, -240.0, 70, 24)] 
+constant=[A11] value=['VisuCoreDim'] format=[str] label=[param] RectF=[(-2240.0, -380.0, 98.0, 35.0)] 
+constant=[A9] value=['VisuCoreDataOffs'] format=[str] label=[param] RectF=[(-2300.0, 2280.0, 125.0, 35.0)] 
+probe=[P6] label=[Value] format=[list_float] RectF=[(-1200.0, 2220.0, 70, 24)] 
+constant=[A7] value=['ACQ_slice_thick'] format=[str] label=[param] RectF=[(-2280.0, 560.0, 113.0, 35.0)] 
+constant=[A4] value=['VisuCoreWordType'] format=[str] label=[param] RectF=[(-2300.0, 1320.0, 132.0, 35.0)] 
+constant=[A2] value=['VisuCoreSize'] format=[str] label=[param] RectF=[(-2280.0, 100.0, 97.0, 35.0)] 
+constant=[A3] value=['VisuCoreByteOrder'] format=[str] label=[param] RectF=[(-2240.0, 780.0, 133.0, 35.0)] 
+constant=[A5] value=['PVM_SpatResol'] format=[str] label=[param] RectF=[(-2280.0, 320.0, 111.0, 35.0)] 
+probe=[P5] label=[Value] format=[list_float] RectF=[(-1220.0, 1980.0, 70, 24)] 
+constant=[A8] value=['VisuCoreDataSlope'] format=[str] label=[param] RectF=[(-2300.0, 1960.0, 133.0, 35.0)] 
+constant=[A10] value=['VisuFGOrderDesc'] format=[str] label=[param] RectF=[(-2280.0, -120.0, 124.0, 35.0)] 
+constant=[A14] value=['pixdim'] format=[enumerate(('sizeof_hdr','data_type','db_name','extents','session_error','regular','dim_info','dim','intent_p1','intent_p2','intent_p3','intent_code','datatype','bitpix','slice_start','pixdim','vox_offset','scl_slope','scl_inter','slice_end','slice_code','xyzt_units','cal_max','cal_min','slice_duration','toffset','glmax','glmin','descrip','aux_file','qform_code','sform_code','quatern_b','quatern_c','quatern_d','qoffset_x','qoffset_y','qoffset_z','srow_x','srow_y','srow_z','intent_name','magic'))] label=[structarr] RectF=[(1480.0, -200.0, 122.0, 31.0)] 
+constant=[A16] value=['datatype'] format=[enumerate(('sizeof_hdr','data_type','db_name','extents','session_error','regular','dim_info','dim','intent_p1','intent_p2','intent_p3','intent_code','datatype','bitpix','slice_start','pixdim','vox_offset','scl_slope','scl_inter','slice_end','slice_code','xyzt_units','cal_max','cal_min','slice_duration','toffset','glmax','glmin','descrip','aux_file','qform_code','sform_code','quatern_b','quatern_c','quatern_d','qoffset_x','qoffset_y','qoffset_z','srow_x','srow_y','srow_z','intent_name','magic'))] label=[structarr] RectF=[(2080.0, 280.0, 122.0, 31.0)] 
+probe=[P4] label=[Value] format=[int] RectF=[(-1120.0, 1520.0, 70, 24)] 
+cluster=[A0] value=[(-10000, 1, 10000)] format=[int] label=[A0] RectF=[(40.0, -640.0, 117.0, 33.0)] 
+cluster=[A13] value=[(-10000, 16, 10000)] format=[int] label=[A13] RectF=[(820.0, -280.0, 117.0, 33.0)] 
+block=[U16] category=[Tools.Float_list] class=[float_list_getElement] valInputs=[(['list_float_in', 'index'], ['Node(N73)', 'Node(N77)'], ['out_list_indexed'], ['float'])] RectF=[(760.0, -560.0, 220.0, 80.0)] 
+constant=[A6] value=[(-100000.0, 0.0, 100000.0)] format=[float] label=[out2] RectF=[(720.0, -380.0, 131.0, 31.0)] 
+constant=[A1] value=[(-100000.0, 1.0, 100000.0)] format=[float] label=[out1] RectF=[(720.0, -420.0, 131.0, 31.0)] 
+block=[U13] category=[MRImaging.Bruker] class=[bruker_normalize_image] valInputs=[(['image', 'slope', 'offsets'], ['Node(N61)', 'Node(N63)', 'Node(N64)'], ['image_normalized'], ['array_float'])] RectF=[(700.0, -600.0, 200.0, 120.0)] 
+block=[U18] category=[Tools.Float_list] class=[float_list_getElement] valInputs=[(['list_float_in', 'index'], ['Node(N75)', 'Node(N78)'], ['out_list_indexed'], ['float'])] RectF=[(780.0, -420.0, 220.0, 80.0)] 
+constant=[A12] value=[(-100000, 0, 100000)] format=[int] label=[index] RectF=[(600.0, -440.0, 87.0, 31.0)] 
+block=[U15] category=[Images.Nifti] class=[nifti_set_slope_inter] valInputs=[(['nifti_file', 'slope', 'intercept', 'outfile'], ['Node(N69)', 'Node(N71)', 'Node(N72)', 'Node(N70)'], ['outfile'], ['path'])] RectF=[(2040.0, 20.0, 180.0, 120.0)] 
+loopIf=[I0] inputs=[[[['in0', 'in', 'array_float'], ['in0', 'out', 'array_float']], [['in1', 'in', 'list_float'], ['in1', 'out', 'list_float']], [['in2', 'in', 'list_float'], ['in2', 'out', 'list_float']], [['in3', 'in', 'int'], ['in3', 'out', 'int']]]] outputs=[[[['out0', 'in', 'array_float'], ['out0', 'out', 'array_float']], [['out1', 'in', 'float'], ['out1', 'out', 'float']], [['out2', 'in', 'float'], ['out2', 'out', 'float']], [['out3', 'in', 'int'], ['out3', 'out', 'int']]]] listItems=[[['U13', 'A6', 'A13', 'A1'], ['U16', 'U18', 'A12', 'N51', 'N82']]] RectF=[(600.0, -680.0, 480.0, 500.0)] 
 connt=[C1] name=[outfile] type=[out] format=[path] RectF=[(2500.0, 300.0, 70, 24)] 
-connt=[C0] name=[bruker_file] type=[in] format=[path] valOut=[path] RectF=[(-3550.0, -650.0, 70, 24)] 
-block=[U17] category=[Images.Nifti] class=[nifti_change_header] valInputs=[(['nifti_file', 'structarr', 'new_value', 'outfile'], ['Node(N43)', 'Node(N52)', 'Node(N83)', 'Node(N44)'], ['outfile'], ['path'])] RectF=[(2250.0, 225.0, 150.0, 150.0)] 
-script=[S2] title=[Script_editor] inputs=[['dimension', 'in', 'int'], ['descr', 'in', 'str'], ['matrix', 'in', 'list_int'], ['XY_pix', 'in', 'list_float'], ['Z_float', 'in', 'float'], ['Z_int', 'in', 'int']] outputs=[['list_dim', 'out', 'tuple'], ['pixdim', 'out', 'list_float']] code=[your code] RectF=[(-1575.0, -425.0, 491.0, 556.0)]
-block=[U11] category=[MRImaging.Bruker] class=[bruker_get_value] valInputs=[(['file', 'param'], ['Node(N39)', 'Node(N37)'], ['float_array_values', 'float_list_values', 'float_value', 'int_array_values', 'int_list_values', 'int_value', 'str_value'], ['array_float', 'list_float', 'float', 'array_int', 'list_int', 'int', 'str'])] RectF=[(-2050.0, -450.0, 200.0, 150.0)] 
-block=[U8] category=[MRImaging.Bruker] class=[bruker_get_value] valInputs=[(['file', 'param'], ['Node(N30)', 'Node(N29)'], ['float_array_values', 'float_list_values', 'float_value', 'int_array_values', 'int_list_values', 'int_value', 'str_value'], ['array_float', 'list_float', 'float', 'array_int', 'list_int', 'int', 'str'])] RectF=[(-2075.0, 2150.0, 200.0, 200.0)] 
-script=[S0] title=[Script_editor] inputs=[['list_float', 'in', 'list_float'], ['simple_float', 'in', 'float'], ['list_int', 'in', 'list_int'], ['simple_int', 'in', 'int']] outputs=[['out_f', 'out', 'list_float']] code=[your code] RectF=[(-1625.0, 1825.0, 244.0, 202.0)]
-block=[U6] category=[MRImaging.Bruker] class=[bruker_get_value] valInputs=[(['file', 'param'], ['Node(N18)', 'Node(N16)'], ['float_array_values', 'float_list_values', 'float_value', 'int_array_values', 'int_list_values', 'int_value', 'str_value'], ['array_float', 'list_float', 'float', 'array_int', 'list_int', 'int', 'str'])] RectF=[(-2050.0, 475.0, 200.0, 150.0)] 
-block=[U4] category=[MRImaging.Bruker] class=[bruker_get_value] valInputs=[(['file', 'param'], ['Node(N11)', 'Node(N9)'], ['float_array_values', 'float_list_values', 'float_value', 'int_array_values', 'int_list_values', 'int_value', 'str_value'], ['array_float', 'list_float', 'float', 'array_int', 'list_int', 'int', 'str'])] RectF=[(-2075.0, 1250.0, 225.0, 150.0)] 
-block=[U0] category=[MRImaging.Bruker] class=[bruker_get_metadata_files] valInputs=[(['bruker_file'], ['Node(N0)'], ['subject_file', 'visupars_file', 'reco_file', 'method_file', 'acqp_file'], ['path', 'path', 'path', 'path', 'path'])] RectF=[(-3250.0, -475.0, 225.0, 150.0)] 
-block=[U3] category=[MRImaging.Bruker] class=[bruker_get_value] valInputs=[(['file', 'param'], ['Node(N2)', 'Node(N1)'], ['float_array_values', 'float_list_values', 'float_value', 'int_array_values', 'int_list_values', 'int_value', 'str_value'], ['array_float', 'list_float', 'float', 'array_int', 'list_int', 'int', 'str'])] RectF=[(-2050.0, 25.0, 200.0, 150.0)] 
-block=[U2] category=[MRImaging.Bruker] class=[bruker_get_value] valInputs=[(['file', 'param'], ['Node(N7)', 'Node(N6)'], ['float_array_values', 'float_list_values', 'float_value', 'int_array_values', 'int_list_values', 'int_value', 'str_value'], ['array_float', 'list_float', 'float', 'array_int', 'list_int', 'int', 'str'])] RectF=[(-2050.0, 700.0, 200.0, 150.0)] 
-block=[U5] category=[MRImaging.Bruker] class=[bruker_get_value] valInputs=[(['file', 'param'], ['Node(N14)', 'Node(N13)'], ['float_array_values', 'float_list_values', 'float_value', 'int_array_values', 'int_list_values', 'int_value', 'str_value'], ['array_float', 'list_float', 'float', 'array_int', 'list_int', 'int', 'str'])] RectF=[(-2050.0, 250.0, 200.0, 150.0)] 
-block=[U7] category=[MRImaging.Bruker] class=[bruker_get_value] valInputs=[(['file', 'param'], ['Node(N23)', 'Node(N19)'], ['float_array_values', 'float_list_values', 'float_value', 'int_array_values', 'int_list_values', 'int_value', 'str_value'], ['array_float', 'list_float', 'float', 'array_int', 'list_int', 'int', 'str'])] RectF=[(-2075.0, 1850.0, 200.0, 200.0)] 
-script=[S1] title=[Script_editor] inputs=[['list_float', 'in', 'list_float'], ['simple_float', 'in', 'float'], ['list_int', 'in', 'list_int'], ['simple_int', 'in', 'int']] outputs=[['out_f', 'out', 'list_float']] code=[your code] RectF=[(-1625.0, 2175.0, 238.0, 188.0)]
-block=[U10] category=[MRImaging.Bruker] class=[bruker_get_value] valInputs=[(['file', 'param'], ['Node(N8)', 'Node(N3)'], ['float_array_values', 'float_list_values', 'float_value', 'int_array_values', 'int_list_values', 'int_value', 'str_value'], ['array_float', 'list_float', 'float', 'array_int', 'list_int', 'int', 'str'])] RectF=[(-2050.0, -200.0, 200.0, 150.0)] 
-script=[S4] title=[Script_editor] inputs=[['data_type', 'in', 'str']] outputs=[['d_type', 'out', 'str'], ['datatype', 'out', 'int']] code=[your code] RectF=[(-1625.0, 1050.0, 396.0, 642.0)]
-script=[S3] title=[Script_editor] inputs=[['byteorder', 'in', 'str']] outputs=[['b_order', 'out', 'str']] code=[your code] RectF=[(-1625.0, 725.0, 412.0, 215.0)]
-block=[U9] category=[Images.Raw] class=[raw_open_image] valInputs=[(['raw_file', 'imageSize', 'byteorder', 'data_type'], ['Node(N5)', 'Node(N45)', 'Node(N46)', 'Node(N47)'], ['raw_image'], ['array_float'])] RectF=[(-750.0, -700.0, 300.0, 250.0)] 
-block=[U12] category=[Images.Nifti] class=[nifti_save_file] valInputs=[(['image', 'nifti_path'], ['Node(N49)', 'Node(N42)'], ['pathFile'], ['path'])] RectF=[(1350.0, -600.0, 150.0, 75.0)] 
-block=[U14] category=[Images.Nifti] class=[nifti_change_header] valInputs=[(['nifti_file', 'structarr', 'new_value', 'outfile'], ['Node(N50)', 'Node(N53)', 'Node(N54)', 'Node(N17)'], ['outfile'], ['path'])] RectF=[(1800.0, -175.0, 150.0, 150.0)] 
-connt=[C2] name=[in_path] type=[in] format=[path] valOut=[path] RectF=[(-3550.0, 200.0, 70, 24)] 
-block=[U1] category=[Tools.Follower] class=[follow_path_simple] valInputs=[(['in_path'], ['Node(N15)'], ['out_path'], ['path'])] RectF=[(875.0, 175.0, 150.0, 75.0)] 
-block=[U19] category=[Tools.Float_list] class=[float_list_length] valInputs=[(['list_float_in'], ['Node(N79)'], ['length'], ['int'])] RectF=[(0.0, -775.0, 150.0, 75.0)] 
-block=[U20] category=[Tools.Boolean_operations] class=[x_Greater_y] valInputs=[(['x', 'y'], ['Node(N66)', 'Node(N81)'], ['out'], ['bool'])] RectF=[(275.0, -775.0, 150.0, 125.0)] 
-[source S2]
-['matrix=U3:int_list_values', 'descr=U10:str_value', 'dimension=U11:int_value', 'XY_pix=U5:float_list_values', 'Z_float=U6:float_value', 'Z_int=U6:int_value']
-import numpy as np
-
-
-list_dim = matrix
-
-print('dimension = ', dimension)
-print('description = ', descr)
-print('matrix = ', matrix)
-
-if Z_float:
-    Z_pix = Z_float
+connt=[C0] name=[bruker_file] type=[in] format=[path] valOut=[path] RectF=[(-3560.0, -640.0, 70, 24)] 
+block=[U17] category=[Images.Nifti] class=[nifti_change_header] valInputs=[(['nifti_file', 'structarr', 'new_value', 'outfile'], ['Node(N43)', 'Node(N52)', 'Node(N83)', 'Node(N44)'], ['outfile'], ['path'])] RectF=[(2240.0, 220.0, 160.0, 160.0)] 
+script=[S2] title=[Script_editor] inputs=[['dimension', 'in', 'int'], ['descr', 'in', 'str'], ['matrix', 'in', 'list_int'], ['XY_pix', 'in', 'list_float'], ['Z_float', 'in', 'float'], ['Z_int', 'in', 'int']] outputs=[['list_dim', 'out', 'tuple'], ['pixdim', 'out', 'list_float']] code=[your code] RectF=[(-1580.0, -420.0, 500.0, 560.0)]
+block=[U11] category=[MRImaging.Bruker] class=[bruker_get_value] valInputs=[(['file', 'param'], ['Node(N39)', 'Node(N37)'], ['float_array_values', 'float_list_values', 'float_value', 'int_array_values', 'int_list_values', 'int_value', 'str_value'], ['array_float', 'list_float', 'float', 'array_int', 'list_int', 'int', 'str'])] RectF=[(-2040.0, -440.0, 220.0, 160.0)] 
+block=[U8] category=[MRImaging.Bruker] class=[bruker_get_value] valInputs=[(['file', 'param'], ['Node(N30)', 'Node(N29)'], ['float_array_values', 'float_list_values', 'float_value', 'int_array_values', 'int_list_values', 'int_value', 'str_value'], ['array_float', 'list_float', 'float', 'array_int', 'list_int', 'int', 'str'])] RectF=[(-2080.0, 2160.0, 220.0, 200.0)] 
+script=[S0] title=[Script_editor] inputs=[['list_float', 'in', 'list_float'], ['simple_float', 'in', 'float'], ['list_int', 'in', 'list_int'], ['simple_int', 'in', 'int']] outputs=[['out_f', 'out', 'list_float']] code=[your code] RectF=[(-1620.0, 1820.0, 240.0, 200.0)]
+block=[U6] category=[MRImaging.Bruker] class=[bruker_get_value] valInputs=[(['file', 'param'], ['Node(N18)', 'Node(N16)'], ['float_array_values', 'float_list_values', 'float_value', 'int_array_values', 'int_list_values', 'int_value', 'str_value'], ['array_float', 'list_float', 'float', 'array_int', 'list_int', 'int', 'str'])] RectF=[(-2040.0, 480.0, 220.0, 160.0)] 
+block=[U4] category=[MRImaging.Bruker] class=[bruker_get_value] valInputs=[(['file', 'param'], ['Node(N11)', 'Node(N9)'], ['float_array_values', 'float_list_values', 'float_value', 'int_array_values', 'int_list_values', 'int_value', 'str_value'], ['array_float', 'list_float', 'float', 'array_int', 'list_int', 'int', 'str'])] RectF=[(-2080.0, 1240.0, 220.0, 160.0)] 
+block=[U0] category=[MRImaging.Bruker] class=[bruker_get_metadata_files] valInputs=[(['bruker_file'], ['Node(N0)'], ['subject_file', 'visupars_file', 'reco_file', 'method_file', 'acqp_file'], ['path', 'path', 'path', 'path', 'path'])] RectF=[(-3240.0, -480.0, 220.0, 160.0)] 
+block=[U3] category=[MRImaging.Bruker] class=[bruker_get_value] valInputs=[(['file', 'param'], ['Node(N2)', 'Node(N1)'], ['float_array_values', 'float_list_values', 'float_value', 'int_array_values', 'int_list_values', 'int_value', 'str_value'], ['array_float', 'list_float', 'float', 'array_int', 'list_int', 'int', 'str'])] RectF=[(-2040.0, 20.0, 220.0, 160.0)] 
+block=[U2] category=[MRImaging.Bruker] class=[bruker_get_value] valInputs=[(['file', 'param'], ['Node(N7)', 'Node(N6)'], ['float_array_values', 'float_list_values', 'float_value', 'int_array_values', 'int_list_values', 'int_value', 'str_value'], ['array_float', 'list_float', 'float', 'array_int', 'list_int', 'int', 'str'])] RectF=[(-2040.0, 700.0, 220.0, 160.0)] 
+block=[U5] category=[MRImaging.Bruker] class=[bruker_get_value] valInputs=[(['file', 'param'], ['Node(N14)', 'Node(N13)'], ['float_array_values', 'float_list_values', 'float_value', 'int_array_values', 'int_list_values', 'int_value', 'str_value'], ['array_float', 'list_float', 'float', 'array_int', 'list_int', 'int', 'str'])] RectF=[(-2040.0, 240.0, 220.0, 160.0)] 
+block=[U7] category=[MRImaging.Bruker] class=[bruker_get_value] valInputs=[(['file', 'param'], ['Node(N23)', 'Node(N19)'], ['float_array_values', 'float_list_values', 'float_value', 'int_array_values', 'int_list_values', 'int_value', 'str_value'], ['array_float', 'list_float', 'float', 'array_int', 'list_int', 'int', 'str'])] RectF=[(-2080.0, 1840.0, 220.0, 200.0)] 
+script=[S1] title=[Script_editor] inputs=[['list_float', 'in', 'list_float'], ['simple_float', 'in', 'float'], ['list_int', 'in', 'list_int'], ['simple_int', 'in', 'int']] outputs=[['out_f', 'out', 'list_float']] code=[your code] RectF=[(-1620.0, 2180.0, 240.0, 180.0)]
+block=[U10] category=[MRImaging.Bruker] class=[bruker_get_value] valInputs=[(['file', 'param'], ['Node(N8)', 'Node(N3)'], ['float_array_values', 'float_list_values', 'float_value', 'int_array_values', 'int_list_values', 'int_value', 'str_value'], ['array_float', 'list_float', 'float', 'array_int', 'list_int', 'int', 'str'])] RectF=[(-2040.0, -200.0, 220.0, 160.0)] 
+script=[S4] title=[Script_editor] inputs=[['data_type', 'in', 'str']] outputs=[['d_type', 'out', 'str'], ['datatype', 'out', 'int']] code=[your code] RectF=[(-1620.0, 1040.0, 400.0, 640.0)]
+script=[S3] title=[Script_editor] inputs=[['byteorder', 'in', 'str']] outputs=[['b_order', 'out', 'str']] code=[your code] RectF=[(-1620.0, 720.0, 420.0, 220.0)]
+block=[U9] category=[Images.Raw] class=[raw_open_image] valInputs=[(['raw_file', 'imageSize', 'byteorder', 'data_type'], ['Node(N5)', 'Node(N45)', 'Node(N46)', 'Node(N47)'], ['raw_image'], ['array_float'])] RectF=[(-760.0, -700.0, 300.0, 240.0)] 
+block=[U12] category=[Images.Nifti] class=[nifti_save_file] valInputs=[(['image', 'nifti_path'], ['Node(N49)', 'Node(N42)'], ['pathFile'], ['path'])] RectF=[(1360.0, -600.0, 160.0, 80.0)] 
+block=[U14] category=[Images.Nifti] class=[nifti_change_header] valInputs=[(['nifti_file', 'structarr', 'new_value', 'outfile'], ['Node(N50)', 'Node(N53)', 'Node(N54)', 'Node(N17)'], ['outfile'], ['path'])] RectF=[(1800.0, -180.0, 160.0, 160.0)] 
+connt=[C2] name=[in_path] type=[in] format=[path] valOut=[path] RectF=[(-3560.0, 200.0, 70, 24)] 
+block=[U1] category=[Tools.Follower] class=[follow_path_simple] valInputs=[(['in_path'], ['Node(N15)'], ['out_path'], ['path'])] RectF=[(880.0, 180.0, 160.0, 80.0)] 
+block=[U19] category=[Tools.Float_list] class=[float_list_length] valInputs=[(['list_float_in'], ['Node(N79)'], ['length'], ['int'])] RectF=[(0.0, -780.0, 160.0, 80.0)] 
+block=[U20] category=[Tools.Boolean_operations] class=[x_Greater_y] valInputs=[(['x', 'y'], ['Node(N66)', 'Node(N81)'], ['out'], ['bool'])] RectF=[(280.0, -780.0, 160.0, 120.0)] 
+[source S3]
+['byteorder=U2:str_value']
+if byteorder == 'littleEndian':
+    b_order = 'little-endian'
 else:
-    Z_pix = float(Z_int)
+    b_order = 'big-endian'
 
-if dimension == 2:
-    descr = descr.replace(') (', ');(')
-    list_descr = descr.split(';')
-    for dm in list_descr:
-        res = dm[1:-1]
-        list_dim.append(int(res.split(',')[0].strip()))
-else:
-    Z_pix = Z_pix / list_dim[2]
-
-list_dim = tuple(list_dim)
-
-pixdim = np.array([1., XY_pix[0], XY_pix[1], Z_pix, 0.0, 0.0, 0.0, 0.0])
-['S2:list_dim', 'S2:pixdim']
-[/source S2]
-[source S0]
-['list_float=U7:float_list_values', 'simple_float=U7:float_value', 'list_int=U7:int_list_values', 'simple_int=U7:int_value']
-if list_float != None:
-    out_f = list_float
-elif simple_float != None:
-    out_f = [simple_float]
-elif list_int != None:
-    out_f = list_int
-elif simple_int != None:
-    out_f = [simple_int]
-
-['S0:out_f']
-[/source S0]
-[source S1]
-['list_float=U8:float_list_values', 'simple_float=U8:float_value', 'list_int=U8:int_list_values', 'simple_int=U8:int_value']
-if list_float != None:
-    out_f = list_float
-elif simple_float != None:
-    out_f = [simple_float]
-elif list_int != None:
-    out_f = list_int
-elif simple_int != None:
-    out_f = [simple_int]
-
-['S1:out_f']
-[/source S1]
+['S3:b_order']
+[/source S3]
 [source S4]
 ['data_type=U4:str_value']
 d_type = 'int'
@@ -235,15 +188,62 @@ elif d_type == 'float128':
 
 ['S4:d_type', 'S4:datatype']
 [/source S4]
-[source S3]
-['byteorder=U2:str_value']
-if byteorder == 'littleEndian':
-    b_order = 'little-endian'
-else:
-    b_order = 'big-endian'
+[source S1]
+['list_float=U8:float_list_values', 'simple_float=U8:float_value', 'list_int=U8:int_list_values', 'simple_int=U8:int_value']
+if list_float != None:
+    out_f = list_float
+elif simple_float != None:
+    out_f = [simple_float]
+elif list_int != None:
+    out_f = list_int
+elif simple_int != None:
+    out_f = [simple_int]
 
-['S3:b_order']
-[/source S3]
+['S1:out_f']
+[/source S1]
+[source S0]
+['list_float=U7:float_list_values', 'simple_float=U7:float_value', 'list_int=U7:int_list_values', 'simple_int=U7:int_value']
+if list_float != None:
+    out_f = list_float
+elif simple_float != None:
+    out_f = [simple_float]
+elif list_int != None:
+    out_f = list_int
+elif simple_int != None:
+    out_f = [simple_int]
+
+['S0:out_f']
+[/source S0]
+[source S2]
+['matrix=U3:int_list_values', 'descr=U10:str_value', 'dimension=U11:int_value', 'XY_pix=U5:float_list_values', 'Z_float=U6:float_value', 'Z_int=U6:int_value']
+import numpy as np
+
+
+list_dim = matrix
+
+print('dimension = ', dimension)
+print('description = ', descr)
+print('matrix = ', matrix)
+
+if Z_float:
+    Z_pix = Z_float
+else:
+    Z_pix = float(Z_int)
+
+if dimension == 2:
+    descr = descr.replace(') (', ');(')
+    list_descr = descr.split(';')
+    for dm in list_descr:
+        res = dm[1:-1]
+        list_dim.append(int(res.split(',')[0].strip()))
+else:
+    Z_pix = Z_pix / list_dim[2]
+
+list_dim = tuple(list_dim)
+
+pixdim = np.array([1., XY_pix[0], XY_pix[1], Z_pix, 0.0, 0.0, 0.0, 0.0])
+['S2:list_dim', 'S2:pixdim']
+[/source S2]
 
 [execution]
 ['C0:bruker_file=', 'C2:in_path=']

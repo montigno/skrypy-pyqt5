@@ -16,6 +16,11 @@ If you encounter problems with Skrypy, see [here](https://montigno.github.io/skr
 
 <p></p>
 
+	26/11/2026: version 26.11.26a
+	- some bugs with undo/redo resolved
+
+<p></p>
+
 	16/11/2026: version 26.11.16a
 	- CEST/WASSR blocks: significant changes
 

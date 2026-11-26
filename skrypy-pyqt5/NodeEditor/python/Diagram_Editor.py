@@ -1060,6 +1060,7 @@ class BlockCreate(QGraphicsRectItem):
         try:
             LoadDiagram(txt)
             editor.diagramView[editor.currentTab].fitInView(editor.diagramScene[editor.currentTab].sceneRect(), Qt.KeepAspectRatio)
+            UpdateUndoRedo()
         except Exception:
             editor.editText('Error with some modules/submodules, see in {}'.format(file),
                             10, 600, 'ff0000', False, True)
@@ -9142,6 +9143,7 @@ class SaveDiagram(QTextEdit):
             elif isinstance(item, ScriptItem):
                 listCodeScript[item.unit] = item.elemProxy.toPlainText()
                 rect = item.rect()
+                item.changed = False
                 self.append("".join([
                     f"script=[{item.unit}]",
                     f" title=[{item.name}]",

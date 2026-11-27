@@ -312,6 +312,8 @@ echo "----------------------------------------"
 
 if [ \$STATUS -eq 0 ]; then
     echo "Skrypy finished normally."
+    echo
+    exit 0
 else
     echo
     echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
@@ -319,12 +321,12 @@ else
     echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     echo
     echo "Error code : \$STATUS"
+    echo
+    read -r -p "Press Enter to close..."
+    exit \$STATUS
+    
 fi
 
-echo
-read -r -p "Press Enter to close..."
-
-exit \$STATUS
 EOL
 
 chmod +x "$LAUNCHER"

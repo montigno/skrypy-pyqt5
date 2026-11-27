@@ -16,6 +16,11 @@ If you encounter problems with Skrypy, see [here](https://montigno.github.io/skr
 
 <p></p>
 
+	27/11/2026: version 26.11.27a
+	- install_skrypy_Linux.sh : minor change
+
+<p></p>
+
 	26/11/2026: version 26.11.26a
 	- some bugs with undo/redo resolved
 
